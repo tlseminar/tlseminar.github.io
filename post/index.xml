@@ -10,6 +10,71 @@
     <atom:link href="https://tlseminar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Background Preparation</title>
+      <link>https://tlseminar.github.io/background/</link>
+      <pubDate>Wed, 14 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/background/</guid>
+      <description>
+
+&lt;p&gt;Here are some suggestions for getting the necessary background for the
+seminar.&lt;/p&gt;
+
+&lt;h2 id=&#34;cryptography&#34;&gt;Cryptography&lt;/h2&gt;
+
+&lt;p&gt;If you have already taken a cryptography course, you should have
+enough cryptography background already.  If not, here are some
+suggested ways to get enough crypo background over winter break to be
+ready for the seminar.&lt;/p&gt;
+
+&lt;h3 id=&#34;on-line-courses&#34;&gt;On-Line Courses&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.udacity.com/course/applied-cryptography--cs387&#34;&gt;&lt;strong&gt;Udacity cs387: Applied
+Cryptography&lt;/strong&gt;&lt;/a&gt;
+- this is an open on-line course that you can take anytime taught by
+myself (so I am somewhat partial to it!).  There are &lt;a href=&#34;http://www.cs.virginia.edu/~evans/courses/cs387/&#34;&gt;some additional
+materials for the course
+available&lt;/a&gt;,
+including &lt;a href=&#34;http://www.cs.virginia.edu/~evans/courses/crypto-notes.pdf&#34;&gt;extensive course notes
+(PDF)&lt;/a&gt;
+created by Daniel Winter.  This is a very short and informal
+introduction to cryptography, which would be enough background to be
+prepared for the seminar.  (I can&amp;rsquo;t give an unbiased assessment of the
+course, but according to Information Week, it is a recommended course
+to &lt;a href=&#34;http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915&#34;&gt;&lt;em&gt;&amp;ldquo;Pump Up IT
+Careers&amp;rdquo;&lt;/em&gt;&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;p&gt;Dan Boneh&amp;rsquo;s &lt;a href=&#34;https://www.coursera.org/learn/crypto&#34;&gt;&lt;strong&gt;Cryptography
+Course&lt;/strong&gt;&lt;/a&gt; (offered through
+Coursera).  The materials from previous courses are not available
+(although you may be able to find them if you are resourceful), so you
+have to take the course when it is offered by Coursera. There is a
+session starting December 26.  This is an excellent course that is a
+bit longer and goes into more depth on many topics than my course.
+You can read &lt;a href=&#34;http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html&#34;&gt;Bryan Pendleton&amp;rsquo;s more objective
+comparison&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;textbooks&#34;&gt;Textbooks&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.crypto101.io/&#34;&gt;Crypto 101&lt;/a&gt; - a very easy to read and
+practically-focused introduction to cryptography (available as a &lt;a href=&#34;https://tlseminar.github.io/docs/Crypto101.pdf&#34;&gt;free,
+creative-commons licensed PDF&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.cs.umd.edu/~jkatz/imc.html&#34;&gt;&lt;em&gt;Introduction to Modern
+Cryptography&lt;/em&gt;&lt;/a&gt;, Jonathan Katz
+and Yehuda Lindell.  This provides a lot more depth that is required
+for joining the seminar, but is an excellent book for ambitious
+students with more time.&lt;/p&gt;
+
+&lt;h2 id=&#34;computing-systems&#34;&gt;Computing Systems&lt;/h2&gt;
+
+&lt;p&gt;Students in the class are expected to have understanding of computing
+systems and experience with systems-level programming at least at the
+level of a typical introductory operating systems course.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Welcome to TLSeminar!</title>
       <link>https://tlseminar.github.io/welcome/</link>
       <pubDate>Wed, 14 Dec 2016 00:00:00 +0000</pubDate>
