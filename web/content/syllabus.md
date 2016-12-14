@@ -1,9 +1,7 @@
-# Syllabus
-
-<div class="printing"><a href="{{ url_for('static', filename='docs/syllabus.pdf') }}">PDF for Printing</a></div>
+<div class="printing"><a href="/docs/syllabus.pdf">PDF for Printing</a></div>
 
 ### **cs6501: Understanding and Securing TLS**
-### University of Virginia, Spring 2017
+University of Virginia, Spring 2017
 
 **Meetings:** Fridays, 9:30AM - noon, Thornton Hall D115
 

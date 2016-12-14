@@ -6,7 +6,22 @@
     <description>Recent content on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Wed, 14 Dec 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Welcome to TLSeminar!</title>
+      <link>https://tlseminar.github.io/welcome/</link>
+      <pubDate>Wed, 14 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/welcome/</guid>
+      <description>&lt;p&gt;This is the course site for &lt;strong&gt;cs6501: Understanding and Securing
+TLS&lt;/strong&gt;. [&lt;a href=&#34;https://tlseminar.github.io/syllabus&#34;&gt;Syllabus&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;The first class is Friday, 20 January 2017 (9:30am-noon in Thornton
+Hall D115).&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title></title>
@@ -71,13 +86,11 @@
       <guid>https://tlseminar.github.io/syllabus/</guid>
       <description>
 
-&lt;h1 id=&#34;syllabus&#34;&gt;Syllabus&lt;/h1&gt;
-
-&lt;div class=&#34;printing&#34;&gt;&lt;a href=&#34;{{ url_for(&#39;static&#39;, filename=&#39;docs/syllabus.pdf&#39;) }}&#34;&gt;PDF for Printing&lt;/a&gt;&lt;/div&gt;
+&lt;div class=&#34;printing&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/syllabus.pdf&#34;&gt;PDF for Printing&lt;/a&gt;&lt;/div&gt;
 
 &lt;h3 id=&#34;cs6501-understanding-and-securing-tls&#34;&gt;&lt;strong&gt;cs6501: Understanding and Securing TLS&lt;/strong&gt;&lt;/h3&gt;
 
-&lt;h3 id=&#34;university-of-virginia-spring-2017&#34;&gt;University of Virginia, Spring 2017&lt;/h3&gt;
+&lt;p&gt;University of Virginia, Spring 2017&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Meetings:&lt;/strong&gt; Fridays, 9:30AM - noon, Thornton Hall D115&lt;/p&gt;
 
