@@ -32,9 +32,7 @@ develop:
 	hugo server --theme=$(THEME) --buildDrafts --watch
 
 github: html
-#	mv ~/tlseminar.github.io/* ~/tlseminar.github.ioold
-#	cp -r public/* ~/tlseminar.github.io
-#	cd ~/tlseminar.github.io; 
+	cp -r public/* ../
 	git add -A; git commit -m "Rebuilt site" ; git push
 
 .PHONY: html clean develop

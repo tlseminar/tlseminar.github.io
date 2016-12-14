@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TLSeminar</title>
+    <link>https://tlseminar.github.io/index.xml</link>
+    <description>Recent content on TLSeminar</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title></title>
+      <link>https://tlseminar.github.io/schedule/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/schedule/</guid>
+      <description>
+
+&lt;h1 id=&#34;course-schedule&#34;&gt;Course Schedule&lt;/h1&gt;
+
+&lt;p&gt;The schedule will be posted here later.  The first class is &lt;strong&gt;Friday,
+20 January 2017&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;!--
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Class&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Due [Friday 6:29pm unless noted]&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 23 Aug 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class1&#34;&gt;1. Discrete Math, Proof&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
+&lt;tr&gt;&lt;td&gt;Thursday, 25 Aug 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class2&#34;&gt;2. Methods of Proof&lt;/a&gt;    &lt;/td&gt;&lt;td&gt; Registration Survey&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 30 Aug 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class3&#34;&gt;3. Well Ordering Principle&lt;/a&gt; &lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
+&lt;tr&gt;&lt;td&gt;Thursday, 1 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class4&#34;&gt;4. Logical Formulas&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps1&#34;&gt;PS1&lt;/a&gt; (MCS Ch 1, classes 1 and 2)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 6 Sep 16&lt;/td&gt;&lt;td&gt;   &lt;a href=&#34;https://tlseminar.github.io/class5&#34;&gt;5. CNF, Quantifiers, and Proofs&lt;/a&gt;       &lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;      
+&lt;tr&gt;&lt;td&gt;Thursday, 8 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class6&#34;&gt;6. 3-SAT&lt;/a&gt; &lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps2&#34;&gt;PS2&lt;/a&gt; (MCS Ch 2-3.5, classes 3-4)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 13 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class7&#34;&gt;7. Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
+&lt;tr&gt;&lt;td&gt;Thursday, 15 Sep 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class8&#34;&gt;8. Functions and Relations&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps3&#34;&gt;PS3&lt;/a&gt; (MCS Ch 3, classes 5-6)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 20 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class9&#34;&gt;9. Cardinality of Finite Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;   
+&lt;tr&gt;&lt;td&gt;Thursday, 22 Sep 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class10&#34;&gt;10. Induction&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;ps/ps4&#34;&gt;PS4&lt;/a&gt; (MCS Ch 4.1-4.4, lecture 7-8)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 27 Sep 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class11&#34;&gt;11. Strong Induction&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
+&lt;tr&gt;&lt;td&gt;Thursday, 29 Sep 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class12&#34;&gt;12. Review&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/ps/ps5&#34;&gt;PS5&lt;/a&gt; (MCS Ch 4.5, 5, classes 9-10)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 4 Oct 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#CCC&#34;&gt;Reading Days &lt;/td&gt;&lt;/tr&gt;  
+&lt;tr&gt;&lt;td&gt;Thursday, 6 Oct 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#FFAAAA&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/exam1solutions/&#34;&gt;Exam 1&lt;/a&gt; (in class) &lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 11 Oct 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class13&#34;&gt;13. State Machines&lt;/a&gt;    &lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;      
+&lt;tr&gt;&lt;td&gt;Thursday, 13 Oct 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class14&#34;&gt;14. Invariant Principle&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;    
+&lt;tr&gt;&lt;td&gt;Tuesday, 18 Oct 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class15&#34;&gt;15. Stable Matching&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;       
+&lt;tr&gt;&lt;td&gt;Thursday, 20 Oct 16&lt;/td&gt;&lt;td bgcolor=&#34;#CCC&#34;&gt; No Class&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps6&#34;&gt;PS6&lt;/a&gt; (MCS Ch 6, class 13-14)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 25 Oct 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class16&#34;&gt;16. Recursive Data Types&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
+&lt;tr&gt;&lt;td&gt;Thursday, 27 Oct 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class17&#34;&gt;17. Structural Induction&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps7&#34;&gt;PS7&lt;/a&gt; (MCS Ch 6.3, class 15) &lt;/td&gt;&lt;tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 1 Nov 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class18&#34;&gt;18. Infinite Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
+&lt;tr&gt;&lt;td&gt;Thursday, 3 Nov 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class19&#34;&gt;19. Uncountable Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps8&#34;&gt;PS8&lt;/a&gt; (MCS Ch 7, class 16-17)
+&lt;tr&gt;&lt;td&gt;Tuesday, 8 Nov 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class20&#34;&gt;20. Elections, Review&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;       
+&lt;tr&gt;&lt;td&gt;Thursday, 10 Nov 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#FFAAAA&#34;&gt; &lt;a href=&#34;https://tlseminar.github.io/exam2solutions/&#34;&gt;Exam 2&lt;/a&gt; (in class) - covers through PS8&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 15 Nov 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class21&#34;&gt;21. Infinite Infinities&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;      
+&lt;tr&gt;&lt;td&gt;Thursday, 17 Nov 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class22&#34;&gt;22. On Uncomputable Numbers&lt;/a&gt;&lt;/td&gt;&lt;td&gt; 
+&lt;tr&gt;&lt;td&gt;Tuesday, 22 Nov 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class23&#34;&gt;23. Universal Machines&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/ps/ps9&#34;&gt;PS9&lt;/a&gt; (MCS Ch 8, classes 19-22) (due 6:29pm Wednesday, 23 Nov)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Thursday, 24 Nov 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#CCC&#34;&gt; Thanksgiving Break&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 29 Nov 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class24&#34;&gt;24. Halting Problems&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;   
+&lt;tr&gt;&lt;td&gt;Thursday, 1 Dec 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class25&#34;&gt;25. Cryptography&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tuesday, 6 Dec 16&lt;/td&gt;&lt;td&gt;   &lt;a href=&#34;https://tlseminar.github.io/class26&#34;&gt;26. Wrap-Up&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/ps/psz&#34;&gt;PS&amp;Omega;&lt;/a&gt; (Due 4/6 December)&lt;/td&gt;&lt;/tr&gt;      
+       
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;Saturday, 10 Dec 16&lt;/b&gt;&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#FFAAAA&#34;&gt;Final Exam (9am-noon)&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+--&gt;
+</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://tlseminar.github.io/syllabus/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/syllabus/</guid>
+      <description>
+
+&lt;h1 id=&#34;syllabus&#34;&gt;Syllabus&lt;/h1&gt;
+
+&lt;div class=&#34;printing&#34;&gt;&lt;a href=&#34;{{ url_for(&#39;static&#39;, filename=&#39;docs/syllabus.pdf&#39;) }}&#34;&gt;PDF for Printing&lt;/a&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;cs6501-understanding-and-securing-tls&#34;&gt;&lt;strong&gt;cs6501: Understanding and Securing TLS&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;h3 id=&#34;university-of-virginia-spring-2017&#34;&gt;University of Virginia, Spring 2017&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Meetings:&lt;/strong&gt; Fridays, 9:30AM - noon, Thornton Hall D115&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Course Objective.&lt;/strong&gt; SSL/TLS is the world’s most important
+  cryptographic protocol, used for every secure web connection and
+  many other purposes. Every month it seems we hear about another new
+  major vulnerability in TLS. In this project-focused seminar, we’ll
+  take a deep dive into understanding how TLS came to be the mess it
+  is today, look into some of the vulnerabilities in detail, and study
+  methods for making TLS more secure. We will work as a group to
+  contribute to open source projects to improve the security of TLS.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Expected Background:&lt;/strong&gt; Students are expected to enter the class with
+  introductory background in cryptography (sufficient to understand
+  symmetric and asymmetric cryptosystems, cryptographic hash
+  functions, and digital signatures) and experience in systems
+  programming (comparable to a good undergraduate operating systems
+  course).  If you do not have this background, you are still welcome
+  to take the course, but will need to do some work on your own to be
+  prepared before the semester begins (see the course site for links
+  to recommended preparation materials).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Coordinators:&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&#34;https://halmohri.com/&#34;&gt;Hussain Almohri&lt;/a&gt; (visiting from Kuwait University)&lt;br /&gt;
+&lt;a href=&#34;http://www.cs.virginia.edu/evans&#34;&gt;David Evans&lt;/a&gt; (evans@virginia.edu). My &lt;a href=&#34;http://www.cs.virginia.edu/evans/office&#34;&gt;office&lt;/a&gt; is Rice 507.&lt;/p&gt;
+
+&lt;h2 id=&#34;course-expectations&#34;&gt;Course Expectations&lt;/h2&gt;
+
+&lt;p&gt;Students in the seminar are expected to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Lead discussions on interesting topics during the class meetings.
+For each week, there will be two groups of two students charged with
+preparing a topic and leading the discussion.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Particpate actively in class meetings.  This means being prepared to
+contribute by doing the assigned preparation (which will typically
+involve reading a few research papers, but may involve other things
+also) and thinking about the materials deeply to be able to
+contribute well to discussions.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Produce scribe &amp;ldquo;blogs&amp;rdquo; for 2-3 topics.  For each topic, there will
+be students assigned to write-up a blog about the topic to post on
+the course site.  Students responsible for posting the blog summary
+will be different from the ones charged with leading the topic
+discussion, but should work closely with the leaders on the posted
+write-up.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Work in a small team to conduct projects that will contribute
+usefully to the TLS ecosystem. Projects may contribute to open
+source implementations of TLS, provide resources for testing and
+deploying TLS, analyze the state of TLS deployments today, or adress
+other issues related to secure web connections.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Work with the class to produce a systematization of knowledge paper
+on the security of TLS.  Everyone will be expected to contribute to
+this, with the goal of jointly producing a publishable paper that
+systematizes what is currently known about TLS and the ecosystem
+around it.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;communications&#34;&gt;Communications&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Course Website:&lt;/strong&gt;
+  &lt;a href=&#34;https://tlseminar.github.io/&#34;&gt;&lt;em&gt;https://tlseminar.github.io/&lt;/em&gt;&lt;/a&gt;.  All
+  course materials will be posted on the course website, and students
+  will be expected to provide materials to add to this site.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Slack:&lt;/strong&gt;
+  &lt;a href=&#34;https://tlseminar.slack.com&#34;&gt;&lt;em&gt;https://tlseminar.slack.com&lt;/em&gt;&lt;/a&gt;.  We
+  will use a slack group for class communications.  You can join using
+  any &lt;code&gt;@virginia.edu&lt;/code&gt; email address.  You can also create slack
+  channels for your team communications.&lt;/p&gt;
+
+&lt;h2 id=&#34;honor-and-responsibility&#34;&gt;Honor and Responsibility&lt;/h2&gt;
+
+&lt;p&gt;We believe strongly in the value of a &lt;em&gt;community of trust&lt;/em&gt;, and expect
+all of the students in this class to contribute to strenghtening and
+enhancing that community.  The course will be better for everyone if
+everyone can assume everyone else is trustworthy. The course staff
+starts with the assumption that all students at the university deserve
+to be trusted.&lt;/p&gt;
+
+&lt;p&gt;In this course, we will be learning about and exploring some
+vulnerabilities that could be used to compromise &lt;a href=&#34;https://www.ssllabs.com/ssltest/analyze.html?d=collab.virginia.edu&amp;amp;latest&#34;&gt;vunlerable
+websites&lt;/a&gt;.
+&lt;strong&gt;You are trusted to behave responsibility and ethically.&lt;/strong&gt; You may
+not attack any website without permission of the site owners, and may
+not use anything you learn in this class for evil.  If you have any
+doubts about whether or not something you want to do is ethical and
+legal, you should check with the course instructor before proceeding.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>cs2102: Discrete Math</title>
+      <link>https://tlseminar.github.io/main/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/main/</guid>
+      <description>&lt;p&gt;This is the front page.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/syllabus&#34;&gt;Syllabus&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Coming soon&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
