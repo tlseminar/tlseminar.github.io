@@ -1,0 +1,54 @@
+baseurl = "https://tlseminar.github.io"
+languageCode = "en-us"
+title = "TLSeminar"
+subtitle = "Understanding and Securing TLS"
+copyright = ""
+theme = "hyde-y"
+
+paginate = 10
+paginatePath = "page"
+
+pageNotFoundTitle = "Not Found"
+pageNotFoundDetail = "The in-the-middle attacker who is attacking your connection did not anticipate this action. This is most likely a bad link, although it is possible you have found a vulnerability in the Cantor Continuum."
+
+# disqusShortname = "evans1629"
+
+[permalinks]
+    post = "/:slug/"
+    code = "/:slug/"
+
+[taxonomies]
+    tag = "tags"
+    topic = "topics"
+
+[author]
+    name = "TLSeminar"
+    #    email = "evans@virginia.edu"
+
+[params]
+    brand = "TLSeminar"
+    topline = "Understanding and Securing TLS"
+    footline = "<p align=\"center\">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href=\"https://www.cs.virginia.edu/evans\">David Evans</a></p>"
+    sidebar = "left"
+    googleAnalytics = "UA-3775212-1"
+
+    
+    sidebartitle = "cs2012"
+    sidebartagline = "Discrete Math"
+    nodate = true
+    noauthor = true
+    noread = true
+    nopaging=true
+    notoc=true
+
+[blackfriday]
+    angledQuotes = false
+    fractions = false
+    hrefTargetBlank = false
+    latexDashes = true
+    plainIdAnchors = true
+    extensions = []
+    extensionmask = []
+
+
+[[menu.footer]]

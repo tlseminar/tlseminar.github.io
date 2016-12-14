@@ -1,0 +1,20 @@
+[0syllabus]
+    Name = "Syllabus"
+    URL = "/syllabus"
+
+[1schedule]
+    Name = "Schedule"
+    URL = "/schedule"
+
+[2readings]
+    Name = "Readings"
+    URL = "/readings"
+
+[3resources]
+    Name = "Resources"
+    URL = "/resources"
+
+[5posts]
+    Name = "Posts"
+    Title = "Show list of posts"
+    URL = "/post"
