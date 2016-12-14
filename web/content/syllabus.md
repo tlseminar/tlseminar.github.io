@@ -1,6 +1,8 @@
 ## Syllabus
 
+<div class="notpdf">
    <div class="printing"><a href="/docs/syllabus.pdf">PDF for Printing</a></div>
+</div><!--endpdf-->
 
 ### **cs6501: Understanding and Securing TLS**
 University of Virginia, Spring 2017

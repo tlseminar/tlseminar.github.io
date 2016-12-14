@@ -108,7 +108,9 @@ Hall D115).&lt;/p&gt;
 
 &lt;h2 id=&#34;syllabus&#34;&gt;Syllabus&lt;/h2&gt;
 
-&lt;p&gt;&lt;div class=&#34;printing&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/syllabus.pdf&#34;&gt;PDF for Printing&lt;/a&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;&lt;div class=&#34;notpdf&#34;&gt;
+   &lt;div class=&#34;printing&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/syllabus.pdf&#34;&gt;PDF for Printing&lt;/a&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;!--endpdf--&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;cs6501-understanding-and-securing-tls&#34;&gt;&lt;strong&gt;cs6501: Understanding and Securing TLS&lt;/strong&gt;&lt;/h3&gt;
 
