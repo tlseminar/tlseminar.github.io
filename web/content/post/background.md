@@ -1,6 +1,6 @@
 +++
 date = "14 Dec 2016"
-author = "Dave"
+author = "David Evans"
 draft = false
 title = "Background Preparation"
 slug = "background"
