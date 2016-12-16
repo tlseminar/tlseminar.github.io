@@ -36,9 +36,11 @@ prepared for the seminar.  (I can't give an unbiased assessment of the
 course, but according to Information Week, it is a recommended course
 to [_"Pump Up IT
 Careers"_](http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915),
-and [Prospect Magazine] seems to think the instructor has a "Monty
-Python humor" and "cult following", although you shouldn't believe
-everything you read in British magazines.)
+and [Prospect
+Magazine](www.prospectmagazine.co.uk/magazine/online-universities-udacity-grand-challenge-david-stavens-dave-evans)
+claimed the instructor has a "Monty Python humor" and "cult
+following", although you shouldn't believe everything you read in
+British magazines.)
 
 Dan Boneh's [**Cryptography
 Course**](https://www.coursera.org/learn/crypto) (offered through
