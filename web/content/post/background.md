@@ -14,7 +14,11 @@ seminar.
 If you have already taken a cryptography course, you should have
 enough cryptography background already.  If not, here are some
 suggested ways to get enough crypo background over winter break to be
-ready for the seminar.
+ready for the seminar.  I believe that for most students, the best way
+to get the expected background for this course is to take my Applied
+Cryptography course (more info below), but there are many options, and
+lots of great resources that go into much more depth than my course if
+you have more time.
 
 ### On-Line Courses
 
@@ -31,7 +35,10 @@ introduction to cryptography, which would be enough background to be
 prepared for the seminar.  (I can't give an unbiased assessment of the
 course, but according to Information Week, it is a recommended course
 to [_"Pump Up IT
-Careers"_](http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915).)
+Careers"_](http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915),
+and [Prospect Magazine] seems to think the instructor has a "Monty
+Python humor" and "cult following", although you shouldn't believe
+everything you read in British magazines.)
 
 Dan Boneh's [**Cryptography
 Course**](https://www.coursera.org/learn/crypto) (offered through
@@ -42,6 +49,12 @@ session starting December 26.  This is an excellent course that is a
 bit longer and goes into more depth on many topics than my course.
 You can read [Bryan Pendleton's more objective
 comparison](http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html).
+
+Christoff Parr and Jan Pelzl's [**Understanding
+Cryptography**](http://www.crypto-textbook.com/) textbook include
+Parr's excellent [video
+lectures](http://wiki.crypto.rub.de/Buch/movies.php) (chalkboard
+style without editing, so takes some patience to watch).
 
 ### Textbooks
 

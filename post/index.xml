@@ -25,7 +25,11 @@ seminar.&lt;/p&gt;
 &lt;p&gt;If you have already taken a cryptography course, you should have
 enough cryptography background already.  If not, here are some
 suggested ways to get enough crypo background over winter break to be
-ready for the seminar.&lt;/p&gt;
+ready for the seminar.  I believe that for most students, the best way
+to get the expected background for this course is to take my Applied
+Cryptography course (more info below), but there are many options, and
+lots of great resources that go into much more depth than my course if
+you have more time.&lt;/p&gt;
 
 &lt;h3 id=&#34;on-line-courses&#34;&gt;On-Line Courses&lt;/h3&gt;
 
@@ -42,7 +46,10 @@ introduction to cryptography, which would be enough background to be
 prepared for the seminar.  (I can&amp;rsquo;t give an unbiased assessment of the
 course, but according to Information Week, it is a recommended course
 to &lt;a href=&#34;http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915&#34;&gt;&lt;em&gt;&amp;ldquo;Pump Up IT
-Careers&amp;rdquo;&lt;/em&gt;&lt;/a&gt;.)&lt;/p&gt;
+Careers&amp;rdquo;&lt;/em&gt;&lt;/a&gt;,
+and [Prospect Magazine] seems to think the instructor has a &amp;ldquo;Monty
+Python humor&amp;rdquo; and &amp;ldquo;cult following&amp;rdquo;, although you shouldn&amp;rsquo;t believe
+everything you read in British magazines.)&lt;/p&gt;
 
 &lt;p&gt;Dan Boneh&amp;rsquo;s &lt;a href=&#34;https://www.coursera.org/learn/crypto&#34;&gt;&lt;strong&gt;Cryptography
 Course&lt;/strong&gt;&lt;/a&gt; (offered through
@@ -53,6 +60,12 @@ session starting December 26.  This is an excellent course that is a
 bit longer and goes into more depth on many topics than my course.
 You can read &lt;a href=&#34;http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html&#34;&gt;Bryan Pendleton&amp;rsquo;s more objective
 comparison&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Christoff Parr and Jan Pelzl&amp;rsquo;s &lt;a href=&#34;http://www.crypto-textbook.com/&#34;&gt;&lt;strong&gt;Understanding
+Cryptography&lt;/strong&gt;&lt;/a&gt; textbook include
+Parr&amp;rsquo;s excellent &lt;a href=&#34;http://wiki.crypto.rub.de/Buch/movies.php&#34;&gt;video
+lectures&lt;/a&gt; (chalkboard
+style without editing, so takes some patience to watch).&lt;/p&gt;
 
 &lt;h3 id=&#34;textbooks&#34;&gt;Textbooks&lt;/h3&gt;
 
