@@ -88,7 +88,7 @@ Challen](https://www.bluegroup.systems/people/gwa/).  Provides
 programming assignments you can try on your own, as well as video
 lectures and lots of on-line materials.
 
-[cs4414: Operating Systems](https://rust-class.org/) - Operating
+[cs4414: Operating Systems](http://rust-class.org/) - Operating
 systems course I taught in Fall 2013 and Spring 2014. Includes
 [videos](http://rust-class.org/pages/classes.html) of lectures, and
 programming assignments in Rust (some of which will need some updating
