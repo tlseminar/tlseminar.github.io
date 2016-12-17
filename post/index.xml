@@ -100,6 +100,11 @@ TLS&lt;/strong&gt;. [&lt;a href=&#34;https://tlseminar.github.io/syllabus&#34;&g
 
 &lt;p&gt;The first class is Friday, 20 January 2017 (9:30am-noon in Thornton
 Hall D115).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://xkcd.com/1353/&#34;&gt;
+&lt;img src=&#34;//imgs.xkcd.com/comics/heartbleed.png&#34; title=&#34;I looked at some of the data dumps from vulnerable sites, and it was ... bad. I saw emails, passwords, password hints. SSL keys and session cookies. Important servers brimming with visitor IPs. Attack ships on fire off the shoulder of Orion, c-beams glittering in the dark near the Tannhäuser Gate. I should probably patch OpenSSL.&#34; alt=&#34;Heartbleed&#34; srcset=&#34;//imgs.xkcd.com/comics/heartbleed_2x.png 2x&#34;&gt;
+&lt;/img&gt;
+&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
