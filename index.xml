@@ -64,7 +64,7 @@ You can read &lt;a href=&#34;http://bryanpendleton.blogspot.com/2012/05/comparin
 comparison&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Christoff Parr and Jan Pelzl&amp;rsquo;s &lt;a href=&#34;http://www.crypto-textbook.com/&#34;&gt;&lt;strong&gt;Understanding
-Cryptography&lt;/strong&gt;&lt;/a&gt; textbook include
+Cryptography&lt;/strong&gt;&lt;/a&gt; textbook includes
 Parr&amp;rsquo;s excellent &lt;a href=&#34;http://wiki.crypto.rub.de/Buch/movies.php&#34;&gt;video
 lectures&lt;/a&gt; (chalkboard
 style without editing, so takes some patience to watch).&lt;/p&gt;
@@ -83,9 +83,51 @@ students with more time.&lt;/p&gt;
 
 &lt;h2 id=&#34;computing-systems&#34;&gt;Computing Systems&lt;/h2&gt;
 
-&lt;p&gt;Students in the class are expected to have understanding of computing
-systems and experience with systems-level programming at least at the
-level of a typical introductory operating systems course.&lt;/p&gt;
+&lt;p&gt;Students in the class will benefit from understanding computing
+systems and having experience with systems-level programming at least
+at the level of a typical introductory operating systems course.
+Students without this experience will either need to put a lot of
+effort into learning it, or select projects and presentation topics
+that focus on other aspects.&lt;/p&gt;
+
+&lt;p&gt;Some resources for learning about computing systems are below.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.ops-class.org/&#34;&gt;&amp;ldquo;Hack the Kernel&amp;rdquo;&lt;/a&gt; - Operating Systems
+class developed by &lt;a href=&#34;https://www.bluegroup.systems/people/gwa/&#34;&gt;Geoffrey
+Challen&lt;/a&gt;.  Provides
+programming assignments you can try on your own, as well as video
+lectures and lots of on-line materials.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://rust-class.org/&#34;&gt;cs4414: Operating Systems&lt;/a&gt; - Operating
+systems course I taught in Fall 2013 and Spring 2014. Includes
+&lt;a href=&#34;http://rust-class.org/pages/classes.html&#34;&gt;videos&lt;/a&gt; of lectures, and
+programming assignments in Rust (some of which will need some updating
+to work in the latest version of Rust).&lt;/p&gt;
+
+&lt;p&gt;CMU&amp;rsquo;s &lt;a href=&#34;http://csapp.cs.cmu.edu/&#34;&gt;Computing Systems&lt;/a&gt; course and
+textbook by Randal Bryant and David O&amp;rsquo;Hallaron provides an excellent
+introduction to systems programming, as well as a series of &lt;a href=&#34;http://csapp.cs.cmu.edu/3e/labs.html&#34;&gt;fun
+self-study labs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;rust-programming&#34;&gt;Rust Programming&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;m hoping several of the projects will involve contribution to open
+source projects using Rust to provide secure, efficient, and
+iter-operable implementations of TLS and other cryptographic
+functionalities.  It is not a requirement that you use Rust in this
+class, but everyone will be encouraged to get some experience with it.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://doc.rust-lang.org/nightly/book/&#34;&gt;&lt;strong&gt;Rust Programming Language
+Book&lt;/strong&gt;&lt;/a&gt; (this is the
+&amp;ldquo;official&amp;rdquo; Rust book, which includes a tutorial to get started)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://aml3.github.io/RustTutorial/&#34;&gt;&lt;strong&gt;Rust Tutorial&lt;/strong&gt;&lt;/a&gt; (this was
+developed for my &lt;a href=&#34;https://rust-class.org/&#34;&gt;cs4414 class&lt;/a&gt; by Alex
+Lamana, Rob Michaels, and Wil Thomason.  (Some parts may need updating
+to latest version of Rust, so if you go through this, please submit
+updates as pull requests!)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://rustbyexample.com/&#34;&gt;&lt;strong&gt;Rust by Example&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -95,16 +137,18 @@ level of a typical introductory operating systems course.&lt;/p&gt;
       <pubDate>Wed, 14 Dec 2016 00:00:00 +0000</pubDate>
       
       <guid>https://tlseminar.github.io/welcome/</guid>
-      <description>&lt;p&gt;This is the course site for &lt;strong&gt;cs6501: Understanding and Securing
+      <description>&lt;p&gt;&lt;center&gt;
+&lt;a href=&#34;http://xkcd.com/1353/&#34;&gt;
+&lt;img src=&#34;//imgs.xkcd.com/comics/heartbleed.png&#34; title=&#34;I looked at some of the data dumps from vulnerable sites, and it was ... bad. I saw emails, passwords, password hints. SSL keys and session cookies. Important servers brimming with visitor IPs. Attack ships on fire off the shoulder of Orion, c-beams glittering in the dark near the Tannhäuser Gate. I should probably patch OpenSSL.&#34; alt=&#34;Heartbleed&#34; srcset=&#34;//imgs.xkcd.com/comics/heartbleed_2x.png 2x&#34;&gt;
+&lt;/img&gt;
+&lt;/a&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;This is the course site for &lt;strong&gt;cs6501: Understanding and Securing
 TLS&lt;/strong&gt;. [&lt;a href=&#34;https://tlseminar.github.io/syllabus&#34;&gt;Syllabus&lt;/a&gt;]&lt;/p&gt;
 
 &lt;p&gt;The first class is Friday, 20 January 2017 (9:30am-noon in Thornton
 Hall D115).&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://xkcd.com/1353/&#34;&gt;
-&lt;img src=&#34;//imgs.xkcd.com/comics/heartbleed.png&#34; title=&#34;I looked at some of the data dumps from vulnerable sites, and it was ... bad. I saw emails, passwords, password hints. SSL keys and session cookies. Important servers brimming with visitor IPs. Attack ships on fire off the shoulder of Orion, c-beams glittering in the dark near the Tannhäuser Gate. I should probably patch OpenSSL.&#34; alt=&#34;Heartbleed&#34; srcset=&#34;//imgs.xkcd.com/comics/heartbleed_2x.png 2x&#34;&gt;
-&lt;/img&gt;
-&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

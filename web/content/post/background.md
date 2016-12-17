@@ -53,7 +53,7 @@ You can read [Bryan Pendleton's more objective
 comparison](http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html).
 
 Christoff Parr and Jan Pelzl's [**Understanding
-Cryptography**](http://www.crypto-textbook.com/) textbook include
+Cryptography**](http://www.crypto-textbook.com/) textbook includes
 Parr's excellent [video
 lectures](http://wiki.crypto.rub.de/Buch/movies.php) (chalkboard
 style without editing, so takes some patience to watch).
@@ -73,8 +73,54 @@ students with more time.
 
 ## Computing Systems
 
-Students in the class are expected to have understanding of computing
-systems and experience with systems-level programming at least at the
-level of a typical introductory operating systems course.
+Students in the class will benefit from understanding computing
+systems and having experience with systems-level programming at least
+at the level of a typical introductory operating systems course.
+Students without this experience will either need to put a lot of
+effort into learning it, or select projects and presentation topics
+that focus on other aspects.
+
+Some resources for learning about computing systems are below.
+
+["Hack the Kernel"](https://www.ops-class.org/) - Operating Systems
+class developed by [Geoffrey
+Challen](https://www.bluegroup.systems/people/gwa/).  Provides
+programming assignments you can try on your own, as well as video
+lectures and lots of on-line materials.
+
+[cs4414: Operating Systems](https://rust-class.org/) - Operating
+systems course I taught in Fall 2013 and Spring 2014. Includes
+[videos](http://rust-class.org/pages/classes.html) of lectures, and
+programming assignments in Rust (some of which will need some updating
+to work in the latest version of Rust).
+
+CMU's [Computing Systems](http://csapp.cs.cmu.edu/) course and
+textbook by Randal Bryant and David O'Hallaron provides an excellent
+introduction to systems programming, as well as a series of [fun
+self-study labs](http://csapp.cs.cmu.edu/3e/labs.html).
+
+### Rust Programming
+
+I'm hoping several of the projects will involve contribution to open
+source projects using Rust to provide secure, efficient, and
+iter-operable implementations of TLS and other cryptographic
+functionalities.  It is not a requirement that you use Rust in this
+class, but everyone will be encouraged to get some experience with it.
+
+[**Rust Programming Language
+Book**](https://doc.rust-lang.org/nightly/book/) (this is the
+"official" Rust book, which includes a tutorial to get started)
+
+[**Rust Tutorial**](http://aml3.github.io/RustTutorial/) (this was
+developed for my [cs4414 class](https://rust-class.org/) by Alex
+Lamana, Rob Michaels, and Wil Thomason.  (Some parts may need updating
+to latest version of Rust, so if you go through this, please submit
+updates as pull requests!)
+
+[**Rust by Example**](http://rustbyexample.com/)
+
+
+
+
 
 
