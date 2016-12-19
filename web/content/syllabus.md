@@ -96,5 +96,25 @@ not use anything you learn in this class for evil.  If you have any
 doubts about whether or not something you want to do is ethical and
 legal, you should check with the course instructor before proceeding.
 
+## Area Requirements
+
+**Note for CS Graduate Students.** This course is mislisted in SIS
+(indeed, it is a "bug" in the setup of SIS that cannot be overcome
+that requires all grad courses to be assigned areas) as counting for
+the "Computer Systems" and "Theory" area requirements.  As per the
+actual rules, as a cs6501 seminar the course does not a priori count
+for any particular areas.  It may be possible to count it for any
+area, but it would be up to you to make the case to your committee
+that it should count for a given area. In most cases, this will depend
+a lot on what you individually do in the class - for example, you
+could select presentation topics and a topic for you project that
+would make a strong case for counting it for the "Theory" area, but
+someone else who does a systems-focused project would be able to count
+it for a different area. I can help provide guidance on this, but it
+is ultimately up to your committee to decide if a course counts for a
+particular area requirement.
+
+
+
 
 
