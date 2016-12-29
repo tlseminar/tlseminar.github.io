@@ -158,7 +158,16 @@ Hall D115).&lt;/p&gt;
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://tlseminar.github.io/readings/</guid>
-      <description>&lt;p&gt;Suggested papers to be added soon.&lt;/p&gt;
+      <description>
+
+&lt;h2 id=&#34;readings&#34;&gt;Readings&lt;/h2&gt;
+
+&lt;h2 id=&#34;implementation-issues&#34;&gt;Implementation Issues&lt;/h2&gt;
+
+&lt;p&gt;Martin Georgiev, Subodh Iyengar, Suman Jana, Rishita Anubhai, Dan
+Boneh, Vitaly Shmatikov. &lt;em&gt;The Most Dangerous Code in the World:
+Validating SSL Certificates in Non-Browser Software&lt;/em&gt;.  ACM CCS 2012.
+[&lt;a href=&#34;http://sumanj.info/docs/suman_ccs12.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 </description>
     </item>
     
