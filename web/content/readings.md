@@ -1,4 +1,4 @@
-## Readings
+# Readings
 
 ## Background
 
@@ -58,6 +58,13 @@ Validating SSL Certificates in Non-Browser Software_.  ACM CCS 2012.
 
 David Kaloper-Mersinjak, Hannes Mehnert, Anil Madhavapeddy and Peter Sewell. _Not-quite-so-broken TLS: lessons in re-engineering a security protocol
 specification and implementation_. USENIX Security 2015. [[PDF](/docs/nqsbtls.pdf)]
+
+Suman Jana, Yuan Kang, Samuel Roth, and [Baishakhi Ray](http://rayb.info/). _Automatically Detecting Error Handling Bugs using Error Specifications_. USENIX Security 2016. [[PDF](/docs/epex.pdf)]
+
+## Testing
+
+Chad Brubaker, Suman Jana, [Baishakhi Ray](http://rayb.info/), Sarfraz Khurshid, Vitaly Shmatikov.
+_Using Frankencerts for Automated Adversarial Testing of Certificate Validation in SSL/TLS Implementations_. IEEE Symposium on Security and Privacy (Oakland) 2014. [[PDF](/docs/frankencerts.pdf)]. 
 
 ## Performance and Cost
 
