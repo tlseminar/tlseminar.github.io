@@ -196,6 +196,8 @@ enhancements&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013.
 &lt;em&gt;Second USENIX Workshop on Electronic Commerce Proceedings&lt;/em&gt;,
 1996. [&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
+&lt;h2 id=&#34;attacks&#34;&gt;Attacks&lt;/h2&gt;
+
 &lt;h2 id=&#34;formal-methods&#34;&gt;Formal Methods&lt;/h2&gt;
 
 &lt;p&gt;John C. Mitchell, Vitaly Shmatikov, and Ulrich Stern. &lt;em&gt;Finite-State Analysis of SSL 3.0&lt;/em&gt;. USENIX Security Symposium, January 1998. [&lt;a href=&#34;https://tlseminar.github.io/docs/finitestate.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
@@ -212,7 +214,12 @@ enhancements&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013.
 [&lt;a href=&#34;http://eprint.iacr.org/2013/339&#34;&gt;eprint&lt;/a&gt;]
 [&lt;a href=&#34;http://eprint.iacr.org/2013/339.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
-&lt;h2 id=&#34;implementation-issues&#34;&gt;Implementation Issues&lt;/h2&gt;
+&lt;p&gt;Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub. &lt;em&gt;Implementing TLS with Verified Cryptographic Security&lt;/em&gt;
+IEEE Symposium on Security and Privacy (Oakland), 2013. [&lt;a href=&#34;https://tlseminar.github.io/docs/mitls.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://tlseminar.github.io/docs/mitlstr.pdf&#34;&gt;Extended Tech Report, PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Karthikeyan Bhargavan1, Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub, and Santiago Zanella-Beguelin. &lt;em&gt;Proving the TLS Handshake Secure (As It Is)&lt;/em&gt;. CRYPTO 2014. [&lt;a href=&#34;https://tlseminar.github.io/docs/provinghandshake.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;h2 id=&#34;implementation-bugs&#34;&gt;Implementation Bugs&lt;/h2&gt;
 
 &lt;p&gt;Martin Georgiev, Subodh Iyengar, Suman Jana, Rishita Anubhai, Dan
 Boneh, Vitaly Shmatikov. &lt;em&gt;The Most Dangerous Code in the World:
@@ -222,12 +229,21 @@ Validating SSL Certificates in Non-Browser Software&lt;/em&gt;.  ACM CCS 2012.
 &lt;p&gt;David Kaloper-Mersinjak, Hannes Mehnert, Anil Madhavapeddy and Peter Sewell. &lt;em&gt;Not-quite-so-broken TLS: lessons in re-engineering a security protocol
 specification and implementation&lt;/em&gt;. USENIX Security 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/nqsbtls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
+&lt;p&gt;Benjamin Beurdouche, Karthikeyan Bhargavan, Antoine Delignat-Lavaud,
+Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub,
+Jean Karim Zinzindohoue. &lt;em&gt;A Messy State of the Union: Taming the
+Composite State Machines of TLS&lt;/em&gt;.  IEEE Symposium on Security and
+Privacy (Oakland) 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/mitlsunion.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
 &lt;p&gt;Suman Jana, Yuan Kang, Samuel Roth, and &lt;a href=&#34;http://rayb.info/&#34;&gt;Baishakhi Ray&lt;/a&gt;. &lt;em&gt;Automatically Detecting Error Handling Bugs using Error Specifications&lt;/em&gt;. USENIX Security 2016. [&lt;a href=&#34;https://tlseminar.github.io/docs/epex.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
 &lt;h2 id=&#34;testing&#34;&gt;Testing&lt;/h2&gt;
 
 &lt;p&gt;Chad Brubaker, Suman Jana, &lt;a href=&#34;http://rayb.info/&#34;&gt;Baishakhi Ray&lt;/a&gt;, Sarfraz Khurshid, Vitaly Shmatikov.
 &lt;em&gt;Using Frankencerts for Automated Adversarial Testing of Certificate Validation in SSL/TLS Implementations&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2014. [&lt;a href=&#34;https://tlseminar.github.io/docs/frankencerts.pdf&#34;&gt;PDF&lt;/a&gt;].&lt;/p&gt;
+
+&lt;p&gt;Benjamin Beurdouche, Antoine Delignat-Lavaud, Nadim Kobeissi, Alfredo Pironti, Karthikeyan Bhargavan. &lt;em&gt;FLEXTLS: A Tool for Testing TLS Implementations&lt;/em&gt;.
+USENIX Workshop on Offensive Technologies, 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/flextls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
 &lt;h2 id=&#34;performance-and-cost&#34;&gt;Performance and Cost&lt;/h2&gt;
 

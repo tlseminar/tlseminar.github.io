@@ -33,6 +33,8 @@ David Wagner, Bruce Schneier. _Analysis of the SSL 3.0 Protocol_.  In
 _Second USENIX Workshop on Electronic Commerce Proceedings_,
 1996. [[PDF](/docs/analysisssl3.pdf)]
 
+## Attacks
+
 ## Formal Methods
 
 John C. Mitchell, Vitaly Shmatikov, and Ulrich Stern. _Finite-State Analysis of SSL 3.0_. USENIX Security Symposium, January 1998. [[PDF](/docs/finitestate.pdf)]
@@ -49,7 +51,13 @@ Krawczyk, Hugo, Kenneth G. Paterson, and Hoeteck Wee. _On the Security of the TL
 [[eprint](http://eprint.iacr.org/2013/339)]
 [[PDF](http://eprint.iacr.org/2013/339.pdf)]
 
-## Implementation Issues
+
+Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub. _Implementing TLS with Verified Cryptographic Security_
+IEEE Symposium on Security and Privacy (Oakland), 2013. [[PDF](/docs/mitls.pdf)] [[Extended Tech Report, PDF](/docs/mitlstr.pdf)]
+
+Karthikeyan Bhargavan1, Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub, and Santiago Zanella-Beguelin. _Proving the TLS Handshake Secure (As It Is)_. CRYPTO 2014. [[PDF](/docs/provinghandshake.pdf)]
+
+## Implementation Bugs
 
 Martin Georgiev, Subodh Iyengar, Suman Jana, Rishita Anubhai, Dan
 Boneh, Vitaly Shmatikov. _The Most Dangerous Code in the World:
@@ -59,12 +67,21 @@ Validating SSL Certificates in Non-Browser Software_.  ACM CCS 2012.
 David Kaloper-Mersinjak, Hannes Mehnert, Anil Madhavapeddy and Peter Sewell. _Not-quite-so-broken TLS: lessons in re-engineering a security protocol
 specification and implementation_. USENIX Security 2015. [[PDF](/docs/nqsbtls.pdf)]
 
+Benjamin Beurdouche, Karthikeyan Bhargavan, Antoine Delignat-Lavaud,
+Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub,
+Jean Karim Zinzindohoue. _A Messy State of the Union: Taming the
+Composite State Machines of TLS_.  IEEE Symposium on Security and
+Privacy (Oakland) 2015. [[PDF](/docs/mitlsunion.pdf)]
+
 Suman Jana, Yuan Kang, Samuel Roth, and [Baishakhi Ray](http://rayb.info/). _Automatically Detecting Error Handling Bugs using Error Specifications_. USENIX Security 2016. [[PDF](/docs/epex.pdf)]
 
 ## Testing
 
 Chad Brubaker, Suman Jana, [Baishakhi Ray](http://rayb.info/), Sarfraz Khurshid, Vitaly Shmatikov.
 _Using Frankencerts for Automated Adversarial Testing of Certificate Validation in SSL/TLS Implementations_. IEEE Symposium on Security and Privacy (Oakland) 2014. [[PDF](/docs/frankencerts.pdf)]. 
+
+Benjamin Beurdouche, Antoine Delignat-Lavaud, Nadim Kobeissi, Alfredo Pironti, Karthikeyan Bhargavan. _FLEXTLS: A Tool for Testing TLS Implementations_.
+USENIX Workshop on Offensive Technologies, 2015. [[PDF](/docs/flextls.pdf)]
 
 ## Performance and Cost
 
