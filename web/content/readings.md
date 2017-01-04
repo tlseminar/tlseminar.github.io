@@ -71,7 +71,7 @@ Benjamin Beurdouche, Karthikeyan Bhargavan, Antoine Delignat-Lavaud,
 Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub,
 Jean Karim Zinzindohoue. _A Messy State of the Union: Taming the
 Composite State Machines of TLS_.  IEEE Symposium on Security and
-Privacy (Oakland) 2015. [[PDF](/docs/mitlsunion.pdf)]
+Privacy (Oakland) 2015. [[PDF](/docs/mitlsunion.pdf)] [[Talk Video](https://www.youtube.com/watch?v=rELp9-oFAw0)]
 
 Suman Jana, Yuan Kang, Samuel Roth, and [Baishakhi Ray](http://rayb.info/). _Automatically Detecting Error Handling Bugs using Error Specifications_. USENIX Security 2016. [[PDF](/docs/epex.pdf)]
 
