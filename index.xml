@@ -250,6 +250,16 @@ USENIX Workshop on Offensive Technologies, 2015. [&lt;a href=&#34;https://tlsemi
 &lt;p&gt;Cristian Coarfa, Peter Druschel, and Dan S. Wallach. &lt;em&gt;Performance Analysis of TLS Web Servers&lt;/em&gt;.  ACM Transactions on Computer Systems (earlier version in NDSS 2002), February 2006. [&lt;a href=&#34;https://tlseminar.github.io/docs/performance.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
 &lt;h2 id=&#34;certificates&#34;&gt;Certificates&lt;/h2&gt;
+
+&lt;h2 id=&#34;post-quantum&#34;&gt;Post-Quantum&lt;/h2&gt;
+
+&lt;p&gt;Joppe W. Bos, Craig Costello, Michael Naehrig, and Douglas
+Stebila. &lt;em&gt;Post-quantum key exchange for the TLS protocol from the ring
+learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy (Oakland) 2016.
+[&lt;a href=&#34;http://eprint.iacr.org/2014/599.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.youtube.com/watch?v=BCmSzzQ2ges&#34;&gt;Talk Video&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Erdem Alkim, Léo Ducas, Thomas Pöppelmann, and Peter Schwabe.
+&lt;em&gt;Post-quantum Key Exchange—A New Hope&lt;/em&gt;.  USENIX Security Symposiumn 2016. [&lt;a href=&#34;https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_alkim.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/alkim&#34;&gt;Talk Video&lt;/a&gt;]&lt;/p&gt;
 </description>
     </item>
     
