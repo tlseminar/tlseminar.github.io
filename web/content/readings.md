@@ -89,4 +89,12 @@ Cristian Coarfa, Peter Druschel, and Dan S. Wallach. _Performance Analysis of TL
 
 ## Certificates
 
+## Post-Quantum
 
+Joppe W. Bos, Craig Costello, Michael Naehrig, and Douglas
+Stebila. _Post-quantum key exchange for the TLS protocol from the ring
+learning with errors problem_.  IEEE Symposium on Security and Privacy (Oakland) 2016.
+[[PDF](http://eprint.iacr.org/2014/599.pdf)] [[Talk Video](https://www.youtube.com/watch?v=BCmSzzQ2ges)]
+
+Erdem Alkim, Léo Ducas, Thomas Pöppelmann, and Peter Schwabe.
+_Post-quantum Key Exchange—A New Hope_.  USENIX Security Symposiumn 2016. [[PDF](https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_alkim.pdf)] [[Talk Video](https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/alkim)]
