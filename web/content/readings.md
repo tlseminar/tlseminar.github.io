@@ -35,6 +35,29 @@ _Second USENIX Workshop on Electronic Commerce Proceedings_,
 
 ## Attacks
 
+RFC on known attacks: _Summarizing Known Attacks on Transport Layer Security (TLS) and Datagram TLS (DTLS)_. Y. Sheffer, et al. RFC 7457. February 2015. [[HTML](https://tools.ietf.org/html/rfc7457)] [[PDF](https://tools.ietf.org/pdf/rfc7457.pdf)]
+
+Daniel Bleichenbacher. _Chosen Ciphertext Attacks Against Protocols Based on the RSA Encryption Standard PKCS \#1_. CRYPTO 1998. [[PDF](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)]
+
+Serge Vaudenay. _Security Flaws Induced by CBC Padding Applications to
+SSL, IPSEC, WTLS..._. EuroCRYPT
+2002. [[PDF](http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf)]
+
+David Brumley and Daniel Boneh. _Remote Timing Attacks are Practical_.  USENIX Security Symposium 2003, and Computer Networks, August 2005. [[PDF](/docs/remotetiming.pdf)]  (Followed by: Billy Bob Brumley and Nicola Tuveri. _Remote Timing Attacks are Still Practical_. ESORICS 2011 [[PDF](https://eprint.iacr.org/2011/232.pdf)] [[ePrint](https://eprint.iacr.org/2011/232)])
+ 
+Brice Canvel, Alain Hiltgen, Serge Vaudenay, and Martin Vuagnoux. _Password Interception in a SSL/TLS Channel_. CRYPTO 2003. [[PDF](http://www.iacr.org/cryptodb/archive/2003/CRYPTO/1069/1069.pdf)]
+
+
+Thai Duong and Juliano Rizzo. _Here Come The &oplus; Ninjas_.  2011. [[PDF](/docs/beast.pdf)]
+
+Nadhem AlFardan, Daniel J. Bernstein, Kenneth G. Paterson, Bertram Poettering, and Jacob C.N. Schuldt.
+_On the Security of RC4 in TLS_. USENIX Security Symposium 2013. [[PDF](https://www.usenix.org/system/files/conference/usenixsecurity13/sec13-paper_alfardan.pdf)] [[Video](https://www.usenix.org/conference/usenixsecurity13/technical-sessions/paper/alFardan)]
+
+Nadhem J. AlFardan and Kenneth G. Paterson. _Lucky Thirteen: Breaking the TLS and DTLS Record Protocols_. IEEE Symposium on Security and Privacy (Oakland) 2013. [[PDF](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf)] [[Website](http://www.isg.rhul.ac.uk/tls/Lucky13.html)]
+
+DROWN
+
+
 ## Formal Methods
 
 John C. Mitchell, Vitaly Shmatikov, and Ulrich Stern. _Finite-State Analysis of SSL 3.0_. USENIX Security Symposium, January 1998. [[PDF](/docs/finitestate.pdf)]

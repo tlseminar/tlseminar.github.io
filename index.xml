@@ -198,6 +198,27 @@ enhancements&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013.
 
 &lt;h2 id=&#34;attacks&#34;&gt;Attacks&lt;/h2&gt;
 
+&lt;p&gt;RFC on known attacks: &lt;em&gt;Summarizing Known Attacks on Transport Layer Security (TLS) and Datagram TLS (DTLS)&lt;/em&gt;. Y. Sheffer, et al. RFC 7457. February 2015. [&lt;a href=&#34;https://tools.ietf.org/html/rfc7457&#34;&gt;HTML&lt;/a&gt;] [&lt;a href=&#34;https://tools.ietf.org/pdf/rfc7457.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Daniel Bleichenbacher. &lt;em&gt;Chosen Ciphertext Attacks Against Protocols Based on the RSA Encryption Standard PKCS #1&lt;/em&gt;. CRYPTO 1998. [&lt;a href=&#34;http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Serge Vaudenay. &lt;em&gt;Security Flaws Induced by CBC Padding Applications to
+SSL, IPSEC, WTLS&amp;hellip;&lt;/em&gt;. EuroCRYPT
+2002. [&lt;a href=&#34;http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;David Brumley and Daniel Boneh. &lt;em&gt;Remote Timing Attacks are Practical&lt;/em&gt;.  USENIX Security Symposium 2003, and Computer Networks, August 2005. &lt;a href=&#34;Followed by: Billy Bob Brumley and Nicola Tuveri. _Remote Timing Attacks are Still Practical_. ESORICS 2011 [[PDF](https://eprint.iacr.org/2011/232.pdf)] [[ePrint](https://eprint.iacr.org/2011/232)]&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/remotetiming.pdf&#34;&gt;PDF&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Brice Canvel, Alain Hiltgen, Serge Vaudenay, and Martin Vuagnoux. &lt;em&gt;Password Interception in a SSL/TLS Channel&lt;/em&gt;. CRYPTO 2003. [&lt;a href=&#34;http://www.iacr.org/cryptodb/archive/2003/CRYPTO/1069/1069.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Thai Duong and Juliano Rizzo. &lt;em&gt;Here Come The &amp;oplus; Ninjas&lt;/em&gt;.  2011. [&lt;a href=&#34;https://tlseminar.github.io/docs/beast.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Nadhem AlFardan, Daniel J. Bernstein, Kenneth G. Paterson, Bertram Poettering, and Jacob C.N. Schuldt.
+&lt;em&gt;On the Security of RC4 in TLS&lt;/em&gt;. USENIX Security Symposium 2013. [&lt;a href=&#34;https://www.usenix.org/system/files/conference/usenixsecurity13/sec13-paper_alfardan.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.usenix.org/conference/usenixsecurity13/technical-sessions/paper/alFardan&#34;&gt;Video&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Nadhem J. AlFardan and Kenneth G. Paterson. &lt;em&gt;Lucky Thirteen: Breaking the TLS and DTLS Record Protocols&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013. [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/TLStiming.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/Lucky13.html&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;DROWN&lt;/p&gt;
+
 &lt;h2 id=&#34;formal-methods&#34;&gt;Formal Methods&lt;/h2&gt;
 
 &lt;p&gt;John C. Mitchell, Vitaly Shmatikov, and Ulrich Stern. &lt;em&gt;Finite-State Analysis of SSL 3.0&lt;/em&gt;. USENIX Security Symposium, January 1998. [&lt;a href=&#34;https://tlseminar.github.io/docs/finitestate.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
