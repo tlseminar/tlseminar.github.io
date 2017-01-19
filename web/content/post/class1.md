@@ -6,6 +6,7 @@ title = "Class 1: Introduction"
 slug = "class1"
 +++
 
+
 # Getting Started
 
 1. Install [Wireshark](https://www.wireshark.org/download.html).
