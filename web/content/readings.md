@@ -117,7 +117,10 @@ Cristian Coarfa, Peter Druschel, and Dan S. Wallach. _Performance Analysis of TL
 
 ## Certificates
 
+Dan Wendlandt, David G. Andersen, and Adrian Perrig. _Perspectives: Improving SSH-style Host Authentication with
+Multi-Path Probing_. USENIX ATC 2008. [[PDF](/docs/perspectives.pdf)] [[Project Site](https://perspectives-project.org/)]
 
+[Certificate Transparency](https://www.certificate-transparency.org/)  
 [Let's Encrypt](https://letsencrypt.org/)  
 [ACMS](https://datatracker.ietf.org/doc/draft-ietf-acme-acme/?include_text=1)
 
