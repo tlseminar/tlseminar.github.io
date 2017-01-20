@@ -27,6 +27,14 @@ Background:
 - Bleichenbacher Attack
 
 
+## Lessons from TLS
+
+- Hard to design correct crypto protocols
+- Hard to implement crypto protocols without introducing vulnerabilities
+- Complexity (and politics) has a high cost
+- Hard to recover from early mistakes
+
+
 
 
 
