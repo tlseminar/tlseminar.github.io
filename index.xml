@@ -324,13 +324,20 @@ SSL, IPSEC, WTLS&amp;hellip;&lt;/em&gt;. EuroCRYPT
 
 &lt;p&gt;Nadhem J. AlFardan and Kenneth G. Paterson. &lt;em&gt;Lucky Thirteen: Breaking the TLS and DTLS Record Protocols&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013. [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/TLStiming.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/Lucky13.html&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
 
+&lt;p&gt;David Adrian, Karthikeyan Bhargavan, Zakir Durumeric, Pierrick Gaudry,
+Matthew Green, J. Alex Halderman, Nadia Heninger, Drew Springall,
+Emmanuel Thomé, Luke Valenta, Benjamin VanderSloot, Eric Wustrow,
+Santiago Zanella-Béguelin, and Paul Zimmermann. &lt;em&gt;Imperfect Forward
+Secrecy: How Diffie-Hellman Fails in Practice&lt;/em&gt;.  22nd ACM Conference
+on Computer and Communications Security (CCS ’15), October
+2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/logjam.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://weakdh.org/&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
+
 &lt;p&gt;Nimrod Aviram, Sebastian Schinzel, Juraj Somorovsky, Nadia Heninger,
 Maik Dankel, Jens Steube, Luke Valenta, David Adrian, J. Alex
 Halderman, Viktor Dukhovni, Emilia Käsper, Shaanan Cohney, Susanne
 Engels, Christof Paar, and Yuval Shavitt. &lt;em&gt;DROWN: Breaking TLS using
-SSLv2&lt;/em&gt;. 25th USENIX Security Symposium, Austin, TX, August 2016. [&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;[&lt;a href=&#34;https://drownattack.com/&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
+SSLv2&lt;/em&gt;. 25th USENIX Security Symposium, Austin, TX, August
+2016. [&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://drownattack.com/&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
 
 &lt;h2 id=&#34;formal-methods&#34;&gt;Formal Methods&lt;/h2&gt;
 

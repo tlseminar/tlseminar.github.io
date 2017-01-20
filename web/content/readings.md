@@ -50,13 +50,20 @@ _On the Security of RC4 in TLS_. USENIX Security Symposium 2013. [[PDF](https://
 
 Nadhem J. AlFardan and Kenneth G. Paterson. _Lucky Thirteen: Breaking the TLS and DTLS Record Protocols_. IEEE Symposium on Security and Privacy (Oakland) 2013. [[PDF](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf)] [[Website](http://www.isg.rhul.ac.uk/tls/Lucky13.html)]
 
+David Adrian, Karthikeyan Bhargavan, Zakir Durumeric, Pierrick Gaudry,
+Matthew Green, J. Alex Halderman, Nadia Heninger, Drew Springall,
+Emmanuel Thomé, Luke Valenta, Benjamin VanderSloot, Eric Wustrow,
+Santiago Zanella-Béguelin, and Paul Zimmermann. _Imperfect Forward
+Secrecy: How Diffie-Hellman Fails in Practice_.  22nd ACM Conference
+on Computer and Communications Security (CCS ’15), October
+2015. [[PDF](/docs/logjam.pdf)] [[Website](https://weakdh.org/)]
+
 Nimrod Aviram, Sebastian Schinzel, Juraj Somorovsky, Nadia Heninger,
 Maik Dankel, Jens Steube, Luke Valenta, David Adrian, J. Alex
 Halderman, Viktor Dukhovni, Emilia Käsper, Shaanan Cohney, Susanne
 Engels, Christof Paar, and Yuval Shavitt. _DROWN: Breaking TLS using
-SSLv2_. 25th USENIX Security Symposium, Austin, TX, August 2016. [[PDF](/docs/drown.pdf)]
-
-[[Website](https://drownattack.com/)]
+SSLv2_. 25th USENIX Security Symposium, Austin, TX, August
+2016. [[PDF](/docs/drown.pdf)] [[Website](https://drownattack.com/)]
 
 
 ## Formal Methods
