@@ -6,6 +6,10 @@ title = "Class 1: Introduction"
 slug = "class1"
 +++
 
+<center>
+<script async class="speakerdeck-embed" data-id="c819c3c91461456ca328e97a753f6d56" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+</center>
+
 # Plan
 
 1. Find your team, introduce yourselves and figure out a management structure and plan.
