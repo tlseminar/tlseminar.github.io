@@ -9,11 +9,6 @@ page includes a quite extensive summary of TLS vulnerabilities.
 [_The First Few Milliseconds of an HTTPS Connection_](http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html), Jeff Moser, 2009.  
 [Discussion about TLS1.2/1.3 Updates](http://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with)
 
-Jeremy Clark and Paul C. van Oorschot. _SoK: SSL and HTTPS: Revisiting
-past challenges and evaluating certificate trust model
-enhancements_. IEEE Symposium on Security and Privacy (Oakland) 2013.
-[[PDF](/docs/soktls.pdf)]
-
 ## Protocol Specification
 
 [The Transport Layer Security (TLS) Protocol Version
@@ -117,6 +112,11 @@ USENIX Workshop on Offensive Technologies, 2015. [[PDF](/docs/flextls.pdf)]
 Cristian Coarfa, Peter Druschel, and Dan S. Wallach. _Performance Analysis of TLS Web Servers_.  ACM Transactions on Computer Systems (earlier version in NDSS 2002), February 2006. [[PDF](/docs/performance.pdf)]
 
 ## Certificates
+
+Jeremy Clark and Paul C. van Oorschot. _SoK: SSL and HTTPS: Revisiting
+past challenges and evaluating certificate trust model
+enhancements_. IEEE Symposium on Security and Privacy (Oakland) 2013.
+[[PDF](/docs/soktls.pdf)]
 
 Dan Wendlandt, David G. Andersen, and Adrian Perrig. _Perspectives: Improving SSH-style Host Authentication with
 Multi-Path Probing_. USENIX ATC 2008. [[PDF](/docs/perspectives.pdf)] [[Project Site](https://perspectives-project.org/)]
