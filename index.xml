@@ -6,8 +6,56 @@
     <description>Recent content on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 14 Dec 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 20 Jan 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Class 1: Introduction</title>
+      <link>https://tlseminar.github.io/class1/</link>
+      <pubDate>Fri, 20 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/class1/</guid>
+      <description>
+
+&lt;h1 id=&#34;plan&#34;&gt;Plan&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Find your team, introduce yourselves and figure out a management structure and plan.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Bid for your role:&lt;br /&gt;
+T (lead Class 2: oracle padding attacks)&lt;br /&gt;
+L (blog Class 1/lead 3: breaking weak asymmetric crypto, Drown)&lt;br /&gt;
+S (lead Class 4: certificates)&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#34;examining-certificates&#34;&gt;Examining Certificates&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;When does the certificate for &lt;a href=&#34;https://whitehouse.gov&#34;&gt;https://whitehouse.gov&lt;/a&gt; expire?&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;(won&amp;rsquo;t be able to answer this until later today) Does the new adminstration&amp;rsquo;s &lt;a href=&#34;https://whitehouse.gov&#34;&gt;https://whitehouse.gov&lt;/a&gt; site use the same private key as Obama&amp;rsquo;s?  (What should the answer to this question be?)&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#34;first-few-milliseconds&#34;&gt;First Few Milliseconds&lt;/h1&gt;
+
+&lt;p&gt;Jeff Moser&amp;rsquo;s &lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;&lt;em&gt;The First Few Milliseconds of an HTTPS Connection&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Install &lt;a href=&#34;https://www.wireshark.org/download.html&#34;&gt;Wireshark&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Start Wireshark, and look at all the TLS sessions running on your
+laptop.  How many different TLS sessions are there?&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Pick one of the TLS sessions and try to figure out what application
+is using it.  Who are the endpoints?&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Assuming (for now!) the encryption is all perfect, what could
+someone intercepting the traffic learn?&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;What differences can you observe compared to what is described for the TLS 1.0 connections on that web page?&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
     
     <item>
       <title>Background Preparation</title>
@@ -154,6 +202,69 @@ Hall D115).&lt;/p&gt;
     
     <item>
       <title></title>
+      <link>https://tlseminar.github.io/projectideas/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/projectideas/</guid>
+      <description>
+
+&lt;p&gt;This page collects some ideas for projects.  It is meant as a starting
+point to help you think of things that might be interesting to do, not
+to limit your possibilities.  Any topic that is related to TLS and the
+ecosystem around TLS is within scope for your project.&lt;/p&gt;
+
+&lt;h2 id=&#34;deployment-in-practice&#34;&gt;Deployment in Practice&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Why do the servers running critical sensitive services for UVA
+appear to be so insecure?  What are the impediments in practice to
+making services like
+&lt;a href=&#34;https://www.ssllabs.com/ssltest/analyze.html?d=collab.virginia.edu&amp;amp;latest&#34;&gt;collab&lt;/a&gt;
+and
+&lt;a href=&#34;https://www.ssllabs.com/ssltest/analyze.html?d=sis.virginia.edu&amp;amp;latest&#34;&gt;sis&lt;/a&gt;
+more secure?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;proxy-protected-server&#34;&gt;Proxy-Protected Server&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;What can&amp;rsquo;t we provide a simple proxy service in front of a web
+server that implements a simple, secure TLS endpoint?  What are the
+latency and overhead costs of implementing a server this way?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;configuration&#34;&gt;Configuration&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Make it possible to configure a web server to use different
+certificates with different key pairs for different protocols and
+connection types.  (Motivated most immediately by the DROWN attack.)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Contribute to tools automating use of ACME (e.g., for Let&amp;rsquo;s Encrypt
+certificates).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;client-ui&#34;&gt;Client UI&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Most of the security indicators used by a browser can be spoofed,
+and few users understand what parts of the current UI can be
+&amp;ldquo;trusted&amp;rdquo; (controlled by the web browser core) and what parts are
+untrusted (controlled by the web page).  Reconsider the web client
+UI in a way that provides a stronger and clearer boundary between
+trustworthy and site-controlled content.  [&lt;a href=&#34;https://textslashplain.com/2017/01/14/the-line-of-death/&#34;&gt;The Line of
+Death&lt;/a&gt;]&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Why not put the favicon for a site in its SSL certificate?  How hard
+would it be to extend the current infrastructure to support this,
+and to provide a browser client that displays trusted favicon
+images.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://tlseminar.github.io/readings/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -168,7 +279,8 @@ Hall D115).&lt;/p&gt;
 Security&lt;/em&gt;&lt;/a&gt;
 page includes a quite extensive summary of TLS vulnerabilities.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;&lt;em&gt;The First Few Milliseconds of an HTTPS Connection&lt;/em&gt;&lt;/a&gt;, Jeff Moser, 2009.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;&lt;em&gt;The First Few Milliseconds of an HTTPS Connection&lt;/em&gt;&lt;/a&gt;, Jeff Moser, 2009.&lt;br /&gt;
+&lt;a href=&#34;http://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with&#34;&gt;Discussion about TLS1.2/1.3 Updates&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Jeremy Clark and Paul C. van Oorschot. &lt;em&gt;SoK: SSL and HTTPS: Revisiting
 past challenges and evaluating certificate trust model
@@ -217,7 +329,13 @@ SSL, IPSEC, WTLS&amp;hellip;&lt;/em&gt;. EuroCRYPT
 
 &lt;p&gt;Nadhem J. AlFardan and Kenneth G. Paterson. &lt;em&gt;Lucky Thirteen: Breaking the TLS and DTLS Record Protocols&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013. [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/TLStiming.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/Lucky13.html&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
 
-&lt;p&gt;DROWN&lt;/p&gt;
+&lt;p&gt;Nimrod Aviram, Sebastian Schinzel, Juraj Somorovsky, Nadia Heninger,
+Maik Dankel, Jens Steube, Luke Valenta, David Adrian, J. Alex
+Halderman, Viktor Dukhovni, Emilia Käsper, Shaanan Cohney, Susanne
+Engels, Christof Paar, and Yuval Shavitt. &lt;em&gt;DROWN: Breaking TLS using
+SSLv2&lt;/em&gt;. 25th USENIX Security Symposium, Austin, TX, August 2016. [&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;[&lt;a href=&#34;https://drownattack.com/&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
 
 &lt;h2 id=&#34;formal-methods&#34;&gt;Formal Methods&lt;/h2&gt;
 
@@ -272,6 +390,13 @@ USENIX Workshop on Offensive Technologies, 2015. [&lt;a href=&#34;https://tlsemi
 
 &lt;h2 id=&#34;certificates&#34;&gt;Certificates&lt;/h2&gt;
 
+&lt;p&gt;Dan Wendlandt, David G. Andersen, and Adrian Perrig. &lt;em&gt;Perspectives: Improving SSH-style Host Authentication with
+Multi-Path Probing&lt;/em&gt;. USENIX ATC 2008. [&lt;a href=&#34;https://tlseminar.github.io/docs/perspectives.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://perspectives-project.org/&#34;&gt;Project Site&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.certificate-transparency.org/&#34;&gt;Certificate Transparency&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;https://datatracker.ietf.org/doc/draft-ietf-acme-acme/?include_text=1&#34;&gt;ACMS&lt;/a&gt;&lt;/p&gt;
+
 &lt;h2 id=&#34;post-quantum&#34;&gt;Post-Quantum&lt;/h2&gt;
 
 &lt;p&gt;Joppe W. Bos, Craig Costello, Michael Naehrig, and Douglas
@@ -302,50 +427,107 @@ learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy
       <guid>https://tlseminar.github.io/schedule/</guid>
       <description>
 
-&lt;h1 id=&#34;course-schedule&#34;&gt;Course Schedule&lt;/h1&gt;
+&lt;h1 id=&#34;teams&#34;&gt;Teams&lt;/h1&gt;
 
-&lt;p&gt;The schedule will be posted here later.  The first class is &lt;strong&gt;Friday,
-20 January 2017&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;!--
+&lt;p&gt;(Note: team names are temporary, and will map to teams on schedule.)&lt;/p&gt;
 
 &lt;table&gt;
-&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Class&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Due [Friday 6:29pm unless noted]&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 23 Aug 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class1&#34;&gt;1. Discrete Math, Proof&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
-&lt;tr&gt;&lt;td&gt;Thursday, 25 Aug 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class2&#34;&gt;2. Methods of Proof&lt;/a&gt;    &lt;/td&gt;&lt;td&gt; Registration Survey&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 30 Aug 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class3&#34;&gt;3. Well Ordering Principle&lt;/a&gt; &lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
-&lt;tr&gt;&lt;td&gt;Thursday, 1 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class4&#34;&gt;4. Logical Formulas&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps1&#34;&gt;PS1&lt;/a&gt; (MCS Ch 1, classes 1 and 2)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 6 Sep 16&lt;/td&gt;&lt;td&gt;   &lt;a href=&#34;https://tlseminar.github.io/class5&#34;&gt;5. CNF, Quantifiers, and Proofs&lt;/a&gt;       &lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;      
-&lt;tr&gt;&lt;td&gt;Thursday, 8 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class6&#34;&gt;6. 3-SAT&lt;/a&gt; &lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps2&#34;&gt;PS2&lt;/a&gt; (MCS Ch 2-3.5, classes 3-4)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 13 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class7&#34;&gt;7. Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
-&lt;tr&gt;&lt;td&gt;Thursday, 15 Sep 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class8&#34;&gt;8. Functions and Relations&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps3&#34;&gt;PS3&lt;/a&gt; (MCS Ch 3, classes 5-6)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 20 Sep 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class9&#34;&gt;9. Cardinality of Finite Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;   
-&lt;tr&gt;&lt;td&gt;Thursday, 22 Sep 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class10&#34;&gt;10. Induction&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;ps/ps4&#34;&gt;PS4&lt;/a&gt; (MCS Ch 4.1-4.4, lecture 7-8)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 27 Sep 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class11&#34;&gt;11. Strong Induction&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
-&lt;tr&gt;&lt;td&gt;Thursday, 29 Sep 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class12&#34;&gt;12. Review&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/ps/ps5&#34;&gt;PS5&lt;/a&gt; (MCS Ch 4.5, 5, classes 9-10)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 4 Oct 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#CCC&#34;&gt;Reading Days &lt;/td&gt;&lt;/tr&gt;  
-&lt;tr&gt;&lt;td&gt;Thursday, 6 Oct 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#FFAAAA&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/exam1solutions/&#34;&gt;Exam 1&lt;/a&gt; (in class) &lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 11 Oct 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class13&#34;&gt;13. State Machines&lt;/a&gt;    &lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;      
-&lt;tr&gt;&lt;td&gt;Thursday, 13 Oct 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class14&#34;&gt;14. Invariant Principle&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;    
-&lt;tr&gt;&lt;td&gt;Tuesday, 18 Oct 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class15&#34;&gt;15. Stable Matching&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;       
-&lt;tr&gt;&lt;td&gt;Thursday, 20 Oct 16&lt;/td&gt;&lt;td bgcolor=&#34;#CCC&#34;&gt; No Class&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps6&#34;&gt;PS6&lt;/a&gt; (MCS Ch 6, class 13-14)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 25 Oct 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class16&#34;&gt;16. Recursive Data Types&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
-&lt;tr&gt;&lt;td&gt;Thursday, 27 Oct 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class17&#34;&gt;17. Structural Induction&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps7&#34;&gt;PS7&lt;/a&gt; (MCS Ch 6.3, class 15) &lt;/td&gt;&lt;tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 1 Nov 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class18&#34;&gt;18. Infinite Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;     
-&lt;tr&gt;&lt;td&gt;Thursday, 3 Nov 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class19&#34;&gt;19. Uncountable Sets&lt;/a&gt;&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/ps/ps8&#34;&gt;PS8&lt;/a&gt; (MCS Ch 7, class 16-17)
-&lt;tr&gt;&lt;td&gt;Tuesday, 8 Nov 16&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class20&#34;&gt;20. Elections, Review&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;       
-&lt;tr&gt;&lt;td&gt;Thursday, 10 Nov 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#FFAAAA&#34;&gt; &lt;a href=&#34;https://tlseminar.github.io/exam2solutions/&#34;&gt;Exam 2&lt;/a&gt; (in class) - covers through PS8&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 15 Nov 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class21&#34;&gt;21. Infinite Infinities&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;      
-&lt;tr&gt;&lt;td&gt;Thursday, 17 Nov 16&lt;/td&gt;&lt;td&gt; &lt;a href=&#34;https://tlseminar.github.io/class22&#34;&gt;22. On Uncomputable Numbers&lt;/a&gt;&lt;/td&gt;&lt;td&gt; 
-&lt;tr&gt;&lt;td&gt;Tuesday, 22 Nov 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class23&#34;&gt;23. Universal Machines&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/ps/ps9&#34;&gt;PS9&lt;/a&gt; (MCS Ch 8, classes 19-22) (due 6:29pm Wednesday, 23 Nov)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Thursday, 24 Nov 16&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#CCC&#34;&gt; Thanksgiving Break&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 29 Nov 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class24&#34;&gt;24. Halting Problems&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;   
-&lt;tr&gt;&lt;td&gt;Thursday, 1 Dec 16&lt;/td&gt;&lt;td&gt;  &lt;a href=&#34;https://tlseminar.github.io/class25&#34;&gt;25. Cryptography&lt;/a&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Tuesday, 6 Dec 16&lt;/td&gt;&lt;td&gt;   &lt;a href=&#34;https://tlseminar.github.io/class26&#34;&gt;26. Wrap-Up&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/ps/psz&#34;&gt;PS&amp;Omega;&lt;/a&gt; (Due 4/6 December)&lt;/td&gt;&lt;/tr&gt;      
-       
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;Saturday, 10 Dec 16&lt;/b&gt;&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#FFAAAA&#34;&gt;Final Exam (9am-noon)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Team Sesame&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Team Cinnamon&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Team Poppyseed&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+Adam Imeson (aei5uj)&lt;Br&gt;
+Benyi Gong (bg3va)&lt;br&gt;
+Bethlehem Naylor (bn9eb)&lt;br&gt;
+Bhuvanesh Murali (bm4cr)&lt;br&gt;
+Haina Li (hl3wb)&lt;br&gt;
+Joshua Holtzman (jmh2ba)&lt;br&gt;
+Ning Yu (ny4kt)&lt;br&gt;
+Reid Bixler (rmb3yz)&lt;br&gt;
+&lt;/td&gt;
+&lt;td&gt;
+Anant Kharkar (agk7uc)&lt;br&gt;
+Bargav Jayaraman (bj4nq)&lt;br&gt;
+Benjamin Lowman (brl2xx)&lt;br&gt;
+Bill Young (wty5dn)&lt;br&gt;
+Guthrie Alexander (goa5t)&lt;br&gt;
+Sam Havron (sgh7cc)&lt;br&gt;
+Vikram Patwardhan (vvp2da)&lt;br&gt;
+Yuchi Tian (yt8mn)&lt;br&gt;
+&lt;/td&gt;
+&lt;td&gt;
+Collin Berman (cmb5nh)&lt;br&gt;
+Cyrus Malekpour (cm7bv)&lt;br&gt;
+Haoran Liu (hl4fb)&lt;br&gt;
+Jerry Sun (ys7va)&lt;br&gt;
+Minghua Jiang (mj2eu)&lt;br&gt;
+Saeed Mahlouji Far (sm5fd)&lt;br&gt;
+Sihang Liu (sl4jg)&lt;br&gt;
+Tianyi Jin (tj2cw)&lt;br&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/table&gt;
---&gt;
+
+&lt;p&gt;&lt;/table&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;schedule&#34;&gt;Schedule&lt;/h1&gt;
+
+&lt;p&gt;For each week (except for project proposal and presentation weeks),
+one team will be responsible for Leading the class, one team for
+writing a Blog post on the class topic, and one team for arranging
+food.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Leading Team.&lt;/strong&gt;  The team responsible for leading a class should:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Two weeks before the scheduled class, meet briefly with the coordinator(s) to discuss plan for the class.&lt;/li&gt;
+&lt;li&gt;One week before the scheduled class, go over detailed plan for class with coordinator.&lt;/li&gt;
+&lt;li&gt;No later than one week before class: send out to the class Slack group the preparation materials for the class.  This can include links to papers to read, but could also include exercises to do or software to install and experiment with, etc.&lt;/li&gt;
+&lt;li&gt;Day of class: lead an interesting, engaging, and illuminating class!&lt;/li&gt;
+&lt;li&gt;After class: help the Blogging team by providing them with your materials, answering their questions, and reviewing their write-up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Blogging Team.&lt;/strong&gt; The team responsible for blogging a class should:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The week before the scheduled class, do the preparation work posted by the lead team.&lt;/li&gt;
+&lt;li&gt;The week before the scheduled class, develop a team plan for how to manage the blogging.&lt;/li&gt;
+&lt;li&gt;During class, participate actively in the class, and take detailed notes (this can be distributed among the team).&lt;/li&gt;
+&lt;li&gt;By the Tuesday following class, have a draft of the blog post ready, and share it with the rest of the class (including the leading team and coordinators) for comments.&lt;/li&gt;
+&lt;li&gt;By the next Friday (one week after the class), have a final version of the blog post ready to add to the course site.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Food Team.&lt;/strong&gt; The team responsible for food should:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The week before the scheduled class, do the preparation work posted by the lead team.&lt;/li&gt;
+&lt;li&gt;Plan among yourselves what food to bring and who is responsible.  If
+you want to use my credit card to buy food, borrow it.&lt;/li&gt;
+&lt;li&gt;Bring something yummy, but not too messy or disruptive, to class.&lt;/li&gt;
+&lt;li&gt;Save the receipts to get reimbursed, and take care of the
+reimbursement. (This is easiest if the reimbursee is someone already
+set up in the CS department&amp;rsquo;s financial system.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Topic&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team T&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team L&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team S&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+
+&lt;tr&gt;&lt;td&gt;Class 1 (20 Jan)&lt;/td&gt;&lt;td&gt;Intro&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;/tr&gt;
+
+&lt;tr&gt;&lt;td&gt;Class 2 (27 Jan)&lt;/td&gt;&lt;td&gt;Padding Oracle Attacks&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 3 (3 Feb)&lt;/td&gt;&lt;td&gt;Logjam/DROWN&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 4 (10 Feb)&lt;/td&gt;&lt;td&gt;Certificates&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 5 (17 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 6 (24 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 7 (3 Mar)&lt;/td&gt;&lt;td&gt;TBD/Projects&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td bgcolor=&#34;#66EEAA&#34; style=&#34;text-align:center&#34; colspan=5&gt;Spring Break&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 8 (17 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 9 (24 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 10 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 11 (7 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 12 (14 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 13 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 14 (28 Apr)&lt;/td&gt;&lt;td&gt;Mini-Conference&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
 </description>
     </item>
     

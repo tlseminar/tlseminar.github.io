@@ -51,7 +51,7 @@ food.
 
 - Two weeks before the scheduled class, meet briefly with the coordinator(s) to discuss plan for the class.
 - One week before the scheduled class, go over detailed plan for class with coordinator.
-- No later than the Tuesday the week before class: send out to the class Slack group the preparation materials for the class.  This can include links to papers to read, but could also include exercises to do or software to install and experiment with, etc.
+- No later than one week before class: send out to the class Slack group the preparation materials for the class.  This can include links to papers to read, but could also include exercises to do or software to install and experiment with, etc.
 - Day of class: lead an interesting, engaging, and illuminating class!
 - After class: help the Blogging team by providing them with your materials, answering their questions, and reviewing their write-up.
 
