@@ -66,30 +66,31 @@ food.
 **Food Team.** The team responsible for food should:
 
 - The week before the scheduled class, do the preparation work posted by the lead team.
-- Plan among yourselves what food to bring and who is responsible.  
+- Plan among yourselves what food to bring and who is responsible.  If
+  you want to use my credit card to buy food, borrow it.
 - Bring something yummy, but not too messy or disruptive, to class.
 - Save the receipts to get reimbursed, and take care of the
   reimbursement. (This is easiest if the reimbursee is someone already
   set up in the CS department's financial system.)
 
 <table>
-<tr bgcolor="#CCC"><td><b>Date</b></td><td><b>Topic</b></td><td><b>Team T</b></td><td><b>Team L</b></td><td><b>Team S</b></td></tr>
+<tr bgcolor="#CCC"><td><b>Date</b></td><td><b>Topic</b></td><td width=12%><b>Team T</b></td><td width=12%><b>Team L</b></td><td width=12%><b>Team S</b></td></tr>
 
 <tr><td>Class 1 (20 Jan)</td><td>Intro</td><td>Plan</td><td bgcolor="#44AAEE">Blog</td><td>Plan</td></tr>
 
-<tr><td>Class 2 (27 Jan)</td><td>Padding Oracle</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td>Class 2 (27 Jan)</td><td>Padding Oracle Attacks</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
 <tr><td>Class 3 (3 Feb)</td><td>Logjam/DROWN</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
 <tr><td>Class 4 (10 Feb)</td><td>Certificates</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 5 (17 Feb)</td><td>TBD</td><td bgcolor="#CCDD55">Lead Class 5</td><td>Food</td><td bgcolor="#44AAEE">Blog Class 5</td></tr>
-<tr><td>Class 6 (24 Feb)</td><td>TBD</td><td bgcolor="#44AAEE">Blog Class 6</td><td bgcolor="#CCDD55">Lead Class 6</td><td>Food</td></tr>
-<tr><td>Class 7 (3 Mar)</td><td>TBD/Projects</td><td>Food</td><td bgcolor="#44AAEE">Blog Class 7</td><td bgcolor="#CCDD55">Lead Class 7</td></tr>
-<tr><td bgcolor="#88FF88" style="text-align:center" colspan=5>Spring Break</td></tr>
-<tr><td>Class 8 (17 Mar)</td><td>TBD</td><td bgcolor="#CCDD55">Lead Class 9</td><td>Food</td><td bgcolor="#44AAEE">Blog Class 9</td></tr>
-<tr><td>Class 9 (24 Mar)</td><td>TBD</td><td bgcolor="#44AAEE">Blog Class 10</td><td bgcolor="#CCDD55">Lead Class 10</td><td>Food</td></tr>
-<tr><td>Class 10 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog Class 11</td><td bgcolor="#CCDD55">Lead Class 11</td></tr>
-<tr><td>Class 11 (7 Apr)</td><td>TBD</td><td bgcolor="#CCDD55">Lead Class 12</td><td>Food</td><td bgcolor="#44AAEE">Blog Class 12</td></tr>
-<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog Class 13</td><td bgcolor="#CCDD55">Lead Class 13</td><td>Food</td></tr>
-<tr><td>Class 13 (21 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog Class 13</td><td bgcolor="#CCDD55">Lead Class 13</td><td>Food</td></tr>
-<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td>Food</td><td>-</td><td>-</td></tr>
+<tr><td>Class 5 (17 Feb)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td>Class 6 (24 Feb)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td>Class 7 (3 Mar)</td><td>TBD/Projects</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td bgcolor="#66EEAA" style="text-align:center" colspan=5>Spring Break</td></tr>
+<tr><td>Class 8 (17 Mar)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td>Class 9 (24 Mar)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td>Class 10 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 11 (7 Apr)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td>Class 13 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td>-</td><td>-</td><td>-</td></tr>
 </table>
 

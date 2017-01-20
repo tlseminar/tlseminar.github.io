@@ -6,7 +6,8 @@ Wikipedia's [_Transport Layer
 Security_](https://en.wikipedia.org/wiki/Transport_Layer_Security)
 page includes a quite extensive summary of TLS vulnerabilities.
 
-[_The First Few Milliseconds of an HTTPS Connection_](http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html), Jeff Moser, 2009.
+[_The First Few Milliseconds of an HTTPS Connection_](http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html), Jeff Moser, 2009.  
+[Discussion about TLS1.2/1.3 Updates](http://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with)
 
 Jeremy Clark and Paul C. van Oorschot. _SoK: SSL and HTTPS: Revisiting
 past challenges and evaluating certificate trust model
