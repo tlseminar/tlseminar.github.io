@@ -20,6 +20,20 @@ is using it.  Who are the endpoints?
 4. Assuming (for now!) the encryption is all perfect, what could someone intercepting 
 
 
+## Plans for Next 3 Classes
+
+- Drown Attack
+
+Background:
+- Bleichenbacher Attack
+
+
+## Lessons from TLS
+
+- Hard to design correct crypto protocols
+- Hard to implement crypto protocols without introducing vulnerabilities
+- Complexity (and politics) has a high cost
+- Hard to recover from early mistakes
 
 
 

@@ -47,7 +47,6 @@ David Brumley and Daniel Boneh. _Remote Timing Attacks are Practical_.  USENIX S
  
 Brice Canvel, Alain Hiltgen, Serge Vaudenay, and Martin Vuagnoux. _Password Interception in a SSL/TLS Channel_. CRYPTO 2003. [[PDF](http://www.iacr.org/cryptodb/archive/2003/CRYPTO/1069/1069.pdf)]
 
-
 Thai Duong and Juliano Rizzo. _Here Come The &oplus; Ninjas_.  2011. [[PDF](/docs/beast.pdf)]
 
 Nadhem AlFardan, Daniel J. Bernstein, Kenneth G. Paterson, Bertram Poettering, and Jacob C.N. Schuldt.
@@ -55,7 +54,13 @@ _On the Security of RC4 in TLS_. USENIX Security Symposium 2013. [[PDF](https://
 
 Nadhem J. AlFardan and Kenneth G. Paterson. _Lucky Thirteen: Breaking the TLS and DTLS Record Protocols_. IEEE Symposium on Security and Privacy (Oakland) 2013. [[PDF](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf)] [[Website](http://www.isg.rhul.ac.uk/tls/Lucky13.html)]
 
-DROWN
+Nimrod Aviram, Sebastian Schinzel, Juraj Somorovsky, Nadia Heninger,
+Maik Dankel, Jens Steube, Luke Valenta, David Adrian, J. Alex
+Halderman, Viktor Dukhovni, Emilia Käsper, Shaanan Cohney, Susanne
+Engels, Christof Paar, and Yuval Shavitt. _DROWN: Breaking TLS using
+SSLv2_. 25th USENIX Security Symposium, Austin, TX, August 2016. [[PDF](/docs/drown.pdf)]
+
+[[Website](https://drownattack.com/)]
 
 
 ## Formal Methods
@@ -115,7 +120,9 @@ Cristian Coarfa, Peter Druschel, and Dan S. Wallach. _Performance Analysis of TL
 Dan Wendlandt, David G. Andersen, and Adrian Perrig. _Perspectives: Improving SSH-style Host Authentication with
 Multi-Path Probing_. USENIX ATC 2008. [[PDF](/docs/perspectives.pdf)] [[Project Site](https://perspectives-project.org/)]
 
-[Certificate Transparency](https://www.certificate-transparency.org/)
+[Certificate Transparency](https://www.certificate-transparency.org/)  
+[Let's Encrypt](https://letsencrypt.org/)  
+[ACMS](https://datatracker.ietf.org/doc/draft-ietf-acme-acme/?include_text=1)
 
 ## Post-Quantum
 
