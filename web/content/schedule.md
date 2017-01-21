@@ -12,7 +12,6 @@ Bethlehem Naylor (bn9eb)<br>
 Bhuvanesh Murali (bm4cr)<br>
 Haina Li (hl3wb)<br>
 Joshua Holtzman	(jmh2ba)<br>
-Ning Yu	(ny4kt)<br>
 Reid Bixler (rmb3yz)<br>
 </td>
 <td>
@@ -20,6 +19,7 @@ Anant Kharkar (agk7uc)<br>
 Bargav Jayaraman (bj4nq)<br>
 Benjamin Lowman	(brl2xx)<br>
 Bill Young (wty5dn)<br>
+Darion Cassel (dfc9ed)<br>
 Guthrie Alexander (goa5t)<br>
 Sam Havron (sgh7cc)<br>
 Vikram Patwardhan (vvp2da)<br>
