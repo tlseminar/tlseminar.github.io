@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>  &middot; TLSeminar</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="  &middot; TLSeminar ">
+<meta property="og:site_name" content="TLSeminar"/>
+<meta property="og:url" content="https://tlseminar.github.io/projectideas/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="0001-01-01T00:00:00Z" />
+<meta property="og:article:modified_time" content="0001-01-01T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@" />
+<meta name="twitter:title" content="" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://tlseminar.github.io/projectideas/" />
+<meta name="twitter:domain" content="https://tlseminar.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "0001-01-01",
+    "description": "",
+    "wordCount":  263 
+  }
+</script>
+
+
+
+<link rel="canonical" href="https://tlseminar.github.io/projectideas/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
+<link href="https://tlseminar.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://tlseminar.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://tlseminar.github.io/css/style.css">
+
+
+  
+</head>
+<body>
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://tlseminar.github.io">
+  TLSeminar
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Understanding and Securing TLS
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://tlseminar.github.io/syllabus">Syllabus</a>
+
+<a href="https://tlseminar.github.io/schedule">Schedule</a>
+
+<a href="https://tlseminar.github.io/readings/">Readings</a>
+
+<a href="https://tlseminar.github.io/resources/">Resources</a>
+
+<a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1><center>
+</center></h1>
+
+</header>
+
+  <div class="container content">
+  
+
+<p>This page collects some ideas for projects.  It is meant as a starting
+point to help you think of things that might be interesting to do, not
+to limit your possibilities.  Any topic that is related to TLS and the
+ecosystem around TLS is within scope for your project.</p>
+
+<h2 id="deployment-in-practice">Deployment in Practice</h2>
+
+<ul>
+<li>Why do the servers running critical sensitive services for UVA
+appear to be so insecure?  What are the impediments in practice to
+making services like
+<a href="https://www.ssllabs.com/ssltest/analyze.html?d=collab.virginia.edu&amp;latest">collab</a>
+and
+<a href="https://www.ssllabs.com/ssltest/analyze.html?d=sis.virginia.edu&amp;latest">sis</a>
+more secure?</li>
+</ul>
+
+<h2 id="proxy-protected-server">Proxy-Protected Server</h2>
+
+<ul>
+<li>What can&rsquo;t we provide a simple proxy service in front of a web
+server that implements a simple, secure TLS endpoint?  What are the
+latency and overhead costs of implementing a server this way?</li>
+</ul>
+
+<h2 id="configuration">Configuration</h2>
+
+<ul>
+<li><p>Make it possible to configure a web server to use different
+certificates with different key pairs for different protocols and
+connection types.  (Motivated most immediately by the DROWN attack.)</p></li>
+
+<li><p>Contribute to tools automating use of ACME (e.g., for Let&rsquo;s Encrypt
+certificates).</p></li>
+</ul>
+
+<h2 id="client-ui">Client UI</h2>
+
+<ul>
+<li><p>Most of the security indicators used by a browser can be spoofed,
+and few users understand what parts of the current UI can be
+&ldquo;trusted&rdquo; (controlled by the web browser core) and what parts are
+untrusted (controlled by the web page).  Reconsider the web client
+UI in a way that provides a stronger and clearer boundary between
+trustworthy and site-controlled content.  [<a href="https://textslashplain.com/2017/01/14/the-line-of-death/">The Line of
+Death</a>]</p></li>
+
+<li><p>Why not put the favicon for a site in its SSL certificate?  How hard
+would it be to extend the current infrastructure to support this,
+and to provide a browser client that displays trusted favicon
+images.</p></li>
+</ul>
+
+</div>
+
+
+  
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+  <p align="center">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href="https://www.cs.virginia.edu/evans">David Evans</a>
+
+
+</div>
+
+
+  
+
+</div>
+
+</footer>
+
+    </main>
+    
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3775212-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

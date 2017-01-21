@@ -6,12 +6,8 @@ Wikipedia's [_Transport Layer
 Security_](https://en.wikipedia.org/wiki/Transport_Layer_Security)
 page includes a quite extensive summary of TLS vulnerabilities.
 
-[_The First Few Milliseconds of an HTTPS Connection_](http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html), Jeff Moser, 2009.
-
-Jeremy Clark and Paul C. van Oorschot. _SoK: SSL and HTTPS: Revisiting
-past challenges and evaluating certificate trust model
-enhancements_. IEEE Symposium on Security and Privacy (Oakland) 2013.
-[[PDF](/docs/soktls.pdf)]
+[_The First Few Milliseconds of an HTTPS Connection_](http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html), Jeff Moser, 2009.  
+[Discussion about TLS1.2/1.3 Updates](http://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with)
 
 ## Protocol Specification
 
@@ -54,13 +50,20 @@ _On the Security of RC4 in TLS_. USENIX Security Symposium 2013. [[PDF](https://
 
 Nadhem J. AlFardan and Kenneth G. Paterson. _Lucky Thirteen: Breaking the TLS and DTLS Record Protocols_. IEEE Symposium on Security and Privacy (Oakland) 2013. [[PDF](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf)] [[Website](http://www.isg.rhul.ac.uk/tls/Lucky13.html)]
 
+David Adrian, Karthikeyan Bhargavan, Zakir Durumeric, Pierrick Gaudry,
+Matthew Green, J. Alex Halderman, Nadia Heninger, Drew Springall,
+Emmanuel Thomé, Luke Valenta, Benjamin VanderSloot, Eric Wustrow,
+Santiago Zanella-Béguelin, and Paul Zimmermann. _Imperfect Forward
+Secrecy: How Diffie-Hellman Fails in Practice_.  22nd ACM Conference
+on Computer and Communications Security (CCS ’15), October
+2015. [[PDF](/docs/logjam.pdf)] [[Website](https://weakdh.org/)]
+
 Nimrod Aviram, Sebastian Schinzel, Juraj Somorovsky, Nadia Heninger,
 Maik Dankel, Jens Steube, Luke Valenta, David Adrian, J. Alex
 Halderman, Viktor Dukhovni, Emilia Käsper, Shaanan Cohney, Susanne
 Engels, Christof Paar, and Yuval Shavitt. _DROWN: Breaking TLS using
-SSLv2_. 25th USENIX Security Symposium, Austin, TX, August 2016. [[PDF](/docs/drown.pdf)]
-
-[[Website](https://drownattack.com/)]
+SSLv2_. 25th USENIX Security Symposium, Austin, TX, August
+2016. [[PDF](/docs/drown.pdf)] [[Website](https://drownattack.com/)]
 
 
 ## Formal Methods
@@ -116,6 +119,11 @@ USENIX Workshop on Offensive Technologies, 2015. [[PDF](/docs/flextls.pdf)]
 Cristian Coarfa, Peter Druschel, and Dan S. Wallach. _Performance Analysis of TLS Web Servers_.  ACM Transactions on Computer Systems (earlier version in NDSS 2002), February 2006. [[PDF](/docs/performance.pdf)]
 
 ## Certificates
+
+Jeremy Clark and Paul C. van Oorschot. _SoK: SSL and HTTPS: Revisiting
+past challenges and evaluating certificate trust model
+enhancements_. IEEE Symposium on Security and Privacy (Oakland) 2013.
+[[PDF](/docs/soktls.pdf)]
 
 Dan Wendlandt, David G. Andersen, and Adrian Perrig. _Perspectives: Improving SSH-style Host Authentication with
 Multi-Path Probing_. USENIX ATC 2008. [[PDF](/docs/perspectives.pdf)] [[Project Site](https://perspectives-project.org/)]
