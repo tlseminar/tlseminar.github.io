@@ -39,7 +39,10 @@ repository.&lt;/p&gt;&lt;/li&gt;
 subdirectory. You can start by copying an earlier file in that
 directory (e.g., &lt;code&gt;class1.md&lt;/code&gt;) and updating the header section
 (between the &lt;code&gt;+++&lt;/code&gt; marks) and replacing everything after that with
-your content.  You can use multiple files (but probably only one in
+your content.  Don&amp;rsquo;t forget to update the date so your page will
+appear in the right order.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;You can use multiple files (but probably only one in
 the &lt;code&gt;post/&lt;/code&gt; directory (this will show up as pages on the front
 list).  Use the &lt;code&gt;web/content/images&lt;/code&gt; directory for images and the
 &lt;code&gt;web/content/docs&lt;/code&gt; directory for papers.  Using images and other

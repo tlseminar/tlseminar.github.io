@@ -29,7 +29,10 @@ and we can discuss alternative options.
   subdirectory. You can start by copying an earlier file in that
   directory (e.g., `class1.md`) and updating the header section
   (between the `+++` marks) and replacing everything after that with
-  your content.  You can use multiple files (but probably only one in
+  your content.  Don't forget to update the date so your page will
+  appear in the right order.
+
+- You can use multiple files (but probably only one in
   the `post/` directory (this will show up as pages on the front
   list).  Use the `web/content/images` directory for images and the
   `web/content/docs` directory for papers.  Using images and other
