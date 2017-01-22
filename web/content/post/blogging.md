@@ -47,4 +47,7 @@ and we can discuss alternative options.
   view the site with a browser at `localhost:1313`.
 
 - When you are ready, submit a pull request to incorporate your
-  changes into the main repository (and public course website).
+  changes into the main repository (and public course website).  At
+  this stage, I will probably make things visible on the public site,
+  although it can still be edited and improved with subsequent
+  comments.
