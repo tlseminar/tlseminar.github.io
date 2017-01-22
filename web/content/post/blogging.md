@@ -26,14 +26,15 @@ and we can discuss alternative options.
   repository.
 
 - You should create your page in the `web/content/post/`
-  subdirectory. You can start by copying an earlier file (e.g., `cp
-  class1.md classX.md`) and updating the header section (between the
-  `+++` marks) and replacing everything after that with your content.
-  You can use multiple files (but probably only one in the `post/`
-  directory (this will show up as pages on the front list).  Use the
-  `web/content/images` directory for images and the `web/content/docs`
-  directory for papers.  Using images and other resources to make your
-  post interesting and visually compelling is highly encouraged!
+  subdirectory. You can start by copying an earlier file in that
+  directory (e.g., `class1.md`) and updating the header section
+  (between the `+++` marks) and replacing everything after that with
+  your content.  You can use multiple files (but probably only one in
+  the `post/` directory (this will show up as pages on the front
+  list).  Use the `web/content/images` directory for images and the
+  `web/content/docs` directory for papers.  Using images and other
+  resources to make your post interesting and visually compelling is
+  highly encouraged!
    
 - Write the blog page using Markdown.  Markdown is a simple markup
   language that can be used to easily generate both HTML and other
