@@ -42,7 +42,8 @@ class1.md classX.md&lt;/code&gt;) and updating the header section (between the
 You can use multiple files (but probably only one in the &lt;code&gt;post/&lt;/code&gt;
 directory (this will show up as pages on the front list).  Use the
 &lt;code&gt;web/content/images&lt;/code&gt; directory for images and the &lt;code&gt;web/content/docs&lt;/code&gt;
-directory for papers.&lt;/p&gt;&lt;/li&gt;
+directory for papers.  Using images and other resources to make your
+post interesting and visually compelling is highly encouraged!&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Write the blog page using Markdown.  Markdown is a simple markup
 language that can be used to easily generate both HTML and other
