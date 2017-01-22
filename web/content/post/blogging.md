@@ -29,7 +29,11 @@ and we can discuss alternative options.
   subdirectory. You can start by copying an earlier file (e.g., `cp
   class1.md classX.md`) and updating the header section (between the
   `+++` marks) and replacing everything after that with your content.
- 
+  You can use multiple files (but probably only one in the `post/`
+  directory (this will show up as pages on the front list).  Use the
+  `web/content/images` directory for images and the `web/content/docs`
+  directory for papers.
+   
 - Write the blog page using Markdown.  Markdown is a simple markup
   language that can be used to easily generate both HTML and other
   output document formats.  You can probably figure out everything you
