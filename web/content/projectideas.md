@@ -1,3 +1,5 @@
+# Project Ideas
+
 This page collects some ideas for projects.  It is meant as a starting
 point to help you think of things that might be interesting to do, not
 to limit your possibilities.  Any topic that is related to TLS and the
