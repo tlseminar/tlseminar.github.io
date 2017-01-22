@@ -6,8 +6,56 @@
     <description>Recent content on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Jan 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Blogging Mechanics</title>
+      <link>https://tlseminar.github.io/blogging/</link>
+      <pubDate>Sun, 22 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/blogging/</guid>
+      <description>&lt;p&gt;Here are some suggestions for how to create the class blog posts for
+your assigned classes.  I believe each team has at least a few members
+with enough experience using git and web contruction tools that
+following these instructions won&amp;rsquo;t be a big burden, but if you have
+other ways you want to build your blog page for a topic let me know
+and we can discuss alternative options.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Install &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;.  Hugo is a static website
+generator that builds a site from Markdown pages.  (With homebrew on
+Mac OS X, this is easy: &lt;code&gt;brew update &amp;amp;&amp;amp; brew install hugo&lt;/code&gt;.)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Clone the github repository,
+&lt;a href=&#34;https://github.com/tlseminar/tlseminar.github.io&#34;&gt;&lt;em&gt;https://github.com/tlseminar/tlseminar.github.io&lt;/em&gt;&lt;/a&gt;.
+This is what is used to build the
+&lt;a href=&#34;https://tlseminar.github.io&#34;&gt;tlseminar.github.io&lt;/a&gt; site.  If you are
+working with multiple teammates on the blog post (which you probably
+should be), you can add write permissions for everyone to the cloned
+repository.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;You should create your page in the &lt;code&gt;web/content/post/&lt;/code&gt;
+subdirectory. You can start by copying an earlier file (e.g., &lt;code&gt;cp
+class1.md classX.md&lt;/code&gt;) and updating the header section (between the
+&lt;code&gt;+++&lt;/code&gt; marks) and replacing everything after that with your content.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Write the blog page using Markdown.  Markdown is a simple markup
+language that can be used to easily generate both HTML and other
+output document formats.  You can probably figure out everything you
+need by looking at previous posts, but for a summary of Markdown,
+see &lt;a href=&#34;https://daringfireball.net/projects/markdown/syntax&#34;&gt;Markdown: Syntax&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To test the post, run &lt;code&gt;make develop&lt;/code&gt; (in the &lt;code&gt;web/&lt;/code&gt; subdirectory of
+your repository).  This starts the Hugo development server, usually
+on port 1313 (unless that port is already in use).  Then, you can
+view the site with a browser at &lt;code&gt;localhost:1313&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;When you are ready, submit a pull request to incorporate your
+changes into the main repository (and public course website).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Class 1: Introduction</title>
