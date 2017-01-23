@@ -30,7 +30,6 @@ Collin Berman (cmb5nh)<br>
 Cyrus Malekpour	(cm7bv)<br>
 Haoran Liu (hl4fb)<br>
 Daniel Saha (drs5ma)<br>
-Jerry Sun (ys7va)<br>
 Minghua Jiang (mj2eu)<br>
 Saeed Mahlouji Far (sm5fd)<br>
 Sihang Liu (sl4jg)<br>
