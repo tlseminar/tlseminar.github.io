@@ -44,3 +44,6 @@ ecosystem around TLS is within scope for your project.
   would it be to extend the current infrastructure to support this,
   and to provide a browser client that displays trusted favicon
   images.
+  
+## Protecting Resources
+- [Heartbleed](http://heartbleed.com/) shocked the Internet for a while mainly because it allowed for remote attackers to access data in the server's memory, most importantly the server's private key. Heartbleed was a realization of an important concept: attacking a service and stealing data from the server's memory. There are numerous practical examples of web-based services that can become vulnerable to this type of attack. Can we mitigate this risk by using tools at the programming language level? A combination of Rust's language guarantees and a memory protection system might be the answer! Checkout [Rustls](https://github.com/ctz/rustls) and [fidelius charm](https://github.com/halmohri/fc).  
