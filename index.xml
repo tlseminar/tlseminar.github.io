@@ -470,6 +470,10 @@ Multi-Path Probing&lt;/em&gt;. USENIX ATC 2008. [&lt;a href=&#34;https://tlsemin
 &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&#34;https://datatracker.ietf.org/doc/draft-ietf-acme-acme/?include_text=1&#34;&gt;ACMS&lt;/a&gt;&lt;/p&gt;
 
+&lt;h2 id=&#34;extensions&#34;&gt;Extensions&lt;/h2&gt;
+
+&lt;p&gt;David Naylor, Kyle Schomp, Matteo Varvello, Ilias Leontiadis, Jeremy Blackburn, Diego Lopez, Konstantina Papagiannaki, Pablo Rodriguez Rodriguez, and Peter Steenkiste. &lt;em&gt;Multi-Context TLS (mcTLS): Enabling Secure In-Network Functionality in TLS&lt;/em&gt;. SIGCOMM 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/mcTLS.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
 &lt;h2 id=&#34;post-quantum&#34;&gt;Post-Quantum&lt;/h2&gt;
 
 &lt;p&gt;Joppe W. Bos, Craig Costello, Michael Naehrig, and Douglas
