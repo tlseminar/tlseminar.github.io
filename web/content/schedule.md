@@ -32,7 +32,6 @@ Haoran Liu (hl4fb)<br>
 Daniel Saha (drs5ma)<br>
 Minghua Jiang (mj2eu)<br>
 Saeed Mahlouji Far (sm5fd)<br>
-Sihang Liu (sl4jg)<br>
 Tianyi Jin (tj2cw)<br>
 </td>
 </tr>
