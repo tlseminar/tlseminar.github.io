@@ -38,7 +38,7 @@ Tianyi Jin (tj2cw)<br>
 
 </table>
 
-# Schedule
+# Responsibilities
 
 For each week (except for project proposal and presentation weeks),
 one team will be responsible for Leading the class, one team for
