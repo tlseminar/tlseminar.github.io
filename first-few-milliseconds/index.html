@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <title>TLSeminar </title>
+  <title>The First Few Milliseconds of an TLS 1.2 Connection  &middot; TLSeminar</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="HandheldFriendly" content="True">
 <meta name="MobileOptimized" content="320">
@@ -17,19 +17,47 @@
 <meta name="keywords" content="">
 
 
-<meta property="og:title" content="TLSeminar ">
+<meta property="og:title" content="The First Few Milliseconds of an TLS 1.2 Connection  &middot; TLSeminar ">
 <meta property="og:site_name" content="TLSeminar"/>
-<meta property="og:url" content="https://tlseminar.github.io/" />
+<meta property="og:url" content="https://tlseminar.github.io/first-few-milliseconds/" />
 <meta property="og:locale" content="en-us">
 
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-01-26T00:00:00Z" />
+<meta property="og:article:modified_time" content="2017-01-26T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@" />
+<meta name="twitter:title" content="The First Few Milliseconds of an TLS 1.2 Connection" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://tlseminar.github.io/first-few-milliseconds/" />
+<meta name="twitter:domain" content="https://tlseminar.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "The First Few Milliseconds of an TLS 1.2 Connection",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-01-26",
+    "description": "",
+    "wordCount":  2082 
+  }
+</script>
 
 
 
-<link href="https://tlseminar.github.io/index.xml" rel="alternate" type="application/rss+xml" title="TLSeminar" />
-
-<link rel="canonical" href="https://tlseminar.github.io/" />
+<link rel="canonical" href="https://tlseminar.github.io/first-few-milliseconds/" />
 
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
 <link href="https://tlseminar.github.io/favicon.png" rel="icon">
@@ -121,16 +149,28 @@
 </header>
 
 
-<section id="main-content" class="container main_content homepage">
-  <header class="container header">
-    <h1><center>TLSeminar
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1><center>The First Few Milliseconds of an TLS 1.2 Connection
 </center></h1>
 
-  </header>
+  <div class="metas">
+<time datetime="2017-01-26">26 Jan, 2017</time>
+
+
   
+    &middot; by Team Poppyseed
   
-  <p class="fronthead"><A href="/first-few-milliseconds/">The First Few Milliseconds of an TLS 1.2 Connection</a> (Thu, 26 Jan 2017)</p>
-    
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  
 
 <h2 id="intro">Intro</h2>
 
@@ -364,243 +404,32 @@ nonce = &lt;random_8_bytes&gt;
 <p><a href="https://github.com/nonce-disrespect/nonce-disrespect">https://github.com/nonce-disrespect/nonce-disrespect</a></p>
 
 <p><a href="https://www.trustworthyinternet.org/ssl-pulse/">https://www.trustworthyinternet.org/ssl-pulse/</a></p>
- 
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
   
-  <p class="fronthead"><A href="/blogging/">Blogging Mechanics</a> (Sun, 22 Jan 2017)</p>
-    <p>Here are some suggestions for how to create the class blog posts for
-your assigned classes.  I believe each team has at least a few members
-with enough experience using git and web contruction tools that
-following these instructions won&rsquo;t be a big burden, but if you have
-other ways you want to build your blog page for a topic let me know
-and we can discuss alternative options.</p>
-
-<ul>
-<li><p>Install <a href="https://gohugo.io/">Hugo</a>.  Hugo is a static website
-generator that builds a site from Markdown pages.  (With homebrew on
-Mac OS X, this is easy: <code>brew update &amp;&amp; brew install hugo</code>.)</p></li>
-
-<li><p>Clone the github repository,
-<a href="https://github.com/tlseminar/tlseminar.github.io"><em>https://github.com/tlseminar/tlseminar.github.io</em></a>.
-This is what is used to build the
-<a href="https://tlseminar.github.io">tlseminar.github.io</a> site.  If you are
-working with multiple teammates on the blog post (which you probably
-should be), you can add write permissions for everyone to the cloned
-repository.</p></li>
-
-<li><p>You should create your page in the <code>web/content/post/</code>
-subdirectory. You can start by copying an earlier file in that
-directory (e.g., <code>class1.md</code>) and updating the header section
-(between the <code>+++</code> marks) and replacing everything after that with
-your content.  Don&rsquo;t forget to update the date so your page will
-appear in the right order.</p></li>
-
-<li><p>You can use multiple files (but probably only one in
-the <code>post/</code> directory (this will show up as pages on the front
-list).  Use the <code>web/content/images</code> directory for images and the
-<code>web/content/docs</code> directory for papers.  Using images and other
-resources to make your post interesting and visually compelling is
-highly encouraged!</p></li>
-
-<li><p>Write the blog page using Markdown.  Markdown is a simple markup
-language that can be used to easily generate both HTML and other
-output document formats.  You can probably figure out everything you
-need by looking at previous posts, but for a summary of Markdown,
-see <a href="https://daringfireball.net/projects/markdown/syntax">Markdown: Syntax</a>.</p></li>
-
-<li><p>To test the post, run <code>make develop</code> (in the <code>web/</code> subdirectory of
-your repository).  This starts the Hugo development server, usually
-on port 1313 (unless that port is already in use).  Then, you can
-view the site with a browser at <code>localhost:1313</code>.</p></li>
-
-<li><p>When you are ready, submit a pull request to incorporate your
-changes into the main repository (and public course website).  At
-this stage, I will probably make things visible on the public site,
-although it can still be edited and improved with subsequent
-comments.</p></li>
-</ul>
- 
   
-  <p class="fronthead"><A href="/class1/">Class 1: Introduction</a> (Fri, 20 Jan 2017)</p>
+
+    
+    <a class="prev" href="https://tlseminar.github.io/blogging/" title="Blogging Mechanics">
+      Previous
+    </a>
     
 
-<p><center>
-<script async class="speakerdeck-embed" data-id="c819c3c91461456ca328e97a753f6d56" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
-</center></p>
-
-<h1 id="plan">Plan</h1>
-
-<ol>
-<li><p>Find your team, introduce yourselves and figure out a management structure and plan.</p></li>
-
-<li><p>Bid for your role:<br />
-T (lead Class 2: oracle padding attacks)<br />
-L (blog Class 1/lead 3: breaking weak asymmetric crypto, Drown)<br />
-S (lead Class 4: certificates)</p></li>
-</ol>
-
-<h1 id="examining-certificates">Examining Certificates</h1>
-
-<ol>
-<li><p>When does the certificate for <a href="https://whitehouse.gov">https://whitehouse.gov</a> expire?</p></li>
-
-<li><p>(won&rsquo;t be able to answer this until later today) Does the new adminstration&rsquo;s <a href="https://whitehouse.gov">https://whitehouse.gov</a> site use the same private key as Obama&rsquo;s?  (What should the answer to this question be?)</p></li>
-</ol>
-
-<h1 id="first-few-milliseconds">First Few Milliseconds</h1>
-
-<p>Jeff Moser&rsquo;s <a href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html"><em>The First Few Milliseconds of an HTTPS Connection</em></a></p>
-
-<ol>
-<li><p>Install <a href="https://www.wireshark.org/download.html">Wireshark</a>.</p></li>
-
-<li><p>Start Wireshark, and look at all the TLS sessions running on your
-laptop.  How many different TLS sessions are there?</p></li>
-
-<li><p>Pick one of the TLS sessions and try to figure out what application
-is using it.  Who are the endpoints?</p></li>
-
-<li><p>Assuming (for now!) the encryption is all perfect, what could
-someone intercepting the traffic learn?</p></li>
-
-<li><p>What differences can you observe compared to what is described for the TLS 1.0 connections on that web page?</p></li>
-</ol>
- 
-  
-  <p class="fronthead"><A href="/background/">Background Preparation</a> (Wed, 14 Dec 2016)</p>
     
 
-<p>Here are some suggestions for getting the necessary background for the
-seminar.</p>
-
-<h2 id="cryptography">Cryptography</h2>
-
-<p>If you have already taken a cryptography course, you should have
-enough cryptography background already.  If not, here are some
-suggested ways to get enough crypo background over winter break to be
-ready for the seminar.  I believe that for most students, the best way
-to get the expected background for this course is to take my Applied
-Cryptography course (more info below), but there are many options, and
-lots of great resources that go into much more depth than my course if
-you have more time.</p>
-
-<h3 id="on-line-courses">On-Line Courses</h3>
-
-<p><a href="https://www.udacity.com/course/applied-cryptography--cs387"><strong>Udacity cs387: Applied
-Cryptography</strong></a>
-- this is an open on-line course that you can take anytime taught by
-myself (so I am somewhat partial to it!).  There are <a href="http://www.cs.virginia.edu/~evans/courses/cs387/">some additional
-materials for the course
-available</a>,
-including <a href="http://www.cs.virginia.edu/~evans/courses/crypto-notes.pdf">extensive course notes
-(PDF)</a>
-created by Daniel Winter.  This is a very short and informal
-introduction to cryptography, which would be enough background to be
-prepared for the seminar.  (I can&rsquo;t give an unbiased assessment of the
-course, but according to Information Week, it is a recommended course
-to <a href="http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915"><em>&ldquo;Pump Up IT
-Careers&rdquo;</em></a>,
-and <a href="www.prospectmagazine.co.uk/magazine/online-universities-udacity-grand-challenge-david-stavens-dave-evans">Prospect
-Magazine</a>
-claimed the instructor has a &ldquo;Monty Python humor&rdquo; and &ldquo;cult
-following&rdquo;, although you shouldn&rsquo;t believe everything you read in
-British magazines.)</p>
-
-<p>Dan Boneh&rsquo;s <a href="https://www.coursera.org/learn/crypto"><strong>Cryptography
-Course</strong></a> (offered through
-Coursera).  The materials from previous courses are not available
-(although you may be able to find them if you are resourceful), so you
-have to take the course when it is offered by Coursera. There is a
-session starting December 26.  This is an excellent course that is a
-bit longer and goes into more depth on many topics than my course.
-You can read <a href="http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html">Bryan Pendleton&rsquo;s more objective
-comparison</a>.</p>
-
-<p>Christoff Parr and Jan Pelzl&rsquo;s <a href="http://www.crypto-textbook.com/"><strong>Understanding
-Cryptography</strong></a> textbook includes
-Parr&rsquo;s excellent <a href="http://wiki.crypto.rub.de/Buch/movies.php">video
-lectures</a> (chalkboard
-style without editing, so takes some patience to watch).</p>
-
-<h3 id="textbooks">Textbooks</h3>
-
-<p><a href="https://www.crypto101.io/">Crypto 101</a> - a very easy to read and
-practically-focused introduction to cryptography (available as a <a href="/docs/Crypto101.pdf">free,
-creative-commons licensed PDF</a>).</p>
-
-<p><a href="http://www.cs.umd.edu/~jkatz/imc.html"><em>Introduction to Modern
-Cryptography</em></a>, Jonathan Katz
-and Yehuda Lindell.  This provides a lot more depth that is required
-for joining the seminar, but is an excellent book for ambitious
-students with more time.</p>
-
-<h2 id="computing-systems">Computing Systems</h2>
-
-<p>Students in the class will benefit from understanding computing
-systems and having experience with systems-level programming at least
-at the level of a typical introductory operating systems course.
-Students without this experience will either need to put a lot of
-effort into learning it, or select projects and presentation topics
-that focus on other aspects.</p>
-
-<p>Some resources for learning about computing systems are below.</p>
-
-<p><a href="https://www.ops-class.org/">&ldquo;Hack the Kernel&rdquo;</a> - Operating Systems
-class developed by <a href="https://www.bluegroup.systems/people/gwa/">Geoffrey
-Challen</a>.  Provides
-programming assignments you can try on your own, as well as video
-lectures and lots of on-line materials.</p>
-
-<p><a href="http://rust-class.org/">cs4414: Operating Systems</a> - Operating
-systems course I taught in Fall 2013 and Spring 2014. Includes
-<a href="http://rust-class.org/pages/classes.html">videos</a> of lectures, and
-programming assignments in Rust (some of which will need some updating
-to work in the latest version of Rust).</p>
-
-<p>CMU&rsquo;s <a href="http://csapp.cs.cmu.edu/">Computing Systems</a> course and
-textbook by Randal Bryant and David O&rsquo;Hallaron provides an excellent
-introduction to systems programming, as well as a series of <a href="http://csapp.cs.cmu.edu/3e/labs.html">fun
-self-study labs</a>.</p>
-
-<h3 id="rust-programming">Rust Programming</h3>
-
-<p>I&rsquo;m hoping several of the projects will involve contribution to open
-source projects using Rust to provide secure, efficient, and
-iter-operable implementations of TLS and other cryptographic
-functionalities.  It is not a requirement that you use Rust in this
-class, but everyone will be encouraged to get some experience with it.</p>
-
-<p><a href="https://doc.rust-lang.org/nightly/book/"><strong>Rust Programming Language
-Book</strong></a> (this is the
-&ldquo;official&rdquo; Rust book, which includes a tutorial to get started)</p>
-
-<p><a href="http://aml3.github.io/RustTutorial/"><strong>Rust Tutorial</strong></a> (this was
-developed for my <a href="https://rust-class.org/">cs4414 class</a> by Alex
-Lamana, Rob Michaels, and Wil Thomason.  (Some parts may need updating
-to latest version of Rust, so if you go through this, please submit
-updates as pull requests!)</p>
-
-<p><a href="http://rustbyexample.com/"><strong>Rust by Example</strong></a></p>
- 
-  
-  <p class="fronthead"><A href="/welcome/">Welcome to TLSeminar!</a> (Wed, 14 Dec 2016)</p>
-    <p><center>
-<a href="http://xkcd.com/1353/">
-<img src="//imgs.xkcd.com/comics/heartbleed.png" title="I looked at some of the data dumps from vulnerable sites, and it was ... bad. I saw emails, passwords, password hints. SSL keys and session cookies. Important servers brimming with visitor IPs. Attack ships on fire off the shoulder of Orion, c-beams glittering in the dark near the Tannhäuser Gate. I should probably patch OpenSSL." alt="Heartbleed" srcset="//imgs.xkcd.com/comics/heartbleed_2x.png 2x">
-</img>
-</a>
-</center></p>
-
-<p>This is the course site for <strong>cs6501: Understanding and Securing
-TLS</strong>. [<a href="/syllabus">Syllabus</a>]</p>
-
-<p>The first class is Friday, 20 January 2017 (9:30am-noon in Thornton
-Hall D115).</p>
- 
-  
   
 
-</section>
 
+</div>
+
+</footer>
+
+</article>
       <footer id="main-footer" class="container main_footer">
   
 

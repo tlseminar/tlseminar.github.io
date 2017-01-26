@@ -20,7 +20,6 @@ Bargav Jayaraman (bj4nq)<br>
 Benjamin Lowman	(brl2xx)<br>
 Bill Young (wty5dn)<br>
 Darion Cassel (dfc9ed)<br>
-Guthrie Alexander (goa5t)<br>
 Sam Havron (sgh7cc)<br>
 Vikram Patwardhan (vvp2da)<br>
 Yuchi Tian (yt8mn)<br>

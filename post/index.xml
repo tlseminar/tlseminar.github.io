@@ -6,8 +6,251 @@
     <description>Recent content in Post-rsses on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 22 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Jan 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>The First Few Milliseconds of an TLS 1.2 Connection</title>
+      <link>https://tlseminar.github.io/first-few-milliseconds/</link>
+      <pubDate>Thu, 26 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/first-few-milliseconds/</guid>
+      <description>
+
+&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;In 2009, Jeff Moser published &lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;an excellent article&lt;/a&gt; on the first few milliseconds of an HTTP request. It described in detail how TLS 1.0 connections are established, including a great description of RSA. We&amp;rsquo;ve attempted to build and adapt upon that article here by describing how the process works for a TLS 1.2 connection. As of January 2nd 2017, TLS 1.2 has roughly &lt;a href=&#34;https://www.trustworthyinternet.org/ssl-pulse/&#34;&gt;83.2% adoption&lt;/a&gt; among top websites, so now is a great time to dive in.&lt;/p&gt;
+
+&lt;p&gt;The process of conecting via TLS 1.2 begins when the user attempts to navigate to a website. For this description, we are attempting to navigate to &lt;a href=&#34;https://example.com/&#34;&gt;https://example.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;tls-layers&#34;&gt;TLS Layers&lt;/h2&gt;
+
+&lt;p&gt;The TLS protocol is composed of several layers, which come together to form each request. Here are descriptions of the common layers&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/gnutls-layers.png&#34; alt=&#34;tls layers&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Transport Layer&lt;/strong&gt; - The protocol over which TLS data is distributed. For HTTPS, this will be TCP. Needs only to be reliable (packet loss must be handled). Not a direct part of TLS.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Record Layer&lt;/strong&gt; - The record layer handles sending/receiving TLS messages, including data fragmentation for packets, (optional and bad) compression, and encryption.&lt;/p&gt;
+
+&lt;p&gt;The next three are common protocols that operate within the body of the Record Layer. TLS extensions can specify additional protocols.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Handshake Protocol&lt;/strong&gt; - Responsible for choosing a cipher suite, connection parameters, and coordinating a shared secret.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Alert Procotol&lt;/strong&gt; - Used to communicate warnings and errors. The most common alerts are for an invalid server certificate or to signal the end of a TLS connection when the client exits.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Application Protocol&lt;/strong&gt; - Raw higher-level application data transmitted by TLS. For us, this is HTTP.&lt;/p&gt;
+
+&lt;p&gt;Now, onto the first few milliseconds of a TLSv1.2 request!&lt;/p&gt;
+
+&lt;h2 id=&#34;part-0-the-record-layer&#34;&gt;Part 0: The Record Layer&lt;/h2&gt;
+
+&lt;p&gt;Since the following packets will be wrapped in a Record Layer struct, it&amp;rsquo;s worth describing that here.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/record-layer.png&#34; alt=&#34;record layer struct&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The record packet specifies the Content Type of the request, the TLS version, data length, and then the content data (in this image, a handshake clienthello).&lt;/p&gt;
+
+&lt;p&gt;Note that the version specified in the record layer is often different from that specified in the handshake. This is for compatibility with some old TLS/SSL servers. You will often see the version here specified as TLS 1.0 (0x0103, or SSL 3.0)&lt;/p&gt;
+
+&lt;h2 id=&#34;part-1-client-hello&#34;&gt;Part 1: Client Hello&lt;/h2&gt;
+
+&lt;p&gt;Our web browser (Microsoft Edge 38.14393.0.0 on Windows 10) will begin the TLS 1.2 handshake with a ClientHello record.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/client-hello.png&#34; alt=&#34;clienthello record&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see several important fields here worth mentioning. First, the &lt;strong&gt;time&lt;/strong&gt; (GMT seconds since midnight Jan 1, 1970) and &lt;strong&gt;random&lt;/strong&gt; bytes are included. This will be used later in the protocol to generate our symmetric encryption key.&lt;/p&gt;
+
+&lt;p&gt;The client can send an optional &lt;strong&gt;session ID&lt;/strong&gt; (not sent in this case) to quickly resume a previous TLS connection and skip portions of the TLS handshake.&lt;/p&gt;
+
+&lt;p&gt;Arguably the most important part of the ClientHello message is the list of &lt;strong&gt;cipher suites&lt;/strong&gt;, which dictate the key exchange algorithm, bulk encryption algorithm (with key length), MAC, and a psuedo-random function. The list should be ordered by client preference. The collection of these choices is a &amp;ldquo;cipher suite&amp;rdquo;, and the server is responsible for choosing a secure one it supports, or return an error if it doesn&amp;rsquo;t support any.&lt;/p&gt;
+
+&lt;p&gt;The final field specified in the specification is for &lt;strong&gt;compression methods&lt;/strong&gt;. However, secure clients will advertise that they do not support compression (by passing &amp;ldquo;null&amp;rdquo; as the only algorithm) to avoid the &lt;a href=&#34;https://en.wikipedia.org/wiki/CRIME_(security_exploit)&#34;&gt;CRIME attack&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, the ClientHello can have a number of different extensions. A common one is &lt;strong&gt;server_name&lt;/strong&gt;, which specifies the hostname the connection is meant for, so webservers hosting multiple sites can present the correct certificate.&lt;/p&gt;
+
+&lt;h2 id=&#34;server-hello&#34;&gt;Server Hello&lt;/h2&gt;
+
+&lt;p&gt;Once the server has processed our ClientHello, it will respond with a TLSv1.2 ServerHello message&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/server-hello.png&#34; alt=&#34;serverhello message&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This message returns several important fields, beginning with the TLS &lt;strong&gt;version&lt;/strong&gt; to be used, usually the highest version supported by both client and server. It also includes the server &lt;strong&gt;time&lt;/strong&gt; (not sure why example.com is so off!) and 28 &lt;strong&gt;random bytes&lt;/strong&gt; for use later.&lt;/p&gt;
+
+&lt;p&gt;The server also makes a &lt;strong&gt;cipher suite selection&lt;/strong&gt; from the list chosen by the client. This should be the strongest suite supported by both. In our case, the server has chosen TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, indicating the following:
+* Key Exchange: Elliptic curve diffie-hellman, signed with RSA
+* Encryption: AES in GCM mode with 128 bit keys
+* MAC: SHA256&lt;/p&gt;
+
+&lt;h2 id=&#34;certificate&#34;&gt;Certificate&lt;/h2&gt;
+
+&lt;p&gt;After the ServerHello, the server will send a certificate chain to the client if applicable.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/server-certificate.png&#34; alt=&#34;server certificate message&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Each certificate comes with information about domains it supports, who it was issued by, and the time period (start and end) of its validity.&lt;/p&gt;
+
+&lt;p&gt;The certificate chain is a list of certificates beginning with the TLS certificate for the current domain, and ending in a root certificate that is built-in to the web browser. Each certificate is signed by the certificate above it in the chain, and it is this chain that the client validates to verify the server.&lt;/p&gt;
+
+&lt;p&gt;In our case, example.com has a certificate issued by &amp;ldquo;DigiCert SHA2 High Assurance&amp;rdquo;, which in turn is issued by the root certificate &amp;ldquo;DigiCert High Assurance EV Root CA.&amp;rdquo; On Windows, you can view the list of root certificates on your system with &lt;code&gt;certmgr.msc&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/certmgr.png&#34; alt=&#34;certmgr&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see the DigiCert High Assurance EV Root CA in our store, along with several other DigiCert certificates. OSX allows you to see root certificates using the &amp;ldquo;Keychain Access&amp;rdquo; program, where they are listed under &amp;ldquo;System Roots&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/keychain-access.png&#34; alt=&#34;osx keychain access&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In general, browsers will defer to the operating system root certificates as the central store for their validation. One notable exception is Firefox, which uses its own certificate store and ignores system root certificates by default.&lt;/p&gt;
+
+&lt;p&gt;Root CA certificates are implicitly trusted by every system they&amp;rsquo;re included on. An attacker who manages to control their private key could impersonate any website without raising any red flags, so it&amp;rsquo;s important that the certificate authorities keep them safe (&lt;a href=&#34;https://www.mail-archive.com/dev-security-policy@lists.mozilla.org/msg05455.html&#34;&gt;but that doesn&amp;rsquo;t always happen&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h2 id=&#34;optional-certificate-status-ocsp&#34;&gt;Optional: Certificate Status (OCSP)&lt;/h2&gt;
+
+&lt;p&gt;One increasingly common extension is the Online Certificate Status Protocol (OCSP), used for certificate revocations. OCSP servers can be consulted by clients to check if the server certificate has been revoked, which helps solve a critical problem with TLS certificates. Servers response to certificate requests by issuing a signed response from the CA with a status code indicating whether or not the certificate is valid.&lt;/p&gt;
+
+&lt;p&gt;Prior to wide deployment of OCSP, TLS vendors shipped certificate revocation lists (CRLs) that contained serial numbers of revoked certificates.&lt;/p&gt;
+
+&lt;p&gt;To reduce load, servers often cache the OCSP response and send it as a Certificate Status TLS message (OCSP stapling). This helps reduce load on the OCSP system and protects attackers from analyzing OCSP requests to determine client browsing habits. The server will send this cached message in response to a &lt;strong&gt;status_request&lt;/strong&gt; extension in the ClientHello message.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/ocsp-stapling.png&#34; alt=&#34;ocsp stapling&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Each OCSP ticket is signed by a trusted OCSP server. The response itself consists of a &lt;strong&gt;responseStatus&lt;/strong&gt; and optional &lt;strong&gt;responseBytes&lt;/strong&gt; with additional information.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/ocsp-response.png&#34; alt=&#34;ocsp response info&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In our case, the OCSP ticket is valid and cached for 7 days (1/20 to 1/27). The server itself is responsible for refreshing its OCSP ticket at that time.&lt;/p&gt;
+
+&lt;h2 id=&#34;serverkeyexchange&#34;&gt;ServerKeyExchange&lt;/h2&gt;
+
+&lt;p&gt;For DHE key-exchanges (DHE_DSS, DHE_RSA, and DH_anon), the server will use a ServerKeyExchange message to specify the parameters for the algorithm.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/dhe-params.png&#34; alt=&#34;dhe parameters&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The server has specified a &lt;strong&gt;named_curve&lt;/strong&gt; curve type using the &lt;strong&gt;secp256r1&lt;/strong&gt; elliptic curve (also known as &lt;strong&gt;P-256&lt;/strong&gt; or &lt;strong&gt;prime256v1&lt;/strong&gt;). This is a public &lt;a href=&#34;http://www.secg.org/sec2-v2.pdf&#34;&gt;NIST standard curve&lt;/a&gt;. With knowledge of the curve to be used, both the server and client will know the crucial $p$ and $G$ values for ECDHE. For secp256r1, these are defined by NIST as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;p = FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFF
+
+G = 03 6B17D1F2 E12C4247 F8BCE6E5 63A440F2 77037D81 2DEB33A0 F4A13945 D898C296
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The server will choose a random private key and compute $a*G$ as its &lt;strong&gt;public key&lt;/strong&gt;. In addition to this it also signs the data with its private key - signing &lt;code&gt;SHA256(client_random + server_random + server_params)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;server-hello-done&#34;&gt;Server Hello Done&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/server-hello-done.png&#34; alt=&#34;serverhellodone&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This short message from the server tells the client it&amp;rsquo;s done sending information. Nothing more.&lt;/p&gt;
+
+&lt;h2 id=&#34;clientkeyexchange&#34;&gt;ClientKeyExchange&lt;/h2&gt;
+
+&lt;p&gt;Now, the client must  send its own ephemeral public key (for DH).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/client-dhe-key.png&#34; alt=&#34;client dhe key&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is calculated by generating a random private key $b$ and from there calculating $b*G$ as its public key.&lt;/p&gt;
+
+&lt;h2 id=&#34;completing-the-key-exchange&#34;&gt;Completing the Key Exchange&lt;/h2&gt;
+
+&lt;p&gt;Now that the client has $a*G$ and the server $b*G$, both can calculate the final secret value $a*b*G$ with their own private keys. This is known as the &lt;strong&gt;pre-master secret&lt;/strong&gt;. The key detail here is that calculating $a*b*G$ from $a*G$ and $b*G$ alone is computationally difficult.&lt;/p&gt;
+
+&lt;p&gt;We just have one final step to convert our pre-master secret into the final &lt;strong&gt;master secret&lt;/strong&gt;. We will use the random bytes generated by the client and server earlier along with our chosen psuedo-random function. For us, that was SHA-256.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;master_secret = PRF(pre_master_secret, &amp;quot;master secret&amp;quot;, client_random + server_random)[0..47]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The TLS 1.2 spec defines the PRF as &lt;code&gt;PRF(secret, label, seed)&lt;/code&gt; which expands to &lt;code&gt;P_SHA256(secret, label + seed)&lt;/code&gt;. The label is the literal ASCII string &amp;ldquo;master secret&amp;rdquo; without any null terminator. This expands to the following definition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;P_sha256(secret, seed) = HMAC_sha256(secret, A(1) + seed) +
+                         HMAC_sha256(secret, A(2) + seed) +
+                         HMAC_sha256(secret, A(3) + seed) +
+                         ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;where &lt;code&gt;A(x)&lt;/code&gt; is defined recursively as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;A(0) = seed
+A(x) = HMAC_sha256(secret, A(x-1))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The result of the PRF is the final key that will be used for the bulk of the crypto in our application. We only want 48 bytes here, so we would need 2 rounds of SHA-256 and would discard the extra data.&lt;/p&gt;
+
+&lt;h2 id=&#34;client-changecipherspec&#34;&gt;Client ChangeCipherSpec&lt;/h2&gt;
+
+&lt;p&gt;The final unencrypted message sent by the client will be a ChangeCipherSpec message, which indicates that all following messages will be encrypted.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/change-cipher-spec.png&#34; alt=&#34;changecipherspec message&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;client-finished-server-changecipherspec-and-server-finished&#34;&gt;Client Finished, Server ChangeCipherSpec, and Server Finished&lt;/h2&gt;
+
+&lt;p&gt;Immediately after sending a ChangeCipherSpec message, the client will send an encrypted Handshake Finished message to ensure the server is able to understand the agreed-upon encryption. The message will contain a &lt;strong&gt;hash of all previous handshake messages&lt;/strong&gt;, along with the string &amp;ldquo;client finished&amp;rdquo;. This is very important because it verifies that no part of the handshake has been tampered with by an attacker. It also includes the random bytes that were sent by the client and server, protecting it from replay attacks where the attacker pretends to be one of the parties.&lt;/p&gt;
+
+&lt;p&gt;Once received by the server, the server will acknowledge with its own ChangeCipherSpec message, followed immediately by its own Finished message verifying the contents of the handshake.&lt;/p&gt;
+
+&lt;p&gt;Note: if you have been following along in Wireshark, there appears to be a bug with Client/Server Finish messages when using AES_GCM that mislabels them.&lt;/p&gt;
+
+&lt;h2 id=&#34;application-data&#34;&gt;Application Data&lt;/h2&gt;
+
+&lt;p&gt;Finally, we can begin to transmit encrypted data! It may seem like a lot of work, but that is soon to pay off. The only remaining step is to discuss how the data is encrypted with AES_GCM, an &lt;a href=&#34;https://en.wikipedia.org/wiki/Authenticated_encryption&#34;&gt;AEAD&lt;/a&gt; cipher.&lt;/p&gt;
+
+&lt;p&gt;First, we generate a MAC, key, and IV for both the client and the server using our master secret and the PRF definition from earlier.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;key_data = PRF(master_secret, &amp;quot;key expansion&amp;quot;, server_random + client_random);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since we are using 128-bit AES with SHA-256, we&amp;rsquo;ll pull out the following key data:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// client_write_MAC_key = key_data[0..31]
+// server_write_MAC_key = key_data[32..63]
+client_write_key = key_data[64..79]
+server_write_key = key_data[80..95]
+client_write_IV = key_data[96..99]
+server_write_IV = key_data[100..103]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For AEAD ciphers like GCM, we don&amp;rsquo;t need the MAC keys, but we offset them anyways. The client and server also get different keys to prevent a replay attack where a client message it looped back to it.&lt;/p&gt;
+
+&lt;p&gt;We also construct &lt;code&gt;additional_data&lt;/code&gt; and an 8-byte &lt;code&gt;nonce&lt;/code&gt;, both of which are sent with the encrypted data. In the past, it was thought that the nonce could be either random or just a simple session counter. However, &lt;a href=&#34;https://github.com/nonce-disrespect/nonce-disrespect&#34;&gt;recent research&lt;/a&gt; found many sites using random nonces for AES_GCM were vulnerable to nonce reuse attacks, so it&amp;rsquo;s best to just use an incrementing counter tied to the session.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;additional_data = sequence_num + record_type + tls_version + length
+nonce = &amp;lt;random_8_bytes&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, we can encrypt our data with AES GCM!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;encrypted = AES_GCM(client_write_key, client_write_IV+nonce, &amp;lt;DATA&amp;gt;, additional_data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and the server can read it with&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;DATA&amp;gt; = AES_GCM(client_write_key, client_write_IV+nonce, encrypted, additional_data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://tlseminar.github.io/images/firstfew/tls-hs-ecdhe.png&#34; alt=&#34;tls 1.2 ecdhe handshake&#34; /&gt;
+(source: &lt;a href=&#34;https://timtaubert.de/blog/2015/11/more-privacy-less-latency-improved-handshakes-in-tls-13/&#34;&gt;More Privacy, Less Latency: Improved Handshakes in TLS version 1.3&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s all it takes to make a TLS 1.2 connection! Over the course of ~103ms, we established a bidirectional encrypted tunnel and sent a full HTTP request and response in only 2 round trips. Although we didn&amp;rsquo;t cover nearly everything in the &lt;a href=&#34;https://tools.ietf.org/html/rfc5246&#34;&gt;full TLS 1.2 RFC&lt;/a&gt;, we hope you have a pretty good overview of how process functions - and how much work goes in behind the scenes to secure web traffic!&lt;/p&gt;
+
+&lt;h2 id=&#34;sources&#34;&gt;Sources&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with&#34;&gt;https://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://tools.ietf.org/html/rfc5246&#34;&gt;https://tools.ietf.org/html/rfc5246&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://tools.ietf.org/html/rfc5288&#34;&gt;https://tools.ietf.org/html/rfc5288&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.secg.org/sec2-v2.pdf&#34;&gt;http://www.secg.org/sec2-v2.pdf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://vincent.bernat.im/en/blog/2011-ssl-perfect-forward-secrecy.html&#34;&gt;https://vincent.bernat.im/en/blog/2011-ssl-perfect-forward-secrecy.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/nonce-disrespect/nonce-disrespect&#34;&gt;https://github.com/nonce-disrespect/nonce-disrespect&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.trustworthyinternet.org/ssl-pulse/&#34;&gt;https://www.trustworthyinternet.org/ssl-pulse/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Blogging Mechanics</title>
