@@ -1,6 +1,6 @@
 +++
 date = "26 Jan 2017"
-author = "[Team Poppyseed](/teams)"
+author = "Team Poppyseed"
 draft = false
 title = "The First Few Milliseconds of an TLS 1.2 Connection"
 slug = "first-few-milliseconds"
