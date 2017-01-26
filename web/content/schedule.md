@@ -1,94 +1,26 @@
-# Teams
+See [Teams](/teams) for the class teams and responsibilities.
 
-(Note: team names are temporary, and will map to teams on schedule.)
+**[Class 1](/class 1) - Introduction**  
+[The First Few Milliseconds of an TLS 1.2 Connection](/first-few/milliseconds)
 
-<table>
-<tr bgcolor="#CCC"><td><b>Team Sesame</b></td><td><b>Team Cinnamon</b></td><td><b>Team Poppyseed</b></td></tr>
-<tr>
-<td>
-Adam Imeson (aei5uj)<Br>
-Benyi Gong (bg3va)<br>
-Bethlehem Naylor (bn9eb)<br>
-Bhuvanesh Murali (bm4cr)<br>
-Haina Li (hl3wb)<br>
-Joshua Holtzman	(jmh2ba)<br>
-Reid Bixler (rmb3yz)<br>
-</td>
-<td>
-Anant Kharkar (agk7uc)<br>
-Bargav Jayaraman (bj4nq)<br>
-Benjamin Lowman	(brl2xx)<br>
-Bill Young (wty5dn)<br>
-Darion Cassel (dfc9ed)<br>
-Sam Havron (sgh7cc)<br>
-Vikram Patwardhan (vvp2da)<br>
-Yuchi Tian (yt8mn)<br>
-</td>
-<td>
-Collin Berman (cmb5nh)<br>
-Cyrus Malekpour	(cm7bv)<br>
-Haoran Liu (hl4fb)<br>
-Daniel Saha (drs5ma)<br>
-Minghua Jiang (mj2eu)<br>
-Saeed Mahlouji Far (sm5fd)<br>
-Tianyi Jin (tj2cw)<br>
-</td>
-</tr>
-</table>
+**Class 2: Oracle Padding Attacks**  
 
-</table>
+[Analysis of the SSL 3.0
+Protocol](https://tlseminar.github.io/docs/analysisssl3.pdf)  
+Important sections to read: 3.3, 5 (For a broad analysis of SSL vulnerabilities,
+consider reading sections 3 and 4. Short-block padding attacks are
+briefly mentioned in section 3.3.)
 
-# Schedule
+[Security Flaws Introduced by CBC Padding](http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf)  
+Important Sections to read: 1, 3, 5.1, 7 
 
-For each week (except for project proposal and presentation weeks),
-one team will be responsible for Leading the class, one team for
-writing a Blog post on the class topic, and one team for arranging
-food. 
+[Here Come The XOR Ninjas](https://tlseminar.github.io/docs/beast.pdf)  
+Important Sections to read: 1, 4.1, 4.2, 5.1, 5.2
 
-**Leading Team.**  The team responsible for leading a class should:
+[Lucky Thirteen: Breaking the TLS and DTLS Record Protocols](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf)  
+Important Sections to read: 3, 4, 5, 7
 
-- Two weeks before the scheduled class, meet briefly with the coordinator(s) to discuss plan for the class.
-- One week before the scheduled class, go over detailed plan for class with coordinator.
-- No later than one week before class: send out to the class Slack group the preparation materials for the class.  This can include links to papers to read, but could also include exercises to do or software to install and experiment with, etc.
-- Day of class: lead an interesting, engaging, and illuminating class!
-- After class: help the Blogging team by providing them with your materials, answering their questions, and reviewing their write-up.
+**Class 3: Downgrade Attacks**
 
-**Blogging Team.** The team responsible for blogging a class should:
-
-- The week before the scheduled class, do the preparation work posted by the lead team.
-- The week before the scheduled class, develop a team plan for how to manage the blogging.
-- During class, participate actively in the class, and take detailed notes (this can be distributed among the team).
-- By the Tuesday following class, have a draft of the blog post ready, and share it with the rest of the class (including the leading team and coordinators) for comments.
-- By the next Friday (one week after the class), have a final version of the blog post ready to add to the course site.
-
-**Food Team.** The team responsible for food should:
-
-- The week before the scheduled class, do the preparation work posted by the lead team.
-- Plan among yourselves what food to bring and who is responsible.  If
-  you want to use my credit card to buy food, borrow it.
-- Bring something yummy, but not too messy or disruptive, to class.
-- Save the receipts to get reimbursed, and take care of the
-  reimbursement. (This is easiest if the reimbursee is someone already
-  set up in the CS department's financial system.)
-
-<table>
-<tr bgcolor="#CCC"><td><b>Date</b></td><td><b>Topic</b></td><td width=12%><b>Team T</b></td><td width=12%><b>Team L</b></td><td width=12%><b>Team S</b></td></tr>
-
-<tr><td>Class 1 (20 Jan)</td><td>Intro</td><td>Plan</td><td bgcolor="#44AAEE">Blog</td><td>Plan</td></tr>
-
-<tr><td>Class 2 (27 Jan)</td><td>Padding Oracle Attacks</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 3 (3 Feb)</td><td>Logjam/DROWN</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 4 (10 Feb)</td><td>Certificates</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 5 (17 Feb)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 6 (24 Feb)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 7 (3 Mar)</td><td>TBD/Projects</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td bgcolor="#66EEAA" style="text-align:center" colspan=5>Spring Break</td></tr>
-<tr><td>Class 8 (17 Mar)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 9 (24 Mar)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 10 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 11 (7 Apr)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 13 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td>-</td><td>-</td><td>-</td></tr>
-</table>
+**Class 4: Certificates**
 

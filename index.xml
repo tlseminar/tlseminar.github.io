@@ -753,107 +753,31 @@ learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://tlseminar.github.io/schedule/</guid>
-      <description>
+      <description>&lt;p&gt;See &lt;a href=&#34;https://tlseminar.github.io/teams&#34;&gt;Teams&lt;/a&gt; for the class teams and responsibilities.&lt;/p&gt;
 
-&lt;h1 id=&#34;teams&#34;&gt;Teams&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/class 1&#34;&gt;Class 1&lt;/a&gt; - Introduction&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&#34;https://tlseminar.github.io/first-few/milliseconds&#34;&gt;The First Few Milliseconds of an TLS 1.2 Connection&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;(Note: team names are temporary, and will map to teams on schedule.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Class 2: Oracle Padding Attacks&lt;/strong&gt;&lt;/p&gt;
 
-&lt;table&gt;
-&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Team Sesame&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Team Cinnamon&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Team Poppyseed&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;
-Adam Imeson (aei5uj)&lt;Br&gt;
-Benyi Gong (bg3va)&lt;br&gt;
-Bethlehem Naylor (bn9eb)&lt;br&gt;
-Bhuvanesh Murali (bm4cr)&lt;br&gt;
-Haina Li (hl3wb)&lt;br&gt;
-Joshua Holtzman (jmh2ba)&lt;br&gt;
-Reid Bixler (rmb3yz)&lt;br&gt;
-&lt;/td&gt;
-&lt;td&gt;
-Anant Kharkar (agk7uc)&lt;br&gt;
-Bargav Jayaraman (bj4nq)&lt;br&gt;
-Benjamin Lowman (brl2xx)&lt;br&gt;
-Bill Young (wty5dn)&lt;br&gt;
-Darion Cassel (dfc9ed)&lt;br&gt;
-Sam Havron (sgh7cc)&lt;br&gt;
-Vikram Patwardhan (vvp2da)&lt;br&gt;
-Yuchi Tian (yt8mn)&lt;br&gt;
-&lt;/td&gt;
-&lt;td&gt;
-Collin Berman (cmb5nh)&lt;br&gt;
-Cyrus Malekpour (cm7bv)&lt;br&gt;
-Haoran Liu (hl4fb)&lt;br&gt;
-Daniel Saha (drs5ma)&lt;br&gt;
-Minghua Jiang (mj2eu)&lt;br&gt;
-Saeed Mahlouji Far (sm5fd)&lt;br&gt;
-Tianyi Jin (tj2cw)&lt;br&gt;
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;Analysis of the SSL 3.0
+Protocol&lt;/a&gt;&lt;br /&gt;
+Important sections to read: 3.3, 5 (For a broad analysis of SSL vulnerabilities,
+consider reading sections 3 and 4. Short-block padding attacks are
+briefly mentioned in section 3.3.)&lt;/p&gt;
 
-&lt;p&gt;&lt;/table&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf&#34;&gt;Security Flaws Introduced by CBC Padding&lt;/a&gt;&lt;br /&gt;
+Important Sections to read: 1, 3, 5.1, 7&lt;/p&gt;
 
-&lt;h1 id=&#34;schedule&#34;&gt;Schedule&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/beast.pdf&#34;&gt;Here Come The XOR Ninjas&lt;/a&gt;&lt;br /&gt;
+Important Sections to read: 1, 4.1, 4.2, 5.1, 5.2&lt;/p&gt;
 
-&lt;p&gt;For each week (except for project proposal and presentation weeks),
-one team will be responsible for Leading the class, one team for
-writing a Blog post on the class topic, and one team for arranging
-food.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/TLStiming.pdf&#34;&gt;Lucky Thirteen: Breaking the TLS and DTLS Record Protocols&lt;/a&gt;&lt;br /&gt;
+Important Sections to read: 3, 4, 5, 7&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Leading Team.&lt;/strong&gt;  The team responsible for leading a class should:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Class 3: Downgrade Attacks&lt;/strong&gt;&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Two weeks before the scheduled class, meet briefly with the coordinator(s) to discuss plan for the class.&lt;/li&gt;
-&lt;li&gt;One week before the scheduled class, go over detailed plan for class with coordinator.&lt;/li&gt;
-&lt;li&gt;No later than one week before class: send out to the class Slack group the preparation materials for the class.  This can include links to papers to read, but could also include exercises to do or software to install and experiment with, etc.&lt;/li&gt;
-&lt;li&gt;Day of class: lead an interesting, engaging, and illuminating class!&lt;/li&gt;
-&lt;li&gt;After class: help the Blogging team by providing them with your materials, answering their questions, and reviewing their write-up.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Blogging Team.&lt;/strong&gt; The team responsible for blogging a class should:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The week before the scheduled class, do the preparation work posted by the lead team.&lt;/li&gt;
-&lt;li&gt;The week before the scheduled class, develop a team plan for how to manage the blogging.&lt;/li&gt;
-&lt;li&gt;During class, participate actively in the class, and take detailed notes (this can be distributed among the team).&lt;/li&gt;
-&lt;li&gt;By the Tuesday following class, have a draft of the blog post ready, and share it with the rest of the class (including the leading team and coordinators) for comments.&lt;/li&gt;
-&lt;li&gt;By the next Friday (one week after the class), have a final version of the blog post ready to add to the course site.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Food Team.&lt;/strong&gt; The team responsible for food should:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The week before the scheduled class, do the preparation work posted by the lead team.&lt;/li&gt;
-&lt;li&gt;Plan among yourselves what food to bring and who is responsible.  If
-you want to use my credit card to buy food, borrow it.&lt;/li&gt;
-&lt;li&gt;Bring something yummy, but not too messy or disruptive, to class.&lt;/li&gt;
-&lt;li&gt;Save the receipts to get reimbursed, and take care of the
-reimbursement. (This is easiest if the reimbursee is someone already
-set up in the CS department&amp;rsquo;s financial system.)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;
-&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Topic&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team T&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team L&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team S&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
-
-&lt;tr&gt;&lt;td&gt;Class 1 (20 Jan)&lt;/td&gt;&lt;td&gt;Intro&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;/tr&gt;
-
-&lt;tr&gt;&lt;td&gt;Class 2 (27 Jan)&lt;/td&gt;&lt;td&gt;Padding Oracle Attacks&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 3 (3 Feb)&lt;/td&gt;&lt;td&gt;Logjam/DROWN&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 4 (10 Feb)&lt;/td&gt;&lt;td&gt;Certificates&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 5 (17 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 6 (24 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 7 (3 Mar)&lt;/td&gt;&lt;td&gt;TBD/Projects&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td bgcolor=&#34;#66EEAA&#34; style=&#34;text-align:center&#34; colspan=5&gt;Spring Break&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 8 (17 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 9 (24 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 10 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 11 (7 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 12 (14 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 13 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 14 (28 Apr)&lt;/td&gt;&lt;td&gt;Mini-Conference&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;/tr&gt;
-&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Class 4: Certificates&lt;/strong&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -983,6 +907,116 @@ someone else who does a systems-focused project would be able to count
 it for a different area. I can help provide guidance on this, but it
 is ultimately up to your committee to decide if a course counts for a
 particular area requirement.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://tlseminar.github.io/teams/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/teams/</guid>
+      <description>
+
+&lt;h1 id=&#34;teams&#34;&gt;Teams&lt;/h1&gt;
+
+&lt;p&gt;(Note: team names are temporary, and will map to teams on schedule.)&lt;/p&gt;
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Team Sesame&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Team Cinnamon&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Team Poppyseed&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+Adam Imeson (aei5uj)&lt;Br&gt;
+Benyi Gong (bg3va)&lt;br&gt;
+Bethlehem Naylor (bn9eb)&lt;br&gt;
+Bhuvanesh Murali (bm4cr)&lt;br&gt;
+Haina Li (hl3wb)&lt;br&gt;
+Joshua Holtzman (jmh2ba)&lt;br&gt;
+Reid Bixler (rmb3yz)&lt;br&gt;
+&lt;/td&gt;
+&lt;td&gt;
+Anant Kharkar (agk7uc)&lt;br&gt;
+Bargav Jayaraman (bj4nq)&lt;br&gt;
+Benjamin Lowman (brl2xx)&lt;br&gt;
+Bill Young (wty5dn)&lt;br&gt;
+Darion Cassel (dfc9ed)&lt;br&gt;
+Sam Havron (sgh7cc)&lt;br&gt;
+Vikram Patwardhan (vvp2da)&lt;br&gt;
+Yuchi Tian (yt8mn)&lt;br&gt;
+&lt;/td&gt;
+&lt;td&gt;
+Collin Berman (cmb5nh)&lt;br&gt;
+Cyrus Malekpour (cm7bv)&lt;br&gt;
+Haoran Liu (hl4fb)&lt;br&gt;
+Daniel Saha (drs5ma)&lt;br&gt;
+Minghua Jiang (mj2eu)&lt;br&gt;
+Saeed Mahlouji Far (sm5fd)&lt;br&gt;
+Tianyi Jin (tj2cw)&lt;br&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;/table&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;schedule&#34;&gt;Schedule&lt;/h1&gt;
+
+&lt;p&gt;For each week (except for project proposal and presentation weeks),
+one team will be responsible for Leading the class, one team for
+writing a Blog post on the class topic, and one team for arranging
+food.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Leading Team.&lt;/strong&gt;  The team responsible for leading a class should:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Two weeks before the scheduled class, meet briefly with the coordinator(s) to discuss plan for the class.&lt;/li&gt;
+&lt;li&gt;One week before the scheduled class, go over detailed plan for class with coordinator.&lt;/li&gt;
+&lt;li&gt;No later than one week before class: send out to the class Slack group the preparation materials for the class.  This can include links to papers to read, but could also include exercises to do or software to install and experiment with, etc.&lt;/li&gt;
+&lt;li&gt;Day of class: lead an interesting, engaging, and illuminating class!&lt;/li&gt;
+&lt;li&gt;After class: help the Blogging team by providing them with your materials, answering their questions, and reviewing their write-up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Blogging Team.&lt;/strong&gt; The team responsible for blogging a class should:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The week before the scheduled class, do the preparation work posted by the lead team.&lt;/li&gt;
+&lt;li&gt;The week before the scheduled class, develop a team plan for how to manage the blogging.&lt;/li&gt;
+&lt;li&gt;During class, participate actively in the class, and take detailed notes (this can be distributed among the team).&lt;/li&gt;
+&lt;li&gt;By the Tuesday following class, have a draft of the blog post ready, and share it with the rest of the class (including the leading team and coordinators) for comments.&lt;/li&gt;
+&lt;li&gt;By the next Friday (one week after the class), have a final version of the blog post ready to add to the course site.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Food Team.&lt;/strong&gt; The team responsible for food should:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The week before the scheduled class, do the preparation work posted by the lead team.&lt;/li&gt;
+&lt;li&gt;Plan among yourselves what food to bring and who is responsible.  If
+you want to use my credit card to buy food, borrow it.&lt;/li&gt;
+&lt;li&gt;Bring something yummy, but not too messy or disruptive, to class.&lt;/li&gt;
+&lt;li&gt;Save the receipts to get reimbursed, and take care of the
+reimbursement. (This is easiest if the reimbursee is someone already
+set up in the CS department&amp;rsquo;s financial system.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Topic&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team T&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team L&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team S&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+
+&lt;tr&gt;&lt;td&gt;Class 1 (20 Jan)&lt;/td&gt;&lt;td&gt;Intro&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;/tr&gt;
+
+&lt;tr&gt;&lt;td&gt;Class 2 (27 Jan)&lt;/td&gt;&lt;td&gt;Padding Oracle Attacks&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 3 (3 Feb)&lt;/td&gt;&lt;td&gt;Logjam/DROWN&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 4 (10 Feb)&lt;/td&gt;&lt;td&gt;Certificates&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 5 (17 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 6 (24 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 7 (3 Mar)&lt;/td&gt;&lt;td&gt;TBD/Projects&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td bgcolor=&#34;#66EEAA&#34; style=&#34;text-align:center&#34; colspan=5&gt;Spring Break&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 8 (17 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 9 (24 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 10 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 11 (7 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 12 (14 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 13 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 14 (28 Apr)&lt;/td&gt;&lt;td&gt;Mini-Conference&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
 </description>
     </item>
     
