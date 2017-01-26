@@ -72,7 +72,7 @@ food.
   set up in the CS department's financial system.)
 
 <table>
-<tr bgcolor="#CCC"><td><b>Date</b></td><td><b>Topic</b></td><td width=12%><b>Team T</b></td><td width=12%><b>Team L</b></td><td width=12%><b>Team S</b></td></tr>
+<tr bgcolor="#CCC"><td><b>Date</b></td><td><b>Topic</b></td><td width=12%><b>Team T (Cinnamon)</b></td><td width=12%><b>Team L (Poppyseed)</b></td><td width=12%><b>Team S (Sesame)</b></td></tr>
 
 <tr><td>Class 1 (20 Jan)</td><td>Intro</td><td>Plan</td><td bgcolor="#44AAEE">Blog</td><td>Plan</td></tr>
 
