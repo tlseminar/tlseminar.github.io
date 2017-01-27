@@ -1,7 +1,7 @@
 See [Teams](/teams) for the class teams and responsibilities.
 
 **[Class 1](/class 1) - Introduction**  
-[The First Few Milliseconds of an TLS 1.2 Connection](/first-few/milliseconds)
+[The First Few Milliseconds of an TLS 1.2 Connection](/first-few-milliseconds)
 
 **Class 2: Oracle Padding Attacks**  
 
