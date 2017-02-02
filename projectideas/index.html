@@ -51,7 +51,7 @@
     },
     "datePublished": "0001-01-01",
     "description": "",
-    "wordCount":  385 
+    "wordCount":  435 
   }
 </script>
 
@@ -222,6 +222,17 @@ images.</p></li>
 <li><p><a href="http://heartbleed.com/">Heartbleed</a> shocked the Internet for a while mainly because it allowed for remote attackers to access data in the server&rsquo;s memory, most importantly the server&rsquo;s private key. Heartbleed was a realization of an important concept: attacking a service and stealing data from the server&rsquo;s memory. There are numerous practical examples of web-based services that can become vulnerable to this type of attack. Can we mitigate this risk by using tools at the programming language level? A combination of Rust&rsquo;s language guarantees and a memory protection system might be the answer! Checkout <a href="https://github.com/ctz/rustls">Rustls</a> and <a href="https://github.com/halmohri/fc">fidelius charm</a>.</p></li>
 
 <li><p>Memory corruption vulnerabilities in <a href="https://www.gnutls.org/security.html">GnuTLS</a> form another opportunity to apply fidelius charm, a memory protection library for Rust, to secure interactions with clients.</p></li>
+</ul>
+
+<h2 id="decentralization">Decentralization</h2>
+
+<ul>
+<li><p>Design and prototype a <em>decentralized certificate authority</em>, where
+no single entity controls the signing keys, but a multi-party
+protocol is used to produce a new certificate.</p></li>
+
+<li><p>Is there a way to do CloudFlare-style, we make your site appear to
+support TLS, that is substantially better than what they do?</p></li>
 </ul>
 
 </div>

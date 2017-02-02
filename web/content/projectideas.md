@@ -46,6 +46,16 @@ ecosystem around TLS is within scope for your project.
   images.
   
 ## Protecting Resources
+
 - [Heartbleed](http://heartbleed.com/) shocked the Internet for a while mainly because it allowed for remote attackers to access data in the server's memory, most importantly the server's private key. Heartbleed was a realization of an important concept: attacking a service and stealing data from the server's memory. There are numerous practical examples of web-based services that can become vulnerable to this type of attack. Can we mitigate this risk by using tools at the programming language level? A combination of Rust's language guarantees and a memory protection system might be the answer! Checkout [Rustls](https://github.com/ctz/rustls) and [fidelius charm](https://github.com/halmohri/fc). 
 
 - Memory corruption vulnerabilities in [GnuTLS](https://www.gnutls.org/security.html) form another opportunity to apply fidelius charm, a memory protection library for Rust, to secure interactions with clients. 
+
+## Decentralization
+
+- Design and prototype a _decentralized certificate authority_, where
+  no single entity controls the signing keys, but a multi-party
+  protocol is used to produce a new certificate.
+
+- Is there a way to do CloudFlare-style, we make your site appear to
+  support TLS, that is substantially better than what they do?

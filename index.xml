@@ -654,6 +654,17 @@ images.&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Memory corruption vulnerabilities in &lt;a href=&#34;https://www.gnutls.org/security.html&#34;&gt;GnuTLS&lt;/a&gt; form another opportunity to apply fidelius charm, a memory protection library for Rust, to secure interactions with clients.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h2 id=&#34;decentralization&#34;&gt;Decentralization&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Design and prototype a &lt;em&gt;decentralized certificate authority&lt;/em&gt;, where
+no single entity controls the signing keys, but a multi-party
+protocol is used to produce a new certificate.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Is there a way to do CloudFlare-style, we make your site appear to
+support TLS, that is substantially better than what they do?&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -1027,7 +1038,6 @@ Cyrus Malekpour (cm7bv)&lt;br&gt;
 Haoran Liu (hl4fb)&lt;br&gt;
 Daniel Saha (drs5ma)&lt;br&gt;
 Minghua Jiang (mj2eu)&lt;br&gt;
-Saeed Mahlouji Far (sm5fd)&lt;br&gt;
 Tianyi Jin (tj2cw)&lt;br&gt;
 &lt;/td&gt;
 &lt;/tr&gt;
