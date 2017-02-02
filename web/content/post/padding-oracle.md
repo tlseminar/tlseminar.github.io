@@ -1,6 +1,6 @@
 +++
 date = "31 Jan 2017"
-author = "Team Sesaem"
+author = "Team Sesame"
 draft = false
 title = "Padding Oracle Attacks"
 slug = "padding-oracle"
