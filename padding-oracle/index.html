@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Padding Oracle Attacks  &middot; TLSeminar</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="Padding Oracle Attacks  &middot; TLSeminar ">
+<meta property="og:site_name" content="TLSeminar"/>
+<meta property="og:url" content="https://tlseminar.github.io/padding-oracle/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-01-31T00:00:00Z" />
+<meta property="og:article:modified_time" content="2017-01-31T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@" />
+<meta name="twitter:title" content="Padding Oracle Attacks" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://tlseminar.github.io/padding-oracle/" />
+<meta name="twitter:domain" content="https://tlseminar.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Padding Oracle Attacks",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-01-31",
+    "description": "",
+    "wordCount":  1994 
+  }
+</script>
+
+
+
+<link rel="canonical" href="https://tlseminar.github.io/padding-oracle/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
+<link href="https://tlseminar.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://tlseminar.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://tlseminar.github.io/css/style.css">
+
+
+  
+</head>
+<body>
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://tlseminar.github.io">
+  TLSeminar
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Understanding and Securing TLS
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://tlseminar.github.io/syllabus">Syllabus</a>
+
+<a href="https://tlseminar.github.io/schedule">Schedule</a>
+
+<a href="https://tlseminar.github.io/teams">Teams</a>
+
+<a href="https://tlseminar.github.io/readings/">Readings</a>
+
+<a href="https://tlseminar.github.io/projectideas/">Projects</a>
+
+<a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1><center>Padding Oracle Attacks
+</center></h1>
+
+  <div class="metas">
+<time datetime="2017-01-31">31 Jan, 2017</time>
+
+
+  
+    &middot; by Team Sesaem
+  
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  
+
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><a href="https://tlseminar.github.io/docs/analysisssl3.pdf">Last week</a>, we examined how the Transport Layer Security (TLS) protocol provides a private channel between two devices by following the handshake and record layers protocols. The handshake layer establishes a symmetric key that both the client and the server could use in the record layer to encrypt and decrypt messages. We could sit back and relax because our communication is secure now, right? Wrong.</p>
+
+<p>This week, we&rsquo;ll discuss a real-world TLS attack, the Padding Oracle Attack, that takes advantage of our need for each message to be a particular set length. If the original message is not long enough, then we have to add padding for the <a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf">CBC Mode Encryption</a> to work. Because the padding is present, an attacker can chip away information on the <a href="https://tlseminar.github.io/docs/beast.pdf">ciphertext</a>, one byte at a time, through analyzing the receiver’s error messages for the sender, <a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">response time</a>, and general behavior.</p>
+
+<p>We&rsquo;ll start out by learning about how <a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf">CBC Mode Encryption</a> works.</p>
+
+<h1 id="padding-and-cbc-mode">Padding and CBC Mode</h1>
+
+<p>When AES-128 encryption is performed in cipher block chaining mode (CBC mode), the plaintext message is first split up into 16-byte (that is, 128-bit) blocks. Clearly, though, it is probable that the length of the message is not perfectly divisible by 16. To account for varying message sizes, extra bytes, called padding, are concatenated after the end of the message to fill up the remaining quota for the final block.</p>
+
+<p>These bytes are not chosen at random, however. In order to clearly mark for the recipient where the message ends and the padding begins, the padding follows a strict formatting pattern: if there are n bytes of padding, then each padding byte contains the value n. For instance, if the last block contains 15 message bytes, the 1-byte padding contains 0x01; if the last block contains 14 message bytes, the 2-byte padding contains 0x0202; 3-byte padding contains 0x030303; and so on.</p>
+
+<p>In CBC mode, the bytes of each plaintext block n are first XOR’ed with the encrypted bytes of the block before it, and their result is then encrypted. Block 1 is the obvious exception, which is XOR’ed with a fixed, random, or secret initialization vector. Thus, for any block n &gt; 1, where E<sub>k</sub> is the encryption function, c<sub>n</sub> is the encrypted block n, m<sub>n</sub> is the plaintext block n, and c<sub>n-1</sub> is the encrypted block n-1, <b>c<sub>n</sub> = E<sub>k</sub> (m<sub>n</sub>⊕ c<sub>n-1</sub>)</b>.</p>
+
+<p>However, the predictability of the padding format can turn out to be an extremely exploitable weakness for an active attacker. Under SSL/TLS protocol, when servers receive an encrypted message, their first step upon decryption is to check the validity of the padding; that is, determine if the number(s) at the end of the last block represent the number of padding bytes. As soon as this step is completed, the server will return to the sender either an error code or an acknowledgment that the padding is valid. In this way, the server can act as an oracle to an active attacker, providing them with confirmations/rejections to inform their guesses.</p>
+
+<h1 id="padding-oracle-attack">Padding Oracle Attack</h1>
+
+<p>To begin, the attacker creates a Last Word Oracle. This first assumes a 1-byte padding, so the format that the oracle will return as valid would be the 0x01 XOR’ed with some particular value in the corresponding last position in the n-1th block. Since the last byte, or word, can have 256 distinct values, the attacker can simply manipulate the n-1th block, easily testing all values, until either the possibilities are exhausted or the padding is returned as valid. If the possibilities are exhausted, then the attacker instead tries 0x02, then 0x03, and on until the padding returned is valid.</p>
+
+<p><img src="/images/paddingoracle/last-word.png" alt="LastWordOracle" /></p>
+
+<p>Once the attacker has learned the padding, a Block Decryption Oracle is constructed, using the values of the encrypted n-1th block to, byte by byte, guess the preceding byte, using the oracle’s pass/fail responses to confirm correct guesses. This method is then extended to decrypt all other blocks, called on pairs of a random block and a ciphertext block. (Again, the logical exception is the first block, assuming an independent initialization vector.) This is a terrifyingly efficient attack; to implement it, the attacker only needs (b * W * N)/2 trials, where b is the number of bytes per block, W is the number of possible bytes, and N is the number of blocks.</p>
+
+<p>With the CBC Padding now added to the original ciphered message, attackers can alter this new message with blockwise operations in order to draw information out of the originally unreadable ciphertext. This information could potentially end up being authentication tokens, such as cookies, granting attackers personally identifiable information or the potential to hijack previous sessions.</p>
+
+<h1 id="beast-plaintext-attacks-against-ssl">BEAST: Plaintext Attacks Against SSL</h1>
+
+<p>In CBC block encryption, each plaintext block is XORed with the ciphertext of the previous block before being encrypted. An attempted guess at a plaintext block can be evaluated by encrypting the ciphertext prior to the block in question XORed with the ciphertext prior to the current block XORed with the guess; if the new ciphertext matches that of the block in question, then the guess is correct. E<sub>k</sub>(P<sub>j⊕</sub>C<sub>j-1</sub>) = C<sub>j</sub> &mdash; C<sub>i</sub>==C<sub>j</sub> iff P<sub>i</sub> == P<sub>j</sub>⊕C<sub>i-1</sub>⊕C<sub>j-1</sub> &mdash; guess G can be evaluated as equal to or unequal to plaintext P<sub>j</sub> by setting P<sub>i</sub>=G⊕C<sub>i-1</sub>⊕C<sub>j-1</sub> and checking whether or not C<sub>j</sub>==C<sub>i</sub>. An attacker would need to be able to view the encrypted messages and query the underlying CBC encryption system to be able to mount an attack based on this exploit.</p>
+
+<p>Cryptographic systems are limited in their size and ability to store large plaintext messages, for this reason, most cryptographic systems encrypt messages block by block as they are sent in. In the case that an attacker can append padding to a message before it is encrypted, an attacker can mount a blockwise chosen-boundary attack, in which the first byte of an unknown message is isolated by padding, enabling the attacker to guess at single bytes of a message rather than block-sized chunks.</p>
+
+<p>The natural extension of this is to repeat the process such that once a byte of message has been guessed by the attacker, the padding is changed such that a single unknown byte of message is encrypted with padding and bytes known to the attacker, allowing them to continue guessing at single bytes of information.</p>
+
+<p>Duong and Rizzo go on to describe the process by which this attack could be mounted on HTTPS to obtain a user’s HTTP cookie. The attack requires only that an attacker can view encrypted messages, can make the user make arbitrary encrypted requests, and that arbitrary plaintext can be added to ongoing requests. In the described attack, the user is made to request a package with a padded end such that the first byte of unknown information in the request is isolated in an encryption with only public information. The attacker then makes guesses at that byte of information, appending plaintext to the request and watching the encrypted channel for a message block that matches the block containing the unknown byte of information. At that point, the guess that resulted in that message block is identified as the correct guess. The process is then repeated with a smaller padding until the user’s package request header (including their HTTPS cookies) are known to the attacker.</p>
+
+<p>There are a few issues mentioned associated with this attack, but that by using one of a variety of plugins, an attacker could make the user open bi-directional communication with the server. On this communication channel, the privileges required by the attacker to mount the attack would be easier to gain.</p>
+
+<p>Similar in the vein of the BEAST attack using bitwise XOR operations to glean useful plaintext information, Lucky Thirteen offers yet another alternative means to get partial or even full plaintext recovery with just a simple man-in-the-middle injecting ciphertext into the original ciphertext. Based on analyzing how TLS and DTLS decrypt when given ciphertext, these attacks also rely on the CBC-mode from within these protocols.</p>
+
+<h1 id="lucky-13-plaintest-crecovery-from-injecteced-ciphertext">Lucky 13: Plaintest Crecovery from Injecteced Ciphertext</h1>
+
+<p>AlFardan and Paterson published a paper on the Lucky 13 attack in 2013.  The attack relies on a timing channel introduced by the difference in processing time between TLS records with good and bad padding, requiring only a standard man-in-the-middle attacker for execution and providing recovered plaintext in the most severe case.  This would indicate a major security flaw, even in comparison to the aforementioned BEAST attack; BEAST required capabilities beyond simple MITM on the part of the attacker.  As a result, the authors of the paper disclosed their results to all major vendors to allow for patching before publishing.</p>
+
+<p>The name “Lucky 13” is a reference to a specific breakpoint in the size of the padding on a given message.  Both TLS and DTLS use the HMAC algorithm to compute MAC tags for messages.  HMAC operates using a compression function on messages with lengths equal to multiples of 64 bytes, so TLS and DTLS pad out messages with remaining space.  After subtracting 8 bytes for the length field and 1 byte of mandatory padding, we are left with a maximum message length of 55 bytes that can be encoded within one block.  This means that messages less than 55 bytes can be processed with only four compression function evaluations, and that in general the number of compressions is equal to</p>
+
+<p>$$\left\lceil\frac{l-55}{64}\right\rceil+4$$</p>
+
+<p>for messages of L bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.</p>
+
+<p>The authors detail first a distinguishing attack, and then a variation allowing for full plaintext recovery.  All attacks rely on the timing channel.  Specifically, the authors describe in detail how it is possible to place a target ciphertext block at the end of an encrypted record, causing the decryption function to interpret the plaintext block corresponding to the ciphertext block as padding.  Thus the amount of time required to process that block depends on plaintext bytes, leaking information.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Through these readings and their respective explanations, we see that cryptographic protocols are often broken and need to be patched. There is always some threat model out there looking to exploit the first sign of weakness to decrypt and listen in on what should be a secure, encrypted channel. Through this last week, we focused on looking at padding oracle attacks which take advantage of the padding on the respective blocks in a CBC chain as they are passed from operation to operation. With the last word oracle and the beast attack, we saw how important this padding was to the security of the whole operation. With our look at Lucky 13, we were able to see that people were able to exploit the fact that one extra compression had to be done in certain situations to glean information about the message. As such, we see just from the padding, we have so many attacks. There are so many aspects to SSL/TLS protocols that so many more exploits exist. So, what are ways that we can prevent these attacks? With the padding attacks, we saw that they tried standardizing messages (but, why not just encrypt the message and send it back?). Should our strategy just be to move as quickly to the newest version of the security protocols? Should we add the MAC to the messages after encryption? On that note, it is important to bring to the attention of the readers, that TLS 1.3 (the most recent release) has been released and has resolved many of these issues that have exploited weaknesses present in older versions of the protocol. However, its adoption rate has been very low and so it is important to bring this up as more and more operations should be moved over to TLS 1.3, as this seems to be the most secure system we have right now.</p>
+
+<h1 id="sources">Sources</h1>
+
+<p><a href="https://tlseminar.github.io/docs/analysisssl3.pdf">https://tlseminar.github.io/docs/analysisssl3.pdf</a>
+<a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf">http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf</a>
+<a href="https://tlseminar.github.io/docs/beast.pdf">https://tlseminar.github.io/docs/beast.pdf</a>
+<a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">http://www.isg.rhul.ac.uk/tls/TLStiming.pdf</a></p>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="https://tlseminar.github.io/first-few-milliseconds/" title="The First Few Milliseconds of an TLS 1.2 Connection">
+      Previous
+    </a>
+    
+
+    
+
+  
+
+
+</div>
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+  <p align="center">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href="https://www.cs.virginia.edu/evans">David Evans</a>
+
+
+</div>
+
+
+  
+
+</div>
+
+</footer>
+
+    </main>
+    
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3775212-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+
