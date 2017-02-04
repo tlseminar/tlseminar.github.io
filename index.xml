@@ -45,7 +45,7 @@ Encryption&lt;/a&gt; works.&lt;/p&gt;
 
 &lt;h1 id=&#34;padding-and-cbc-mode&#34;&gt;Padding and CBC Mode&lt;/h1&gt;
 
-&lt;h6 id=&#34;analysis-of-the-ssl-3-0-protocol-https-tlseminar-github-io-docs-analysisssl3-pdf-by-david-wagner-and-bruce-schneider-1997&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;&lt;em&gt;Analysis of the SSL 3.0 Protocol&lt;/em&gt;&lt;/a&gt; by David Wagner and Bruce Schneider (1997)&lt;/h6&gt;
+&lt;h3 id=&#34;analysis-of-the-ssl-3-0-protocol-https-tlseminar-github-io-docs-analysisssl3-pdf-by-david-wagner-and-bruce-schneider-1997&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;&lt;em&gt;Analysis of the SSL 3.0 Protocol&lt;/em&gt;&lt;/a&gt; by David Wagner and Bruce Schneider (1997)&lt;/h3&gt;
 
 &lt;p&gt;When AES-128 encryption is performed in cipher block chaining mode (CBC mode), the plaintext message is first split up into 16-byte (that is, 128-bit) blocks. Clearly, though, it is probable that the length of the message is not perfectly divisible by 16. To account for varying message sizes, extra bytes, called padding, are concatenated after the end of the message to fill up the remaining quota for the final block.&lt;/p&gt;
 
