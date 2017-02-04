@@ -68,7 +68,7 @@ contains 14 message bytes, the 2-byte padding contains &lt;code&gt;0x0202&lt;/co
 
 &lt;p&gt;&lt;center&gt;
 &lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/padding.png&#34; alt=&#34;Padding&#34;&gt;&lt;Br&gt;
-&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&#34;&gt;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&lt;/a&gt;
+&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&#34;&gt;Gotham Digital Science&lt;/a&gt;
 &lt;/center&gt;&lt;/p&gt;
 
 &lt;p&gt;In CBC mode, the bytes of each plaintext block n are first XOR’ed with
@@ -80,8 +80,9 @@ block &lt;em&gt;n&lt;/em&gt; &amp;gt; 1, where E&lt;sub&gt;&lt;em&gt;k&lt;/em&gt
 block &lt;em&gt;n&lt;/em&gt;, and &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;-1&lt;/sub&gt; is the encrypted block &lt;em&gt;n&lt;/em&gt;-1,
 &lt;b&gt;&lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt; = E&lt;sub&gt;&lt;em&gt;k&lt;/em&gt;&lt;/sub&gt; (&lt;em&gt;p&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt;⊕ &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;-1&lt;/sub&gt;)&lt;/b&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/cbc.png&#34; alt=&#34;cbc-mode&#34; /&gt;&lt;/center&gt;
-&lt;p&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png&#34;&gt;https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png&lt;/a&gt;&lt;/p&gt;&lt;/p&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/cbc.png&#34; alt=&#34;cbc-mode&#34; /&gt;&lt;br&gt;
+&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png&#34;&gt;Alan Kaminsky&lt;/a&gt;
+&lt;/center&gt;&lt;/p&gt;
 
 &lt;p&gt;However, the predictability of the padding format can turn out to be an extremely exploitable weakness for an active attacker. Under SSL/TLS protocol, when servers receive an encrypted message, their first step upon decryption is to check the validity of the padding; that is, determine if the number(s) at the end of the last block represent the number of padding bytes. As soon as this step is completed, the server will return to the sender either an error code or an acknowledgment that the padding is valid. In this way, the server can act as an oracle to an active attacker, providing them with confirmations/rejections to inform their guesses.&lt;/p&gt;
 
