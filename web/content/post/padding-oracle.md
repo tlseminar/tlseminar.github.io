@@ -64,8 +64,9 @@ encrypted. Block 1 is the obvious exception, which is XOR’ed with a
 fixed, random, or secret initialization vector (IV). Thus, for any
 block _n_ > 1, where E<sub>_k_</sub> is the encryption function,
 _c_<sub>_n_</sub> is the encrypted block _n_, _p_<sub>_n_</sub> is the plaintext
-block _n_, and _c_<sub>_n_-1</sub> is the encrypted block _n_-1,
-<b>_c_<sub>_n_</sub> = E<sub>_k_</sub> (_p_<sub>_n_</sub>⊕ _c_<sub>_n_-1</sub>)</b>.
+block _n_, and _c_<sub>_n_-1</sub> is the encrypted block _n_-1:
+> _c_<sub>_n_</sub> = E<sub>_k_</sub> (_p_<sub>_n_</sub>⊕ _c_<sub>_n_-1</sub>)
+
 
 <center>![cbc-mode](/images/paddingoracle/cbc.png)<br>
 <em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">Alan Kaminsky</a>

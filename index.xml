@@ -77,8 +77,8 @@ encrypted. Block 1 is the obvious exception, which is XOR’ed with a
 fixed, random, or secret initialization vector (IV). Thus, for any
 block &lt;em&gt;n&lt;/em&gt; &amp;gt; 1, where E&lt;sub&gt;&lt;em&gt;k&lt;/em&gt;&lt;/sub&gt; is the encryption function,
 &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt; is the encrypted block &lt;em&gt;n&lt;/em&gt;, &lt;em&gt;p&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt; is the plaintext
-block &lt;em&gt;n&lt;/em&gt;, and &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;-1&lt;/sub&gt; is the encrypted block &lt;em&gt;n&lt;/em&gt;-1,
-&lt;b&gt;&lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt; = E&lt;sub&gt;&lt;em&gt;k&lt;/em&gt;&lt;/sub&gt; (&lt;em&gt;p&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt;⊕ &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;-1&lt;/sub&gt;)&lt;/b&gt;.&lt;/p&gt;
+block &lt;em&gt;n&lt;/em&gt;, and &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;-1&lt;/sub&gt; is the encrypted block &lt;em&gt;n&lt;/em&gt;-1:
+&amp;gt; &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt; = E&lt;sub&gt;&lt;em&gt;k&lt;/em&gt;&lt;/sub&gt; (&lt;em&gt;p&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;&lt;/sub&gt;⊕ &lt;em&gt;c&lt;/em&gt;&lt;sub&gt;&lt;em&gt;n&lt;/em&gt;-1&lt;/sub&gt;)&lt;/p&gt;
 
 &lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/cbc.png&#34; alt=&#34;cbc-mode&#34; /&gt;&lt;br&gt;
 &lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png&#34;&gt;Alan Kaminsky&lt;/a&gt;
