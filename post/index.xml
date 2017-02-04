@@ -45,11 +45,25 @@ Encryption&lt;/a&gt; works.&lt;/p&gt;
 
 &lt;h1 id=&#34;padding-and-cbc-mode&#34;&gt;Padding and CBC Mode&lt;/h1&gt;
 
-&lt;h3 id=&#34;analysis-of-the-ssl-3-0-protocol-https-tlseminar-github-io-docs-analysisssl3-pdf-by-david-wagner-and-bruce-schneider-1997&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;&lt;em&gt;Analysis of the SSL 3.0 Protocol&lt;/em&gt;&lt;/a&gt; by David Wagner and Bruce Schneider (1997)&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;&lt;em&gt;Analysis of the SSL 3.0 Protocol&lt;/em&gt;&lt;/a&gt; by David Wagner and Bruce Schneider (1997)&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;When AES-128 encryption is performed in cipher block chaining mode (CBC mode), the plaintext message is first split up into 16-byte (that is, 128-bit) blocks. Clearly, though, it is probable that the length of the message is not perfectly divisible by 16. To account for varying message sizes, extra bytes, called padding, are concatenated after the end of the message to fill up the remaining quota for the final block.&lt;/p&gt;
+&lt;p&gt;When AES-128 encryption is performed in cipher block chaining mode
+(CBC mode), the plaintext message is first split up into 16-byte
+(128-bit) blocks. It is often the case, however, that the length of
+the message is not perfectly divisible by 16. To account for varying
+message sizes, extra bytes, called padding, are concatenated after the
+end of the message to fill up the remaining quota for the final block.&lt;/p&gt;
 
-&lt;p&gt;These bytes are not chosen at random, however. In order to clearly mark for the recipient where the message ends and the padding begins, the padding follows a strict formatting pattern: if there are n bytes of padding, then each padding byte contains the value n. For instance, if the last block contains 15 message bytes, the 1-byte padding contains 0x01; if the last block contains 14 message bytes, the 2-byte padding contains 0x0202; 3-byte padding contains 0x030303; and so on.&lt;/p&gt;
+&lt;p&gt;These bytes are not chosen at random, however, and different cipher
+modes prescribe different padding methods. In order to clearly mark
+for the recipient where the message ends and the padding begins, the
+padding follows a strict formatting pattern: if there are &lt;em&gt;n&lt;/em&gt; bytes of
+padding, then each padding byte contains the value &lt;em&gt;n&lt;/em&gt;. For instance,
+if the last block contains 15 message bytes, the 1-byte padding
+contains 0x01; if the last block contains 14 message bytes, the 2-byte
+padding contains 0x0202; 3-byte padding contains 0x030303; and so on.&lt;/p&gt;
 
 &lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/padding.png&#34; alt=&#34;padding&#34; /&gt;&lt;/center&gt;
 &lt;p&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&#34;&gt;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&lt;/a&gt;&lt;/p&gt;&lt;/p&gt;

@@ -34,11 +34,23 @@ Encryption](https://tlseminar.github.io/docs/analysisssl3.pdf) works.
 
 # Padding and CBC Mode
 
-### [*Analysis of the SSL 3.0 Protocol*](https://tlseminar.github.io/docs/analysisssl3.pdf) by David Wagner and Bruce Schneider (1997)
+> [*Analysis of the SSL 3.0 Protocol*](https://tlseminar.github.io/docs/analysisssl3.pdf) by David Wagner and Bruce Schneider (1997)
 
-When AES-128 encryption is performed in cipher block chaining mode (CBC mode), the plaintext message is first split up into 16-byte (that is, 128-bit) blocks. Clearly, though, it is probable that the length of the message is not perfectly divisible by 16. To account for varying message sizes, extra bytes, called padding, are concatenated after the end of the message to fill up the remaining quota for the final block. 
+When AES-128 encryption is performed in cipher block chaining mode
+(CBC mode), the plaintext message is first split up into 16-byte
+(128-bit) blocks. It is often the case, however, that the length of
+the message is not perfectly divisible by 16. To account for varying
+message sizes, extra bytes, called padding, are concatenated after the
+end of the message to fill up the remaining quota for the final block.
 
-These bytes are not chosen at random, however. In order to clearly mark for the recipient where the message ends and the padding begins, the padding follows a strict formatting pattern: if there are n bytes of padding, then each padding byte contains the value n. For instance, if the last block contains 15 message bytes, the 1-byte padding contains 0x01; if the last block contains 14 message bytes, the 2-byte padding contains 0x0202; 3-byte padding contains 0x030303; and so on.
+These bytes are not chosen at random, however, and different cipher
+modes prescribe different padding methods. In order to clearly mark
+for the recipient where the message ends and the padding begins, the
+padding follows a strict formatting pattern: if there are _n_ bytes of
+padding, then each padding byte contains the value _n_. For instance,
+if the last block contains 15 message bytes, the 1-byte padding
+contains 0x01; if the last block contains 14 message bytes, the 2-byte
+padding contains 0x0202; 3-byte padding contains 0x030303; and so on.
 
 <center>![padding](/images/paddingoracle/padding.png)</center>
 <p><em>Source: </em>https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html</p>
