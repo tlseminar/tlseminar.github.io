@@ -46,14 +46,17 @@ end of the message to fill up the remaining quota for the final block.
 These bytes are not chosen at random, however, and different cipher
 modes prescribe different padding methods. In order to clearly mark
 for the recipient where the message ends and the padding begins, the
-padding follows a strict formatting pattern: if there are _n_ bytes of
-padding, then each padding byte contains the value _n_. For instance,
-if the last block contains 15 message bytes, the 1-byte padding
-contains 0x01; if the last block contains 14 message bytes, the 2-byte
-padding contains 0x0202; 3-byte padding contains 0x030303; and so on.
+padding follows a strict formatting pattern. With PKCS #7 padding, if
+there are _n_ bytes of padding, then each padding byte contains the
+value _n_. For instance, if the last block contains 15 message bytes,
+the 1-byte padding contains `0x01`; if the last block contains 14
+message bytes, the 2-byte padding contains `0x0202`; 3-byte padding
+contains `0x030303`; and so on.
 
-<center>![padding](/images/paddingoracle/padding.png)</center>
-<p><em>Source: </em>https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html</p>
+<center>
+<img src="/images/paddingoracle/padding.png" alt="Padding"><Br>
+<em>Source: </em>https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html
+</center>
 
 In CBC mode, the bytes of each plaintext block n are first XOR’ed with the encrypted bytes of the block before it, and their result is then encrypted. Block 1 is the obvious exception, which is XOR’ed with a fixed, random, or secret initialization vector. Thus, for any block n > 1, where E<sub>k</sub> is the encryption function, c<sub>n</sub> is the encrypted block n, p<sub>n</sub> is the plaintext block n, and c<sub>n-1</sub> is the encrypted block n-1, <b>c<sub>n</sub> = E<sub>k</sub> (p<sub>n</sub>⊕ c<sub>n-1</sub>)</b>.
 

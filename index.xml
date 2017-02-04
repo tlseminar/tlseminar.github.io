@@ -59,14 +59,17 @@ end of the message to fill up the remaining quota for the final block.&lt;/p&gt;
 &lt;p&gt;These bytes are not chosen at random, however, and different cipher
 modes prescribe different padding methods. In order to clearly mark
 for the recipient where the message ends and the padding begins, the
-padding follows a strict formatting pattern: if there are &lt;em&gt;n&lt;/em&gt; bytes of
-padding, then each padding byte contains the value &lt;em&gt;n&lt;/em&gt;. For instance,
-if the last block contains 15 message bytes, the 1-byte padding
-contains 0x01; if the last block contains 14 message bytes, the 2-byte
-padding contains 0x0202; 3-byte padding contains 0x030303; and so on.&lt;/p&gt;
+padding follows a strict formatting pattern. With PKCS #7 padding, if
+there are &lt;em&gt;n&lt;/em&gt; bytes of padding, then each padding byte contains the
+value &lt;em&gt;n&lt;/em&gt;. For instance, if the last block contains 15 message bytes,
+the 1-byte padding contains &lt;code&gt;0x01&lt;/code&gt;; if the last block contains 14
+message bytes, the 2-byte padding contains &lt;code&gt;0x0202&lt;/code&gt;; 3-byte padding
+contains &lt;code&gt;0x030303&lt;/code&gt;; and so on.&lt;/p&gt;
 
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/padding.png&#34; alt=&#34;padding&#34; /&gt;&lt;/center&gt;
-&lt;p&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&#34;&gt;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&lt;/a&gt;&lt;/p&gt;&lt;/p&gt;
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/padding.png&#34; alt=&#34;Padding&#34;&gt;&lt;Br&gt;
+&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&#34;&gt;https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html&lt;/a&gt;
+&lt;/center&gt;&lt;/p&gt;
 
 &lt;p&gt;In CBC mode, the bytes of each plaintext block n are first XOR’ed with the encrypted bytes of the block before it, and their result is then encrypted. Block 1 is the obvious exception, which is XOR’ed with a fixed, random, or secret initialization vector. Thus, for any block n &amp;gt; 1, where E&lt;sub&gt;k&lt;/sub&gt; is the encryption function, c&lt;sub&gt;n&lt;/sub&gt; is the encrypted block n, p&lt;sub&gt;n&lt;/sub&gt; is the plaintext block n, and c&lt;sub&gt;n-1&lt;/sub&gt; is the encrypted block n-1, &lt;b&gt;c&lt;sub&gt;n&lt;/sub&gt; = E&lt;sub&gt;k&lt;/sub&gt; (p&lt;sub&gt;n&lt;/sub&gt;⊕ c&lt;sub&gt;n-1&lt;/sub&gt;)&lt;/b&gt;.&lt;/p&gt;
 
