@@ -74,24 +74,56 @@ _c_<sub>_n_</sub> = E<sub>_k_</sub> (_p_<sub>_n_</sub>⊕ _c_<sub>_n_-1</sub>)
 <span class="caption"><em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">Alan Kaminsky</a></span>
 </center>
 
-However, the predictability of the padding format can turn out to be an extremely exploitable weakness for an active attacker. Under SSL/TLS protocol, when servers receive an encrypted message, their first step upon decryption is to check the validity of the padding; that is, determine if the number(s) at the end of the last block represent the number of padding bytes. As soon as this step is completed, the server will return to the sender either an error code or an acknowledgment that the padding is valid. In this way, the server can act as an oracle to an active attacker, providing them with confirmations/rejections to inform their guesses.
+However, the predictability of the padding format can turn out to be
+an extremely exploitable weakness for an active attacker. Under
+SSL/TLS protocol, when servers receive an encrypted message, their
+first step upon decryption is to check the validity of the padding;
+that is, determine if the numbers at the end of the last block
+represent the number of padding bytes. As soon as this step is
+completed, the server will return to the sender either an error code
+or an acknowledgment that the padding is valid. In this way, the
+server acts as an oracle to an active attacker, providing them with
+confirmations/rejections to inform their guesses.
 
 # Padding Oracle Attack
 
-###### [*Security Flaws Induced by CBC Padding Applications to SSL, ISPEC, WTLS...*](http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf) by Serge Vaudenay 
+> [*Security Flaws Induced by CBC Padding Applications to SSL, ISPEC, WTLS...*](http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf) by Serge Vaudenay 
 
-To begin, the attacker creates a Last Word Oracle. This first assumes a 1-byte padding, so the format that the oracle would return as valid is 0x01 XOR’ed with some particular value in the corresponding last position in the n-1th block. Since the last byte, or word, can have 256 distinct values, the attacker can simply manipulate the n-1th block, easily testing all values, until either the possibilities are exhausted or the padding is returned as valid. If the possibilities are exhausted, then the attacker instead tries 0x02, then 0x03, and on until the padding returned is valid.
+To begin, the attacker creates a Last Word Oracle. This first assumes
+a 1-byte padding, so the format that the oracle would return as valid
+is `0x01` XOR’ed with some particular value in the corresponding last
+position in the _n_-1th block. Since the last byte, or word, can have
+256 distinct values, the attacker can simply manipulate the _n_-1th
+block, easily testing all values, until either the possibilities are
+exhausted or the padding is returned as valid. If the possibilities
+are exhausted, then the attacker instead tries `0x02`, then `0x03`,
+and on until the padding returned is valid.
 
-<center>![LastWordOracle](/images/paddingoracle/last-word.png) </center>
-<p><em>Source: </em>https://www.rsaconference.com/writable/presentations/file_upload/asec-403.pdf</p>
+<center>![LastWordOracle](/images/paddingoracle/last-word.png)<br>
+<span class="caption"><em>Source: </em><a href="https://www.rsaconference.com/writable/presentations/file_upload/asec-403.pdf">Brian Holyfield, Gotham Digital Science</a></span>
+</center>
 
-Once the attacker has learned the padding, a Block Decryption Oracle is constructed, using the values of the encrypted n-1th block to, byte by byte, guess the preceding byte, using the oracle’s pass/fail responses to confirm correct guesses. This method is then extended to decrypt all other blocks, as it is called on pairs containing a random block and a ciphertext block. (Again, the logical exception is the first block, assuming an independent initialization vector.) This is a terrifyingly efficient attack; to implement it, the attacker only needs (b * W * N)/2 trials, where b is the number of bytes per block, W is the number of possible bytes, and N is the number of blocks.
+Once the attacker has learned the padding, a Block Decryption Oracle
+is constructed, using the values of the encrypted _n_-1th block to,
+byte by byte, guess the preceding byte, using the oracle’s pass/fail
+responses to confirm correct guesses. This method is then extended to
+decrypt all other blocks, as it is called on pairs containing a random
+block and a ciphertext block. (Again, the logical exception is the
+first block, assuming an independent initialization vector.) This is a
+terrifyingly efficient attack; to implement it, the attacker only
+needs (_b_ * _W_ * _N_)/2 trials, where _b_ is the number of bytes per block,
+_W_ is the number of possible bytes, and _N_ is the number of blocks.
 
-With the CBC Padding now added to the original ciphered message, attackers can alter this new message with blockwise operations in order to draw information out of the originally unreadable ciphertext. This information could potentially end up being authentication tokens, such as cookies, granting attackers personally identifiable information or the potential to hijack previous sessions.
+With the CBC Padding now added to the original ciphered message,
+attackers can alter this new message with blockwise operations in
+order to draw information out of the originally unreadable
+ciphertext. This information could potentially end up being
+authentication tokens, such as cookies, granting attackers personally
+identifiable information or the potential to hijack previous sessions.
 
 # BEAST: Plaintext Attacks Against SSL
 
-###### [*Here Come The \\(\oplus\\) Ninjas*](https://tlseminar.github.io/docs/beast.pdf) by Thai Duong and Juliano Rizzo (2011)
+> [*Here Come The \\(\oplus\\) Ninjas*](https://tlseminar.github.io/docs/beast.pdf) by Thai Duong and Juliano Rizzo (2011)
 
 In CBC block encryption, each plaintext block is XORed with the ciphertext of the previous block before being encrypted. An attempted guess at a plaintext block can be evaluated by encrypting the ciphertext prior to the block in question XORed with the ciphertext prior to the current block XORed with the guess; if the new ciphertext matches that of the block in question, then the guess is correct. E<sub>k</sub>(P<sub>j⊕</sub>C<sub>j-1</sub>) = C<sub>j</sub> --- C<sub>i</sub>==C<sub>j</sub> iff P<sub>i</sub> == P<sub>j</sub>⊕C<sub>i-1</sub>⊕C<sub>j-1</sub> --- guess G can be evaluated as equal to or unequal to plaintext P<sub>j</sub> by setting P<sub>i</sub>=G⊕C<sub>i-1</sub>⊕C<sub>j-1</sub> and checking whether or not C<sub>j</sub>==C<sub>i</sub>. An attacker would need to be able to view the encrypted messages and query the underlying CBC encryption system to be able to mount an attack based on this exploit.
 
@@ -110,7 +142,7 @@ Similar in the vein of the BEAST attack using bitwise XOR operations to glean us
 
 # Lucky 13: Plaintext Recovery from Injected Ciphertext 
 
-###### [*Lucky Thirteen: Breaking the TLS and DTLS Record Protocols*](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf) by Nadhem J. Alfardan and Kenneth G. Paterson (2013)
+> [*Lucky Thirteen: Breaking the TLS and DTLS Record Protocols*](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf) by Nadhem J. Alfardan and Kenneth G. Paterson (2013)
 
 AlFardan and Paterson published a paper on the Lucky 13 attack in 2013.  The attack relies on a timing channel introduced by the difference in processing time between TLS records with good and bad padding, requiring only a standard man-in-the-middle attacker for execution and providing recovered plaintext in the most severe case.  This would indicate a major security flaw, even in comparison to the aforementioned BEAST attack; BEAST required capabilities beyond simple MITM on the part of the attacker.  As a result, the authors of the paper disclosed their results to all major vendors to allow for patching before publishing.
 
