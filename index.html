@@ -176,19 +176,26 @@ end of the message to fill up the remaining quota for the final block.</p>
 <p>These bytes are not chosen at random, however, and different cipher
 modes prescribe different padding methods. In order to clearly mark
 for the recipient where the message ends and the padding begins, the
-padding follows a strict formatting pattern. With PKCS #7 padding, if
-there are <em>n</em> bytes of padding, then each padding byte contains the
-value <em>n</em>. For instance, if the last block contains 15 message bytes,
-the 1-byte padding contains <code>0x01</code>; if the last block contains 14
-message bytes, the 2-byte padding contains <code>0x0202</code>; 3-byte padding
-contains <code>0x030303</code>; and so on.</p>
+padding follows a strict formatting pattern. With PKCS #5 padding as
+used in TLS, if there are <em>n</em> bytes of padding, then each padding byte
+contains the value <em>n</em>. For instance, if the last block contains 15
+message bytes, the 1-byte padding contains <code>0x01</code>; if the last block
+contains 14 message bytes, the 2-byte padding contains <code>0x0202</code>;
+3-byte padding contains <code>0x030303</code>; and so on.</p>
 
 <p><center>
 <img src="/images/paddingoracle/padding.png" alt="Padding"><Br>
 <em>Source: </em><a href="https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html">https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html</a>
 </center></p>
 
-<p>In CBC mode, the bytes of each plaintext block n are first XOR’ed with the encrypted bytes of the block before it, and their result is then encrypted. Block 1 is the obvious exception, which is XOR’ed with a fixed, random, or secret initialization vector. Thus, for any block n &gt; 1, where E<sub>k</sub> is the encryption function, c<sub>n</sub> is the encrypted block n, p<sub>n</sub> is the plaintext block n, and c<sub>n-1</sub> is the encrypted block n-1, <b>c<sub>n</sub> = E<sub>k</sub> (p<sub>n</sub>⊕ c<sub>n-1</sub>)</b>.</p>
+<p>In CBC mode, the bytes of each plaintext block n are first XOR’ed with
+the encrypted bytes of the block before it, and their result is then
+encrypted. Block 1 is the obvious exception, which is XOR’ed with a
+fixed, random, or secret initialization vector (IV). Thus, for any
+block <em>n</em> &gt; 1, where E<sub><em>k</em></sub> is the encryption function,
+<em>c</em><sub><em>n</em></sub> is the encrypted block <em>n</em>, <em>p</em><sub><em>n</em></sub> is the plaintext
+block <em>n</em>, and <em>c</em><sub><em>n</em>-1</sub> is the encrypted block <em>n</em>-1,
+<b><em>c</em><sub><em>n</em></sub> = E<sub><em>k</em></sub> (<em>p</em><sub><em>n</em></sub>⊕ <em>c</em><sub><em>n</em>-1</sub>)</b>.</p>
 
 <p><center><img src="/images/paddingoracle/cbc.png" alt="cbc-mode" /></center>
 <p><em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png</a></p></p>
