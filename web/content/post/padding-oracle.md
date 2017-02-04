@@ -55,7 +55,7 @@ contains 14 message bytes, the 2-byte padding contains `0x0202`;
 
 <center>
 <img src="/images/paddingoracle/padding.png" alt="Padding"><Br>
-<em>Source: </em><a href="https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html">Gotham Digital Science</a>
+<span class="caption"><em>Source: </em><a href="https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html">Gotham Digital Science</a></span>
 </center>
 
 In CBC mode, the bytes of each plaintext block n are first XOR’ed with
@@ -71,7 +71,7 @@ _c_<sub>_n_</sub> = E<sub>_k_</sub> (_p_<sub>_n_</sub>⊕ _c_<sub>_n_-1</sub>)
 
 
 <center>![cbc-mode](/images/paddingoracle/cbc.png)<br>
-<em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">Alan Kaminsky</a>
+<span class="caption"><em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">Alan Kaminsky</a></span>
 </center>
 
 However, the predictability of the padding format can turn out to be an extremely exploitable weakness for an active attacker. Under SSL/TLS protocol, when servers receive an encrypted message, their first step upon decryption is to check the validity of the padding; that is, determine if the number(s) at the end of the last block represent the number of padding bytes. As soon as this step is completed, the server will return to the sender either an error code or an acknowledgment that the padding is valid. In this way, the server can act as an oracle to an active attacker, providing them with confirmations/rejections to inform their guesses.
