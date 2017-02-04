@@ -10,11 +10,27 @@ slug = "padding-oracle"
 
 # Introduction 
 
-Last week, we examined how the Transport Layer Security (TLS) protocol provides a private channel between two devices by following the handshake and record layers protocols. The handshake layer establishes a symmetric key that both the client and the server could use in the record layer to encrypt and decrypt messages. We could sit back and relax because our communication is secure now, right? Wrong. 
+[Last week](/https://tlseminar.github.io/first-few-milliseconds/), we
+examined how the Transport Layer Security (TLS) protocol provides a
+private channel between two devices by following the handshake and
+record layers protocols. The handshake layer establishes a symmetric
+key that both the client and the server could use in the record layer
+to encrypt and decrypt messages. 
 
-This week, we'll discuss a real-world TLS attack, the Padding Oracle Attack, that takes advantage of our need for each message to be a particular set length. If the original message is not long enough, then we have to add padding for the [CBC Mode Encryption](https://tlseminar.github.io/docs/analysisssl3.pdf) to work. Because the padding is present, an attacker can chip away information on the [ciphertext](https://tlseminar.github.io/docs/beast.pdf), one byte at a time, through analyzing the receiver’s error messages for the sender, [response time](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf), and general behavior. 
+This week, we'll discuss a real-world TLS attack, the Padding Oracle
+Attack, that takes advantage of our need for each message to be a
+particular set length. If the original message is not long enough,
+then we have to add padding for the [CBC Mode
+Encryption](https://tlseminar.github.io/docs/analysisssl3.pdf) to
+work. Because the padding is present, an attacker can chip away
+information on the
+[ciphertext](https://tlseminar.github.io/docs/beast.pdf), one byte at
+a time, through analyzing the receiver’s error messages for the
+sender, [response time](http://www.isg.rhul.ac.uk/tls/TLStiming.pdf),
+and general behavior.
 
-We'll start out by learning about how [CBC Mode Encryption](https://tlseminar.github.io/docs/analysisssl3.pdf) works.
+We'll start out by learning about how [CBC Mode
+Encryption](https://tlseminar.github.io/docs/analysisssl3.pdf) works.
 
 # Padding and CBC Mode
 
