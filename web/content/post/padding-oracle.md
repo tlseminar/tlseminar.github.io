@@ -132,9 +132,9 @@ ciphertext prior to the block in question XORed with the ciphertext
 prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:
-
-$$C_j = E_k(P_j \oplus C_{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
-P_j \oplus C_{i - 1} \oplis C_{j - 1}$$
+<center>
+C<sub>_j_</sub> = E<sub>_k_</sub>(P<sub>_j_</sub> ⊕ C<sub>_j_-1</sub>), so, C<sub>_i_</sub>==C<sub>_j_</sub> iff P<sub>_i_</sub> == P<sub>_j_</sub> ⊕ C<sub>_i_-1</sub> ⊕ C<sub>_j_-1</sub>
+</center>
 
 Guess G can be evaluated as equal to or unequal to plaintext
 P<sub>j</sub> by setting P<sub>_i_</sub>=G ⊕ C<sub>_i_-1</sub> ⊕
@@ -176,10 +176,10 @@ revealed to the attacker.
 
 <center>![beast](/images/paddingoracle/beast.png)<br>
 <span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.</span>
-</caption>
+</center>
 
-There are a few issues mentioned associated with this attack, but that
-by using one of a variety of plugins, an attacker could make the user
+There are a few issues mentioned associated with this attack, but by
+using one of a variety of plugins, an attacker could make the user
 open bi-directional communication with the server. On this
 communication channel, the privileges required by the attacker to
 mount the attack would be easier to gain.
@@ -219,25 +219,52 @@ can be encoded within one block.  This means that messages less than
 evaluations, and that in general the number of compressions is equal
 to
 
-$$\left\lceil\frac{l-55}{64}\right\rceil+4$$
+$$\left\lceil\frac{L-55}{64}\right\rceil+4$$
 
-for messages of $L$ bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.
+for messages of _L_ bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.
 
 The authors detail first a distinguishing attack, and then a variation allowing for full plaintext recovery.  All attacks rely on the timing channel.  Specifically, the authors describe in detail how it is possible to place a target ciphertext block at the end of an encrypted record, causing the decryption function to interpret the plaintext block corresponding to the ciphertext block as padding.  Thus the amount of time required to process that block depends on plaintext bytes, leaking information.
 
-<center>![lucky-thirteen](/images/paddingoracle/timing.png)</center>
-<p><em>Figure:</em> Graph showing the differences in timing due to the number of compressions necessary for varying lengths of bytes.<br><em>Source: </em>http://www.isg.rhul.ac.uk/tls/TLStiming.pdf</p>
+<center>![lucky-thirteen](/images/paddingoracle/timing.png)<Br>
+<span class="caption"><em>Figure:</em> Graph showing the differences in timing due to the number of compressions necessary for varying lengths of bytes.<br><em>Source: </em>http://www.isg.rhul.ac.uk/tls/TLStiming.pdf
+</span>
+</center>
 
 # Conclusion
 
-Through these readings and their respective explanations, we see that cryptographic protocols are often broken and need to be patched. There is always some threat model out there looking to exploit the first sign of weakness to decrypt and listen in on what should be a secure, encrypted channel. Through this last week, we focused on looking at padding oracle attacks which take advantage of the padding on the respective blocks in a CBC chain as they are passed from operation to operation. With the last word oracle and the BEAST attack, we saw how important this padding was to the security of the whole operation. With our look at Lucky 13, we were able to see that people were able to exploit the fact that one extra compression had to be done in certain situations to glean information about the message. As such, we see just from the padding, we have so many attacks. There are so many aspects to SSL/TLS protocols that so many more exploits exist. So, what are ways that we can prevent these attacks? With the padding attacks, we saw that they tried standardizing messages (but, why not just encrypt the message and send it back?). Should our strategy just be to move as quickly to the newest version of the security protocols? Should we add the MAC to the messages after encryption? On that note, it is important to bring to the attention of the readers, that TLS 1.3 (the most recent release) has been drafted (and in the process of release) and has resolved many of these issues that have exploited weaknesses present in older versions of the protocol. However, its adoption rate has been very low and so it is important to bring this up as more and more operations should be moved over to TLS 1.3, as this seems to be the most secure system we have available right now and thus should be adopted.
+Through these readings and their respective explanations, we see that
+cryptographic protocols are often broken and need to be patched. There
+is always some threat model out there looking to exploit the first
+sign of weakness to decrypt and listen in on what should be a secure,
+encrypted channel. Through this last week, we focused on looking at
+padding oracle attacks which take advantage of the padding on the
+respective blocks in a CBC chain as they are passed from operation to
+operation. With the last word oracle and the BEAST attack, we saw how
+important this padding was to the security of the whole
+operation. With our look at Lucky 13, we were able to see that people
+were able to exploit the fact that one extra compression had to be
+done in certain situations to glean information about the message. As
+such, we see just from the padding, we have so many attacks. 
+
+There are so many aspects to SSL/TLS protocols that so many more
+exploits exist. So, what are ways that we can prevent these attacks?
+With the padding attacks, we saw that they tried standardizing error
+messages (but, why not just encrypt the message and send it
+back?). Should our strategy just be to move as quickly to the newest
+version of the security protocols? Should we add the MAC to the
+messages after encryption? 
+
+TLS 1.3 (the most recent release) has been drafted (and in the process
+of release) and has resolved many of these issues that have exploited
+weaknesses present in older versions of the protocol. However, its
+adoption rate has been very low and so it is important to bring this
+up as more and more operations should be moved over to TLS 1.3, as
+this seems to be the most secure system we have available right now
+and thus should be adopted.
 
 # Sources
 
-https://tlseminar.github.io/docs/analysisssl3.pdf
-
-http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf
-
-https://tlseminar.github.io/docs/beast.pdf
-
+https://tlseminar.github.io/docs/analysisssl3.pdf  
+http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf  
+https://tlseminar.github.io/docs/beast.pdf  
 http://www.isg.rhul.ac.uk/tls/TLStiming.pdf
