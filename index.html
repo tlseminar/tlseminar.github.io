@@ -258,20 +258,64 @@ identifiable information or the potential to hijack previous sessions.</p>
 <p><a href="https://tlseminar.github.io/docs/beast.pdf"><em>Here Come The \(\oplus\) Ninjas</em></a> by Thai Duong and Juliano Rizzo (2011)</p>
 </blockquote>
 
-<p>In CBC block encryption, each plaintext block is XORed with the ciphertext of the previous block before being encrypted. An attempted guess at a plaintext block can be evaluated by encrypting the ciphertext prior to the block in question XORed with the ciphertext prior to the current block XORed with the guess; if the new ciphertext matches that of the block in question, then the guess is correct. E<sub>k</sub>(P<sub>j⊕</sub>C<sub>j-1</sub>) = C<sub>j</sub> &mdash; C<sub>i</sub>==C<sub>j</sub> iff P<sub>i</sub> == P<sub>j</sub>⊕C<sub>i-1</sub>⊕C<sub>j-1</sub> &mdash; guess G can be evaluated as equal to or unequal to plaintext P<sub>j</sub> by setting P<sub>i</sub>=G⊕C<sub>i-1</sub>⊕C<sub>j-1</sub> and checking whether or not C<sub>j</sub>==C<sub>i</sub>. An attacker would need to be able to view the encrypted messages and query the underlying CBC encryption system to be able to mount an attack based on this exploit.</p>
+<p>In CBC block encryption, each plaintext block is XORed with the
+ciphertext of the previous block before being encrypted. An attempted
+guess at a plaintext block can be evaluated by encrypting the
+ciphertext prior to the block in question XORed with the ciphertext
+prior to the current block XORed with the guess; if the new ciphertext
+matches that of the block in question, then the guess is
+correct:
+&gt; E<sub><em>k</em></sub>(P<sub>_j_⊕</sub>C<sub><em>j</em>-1</sub>) = C<sub><em>j</em></sub>
+&mdash; C<sub><em>i</em></sub> == C<sub><em>j</em></sub> iff P<sub>i</sub> ==
+P<sub><em>j</em></sub> ⊕ C<sub><em>i</em>-1</sub> ⊕ C<sub><em>j</em>-1</sub></p>
 
-<p>Cryptographic systems are limited in their size and ability to store large plaintext messages, for this reason, most cryptographic systems encrypt messages block by block as they are sent in. In the case that an attacker can append padding to a message before it is encrypted, an attacker can mount a blockwise chosen-boundary attack, in which the first byte of an unknown message is isolated by padding, enabling the attacker to guess at single bytes of a message rather than block-sized chunks.</p>
+<p>Guess G can be evaluated as equal to or unequal to plaintext
+P<sub>j</sub> by setting P<sub><em>i</em></sub>=G ⊕ C<sub><em>i</em>-1</sub> ⊕
+C<sub><em>j</em>-1</sub> and checking whether or not C<sub><em>j</em></sub> ==
+C<sub><em>i</em></sub>. An attacker would need to be able to view the
+encrypted messages and query the underlying CBC encryption system to
+be able to mount an attack based on this exploit.</p>
 
-<p>The natural extension of this is to repeat the process such that once a byte of message has been guessed by the attacker, the padding is changed such that a single unknown byte of message is encrypted with padding and bytes known to the attacker, allowing them to continue guessing at single bytes of information.</p>
+<p>Cryptographic systems are limited in their size and ability to store
+large plaintext messages, for this reason, most cryptographic systems
+encrypt messages block by block as they are sent. In the case where an
+attacker can append padding to a message before it is encrypted, an
+attacker can mount a blockwise chosen-boundary attack, in which the
+first byte of an unknown message is isolated by padding, enabling the
+attacker to guess at single bytes of a message rather than block-sized
+chunks.</p>
 
-<p>Duong and Rizzo go on to describe the process by which this attack could be mounted on HTTPS to obtain a user’s HTTP cookie. The attack requires only that an attacker can view encrypted messages, can make the user make arbitrary encrypted requests, and that arbitrary plaintext can be added to ongoing requests. In the described attack, the user is made to request a package with a padded end such that the first byte of unknown information in the request is isolated in an encryption with only public information. The attacker then makes guesses at that byte of information, appending plaintext to the request and watching the encrypted channel for a message block that matches the block containing the unknown byte of information. At that point, the guess that resulted in that message block is identified as the correct guess. The process is then repeated with a smaller padding until the user’s package request header (including their HTTPS cookies) are known to the attacker.</p>
+<p>The natural extension of this is to repeat the process such that once
+a byte of message has been guessed by the attacker, the padding is
+changed such that a single unknown byte of message is encrypted with
+padding and bytes known to the attacker, allowing them to continue
+guessing at single bytes of information.</p>
 
-<p><center><img src="/images/paddingoracle/beast.png" alt="beast" /></center>
-<p><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.</p></p>
+<p>Duong and Rizzo go on to describe the process whereby this attack
+could be mounted on HTTPS to obtain a user’s HTTP cookie. The attack
+only requires that an attacker can view encrypted messages, can cause
+the client to make arbitrary encrypted requests, and that arbitrary
+plaintext can be added to out-going requests. In the described attack,
+the user is made to request a package with a padded end such that the
+first byte of unknown information in the request is isolated in an
+encryption with only public information. The attacker then makes
+guesses at that byte of information, appending plaintext to the
+request and watching the encrypted channel for a message block that
+matches the block containing the unknown byte of information. At that
+point, the guess that resulted in that message block is identified as
+the correct guess. The process is then repeated with a smaller padding
+until the user’s request header (including their HTTPS cookies) is
+revealed to the attacker.</p>
 
-<p>There are a few issues mentioned associated with this attack, but that by using one of a variety of plugins, an attacker could make the user open bi-directional communication with the server. On this communication channel, the privileges required by the attacker to mount the attack would be easier to gain.</p>
+<p><center><img src="/images/paddingoracle/beast.png" alt="beast" /><br>
+<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.
+</caption></p>
 
-<p>Similar in the vein of the BEAST attack using bitwise XOR operations to glean useful plaintext information, Lucky Thirteen offers yet another alternative means to get partial or even full plaintext recovery with just a simple man-in-the-middle injecting ciphertext into the original ciphertext. Based on analyzing how TLS and DTLS decrypt when given ciphertext, these attacks also rely on the CBC-mode from within these protocols.</p>
+<p>There are a few issues mentioned associated with this attack, but that
+by using one of a variety of plugins, an attacker could make the user
+open bi-directional communication with the server. On this
+communication channel, the privileges required by the attacker to
+mount the attack would be easier to gain.</p>
 
 <h1 id="lucky-13-plaintext-recovery-from-injected-ciphertext">Lucky 13: Plaintext Recovery from Injected Ciphertext</h1>
 
@@ -279,13 +323,40 @@ identifiable information or the potential to hijack previous sessions.</p>
 <p><a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf"><em>Lucky Thirteen: Breaking the TLS and DTLS Record Protocols</em></a> by Nadhem J. Alfardan and Kenneth G. Paterson (2013)</p>
 </blockquote>
 
-<p>AlFardan and Paterson published a paper on the Lucky 13 attack in 2013.  The attack relies on a timing channel introduced by the difference in processing time between TLS records with good and bad padding, requiring only a standard man-in-the-middle attacker for execution and providing recovered plaintext in the most severe case.  This would indicate a major security flaw, even in comparison to the aforementioned BEAST attack; BEAST required capabilities beyond simple MITM on the part of the attacker.  As a result, the authors of the paper disclosed their results to all major vendors to allow for patching before publishing.</p>
+<p>Similar in the vein of the BEAST attack using bitwise XOR operations
+to glean useful plaintext information, Lucky Thirteen offers yet
+another alternative means to get partial or even full plaintext
+recovery with just a simple man-in-the-middle injecting ciphertext
+into the original ciphertext. Based on analyzing how TLS and DTLS
+decrypt a given ciphertext, these attacks also rely on CBC-mode
+weaknesses.</p>
 
-<p>The name “Lucky 13” is a reference to a specific breakpoint in the size of the padding on a given message.  Both TLS and DTLS use the HMAC algorithm to compute MAC tags for messages.  HMAC operates using a compression function on messages with lengths equal to multiples of 64 bytes, so TLS and DTLS pad out messages with remaining space.  After subtracting 8 bytes for the length field and 1 byte of mandatory padding, we are left with a maximum message length of 55 bytes that can be encoded within one block.  This means that messages less than 55 bytes can be processed with only four compression function evaluations, and that in general the number of compressions is equal to</p>
+<p>The Lucky 13 attack relies on a timing channel introduced by the
+difference in processing time between TLS records with correct and
+incorrect padding, requiring only a standard in-the-middle attacker
+for execution and providing recovered plaintext in the most severe
+case.  This would indicate a major security flaw, even in comparison
+to the aforementioned BEAST attack. BEAST required capabilities beyond
+simple MITM on the part of the attacker.  As a result, the authors of
+the paper disclosed their results to all major vendors to allow for
+patching before publishing.</p>
+
+<p>The name “Lucky 13” is a reference to a specific breakpoint in the
+size of the padding on a given message.  Both TLS and DTLS use the
+HMAC algorithm to compute MAC tags for messages.  HMAC operates using
+a compression function on messages with lengths equal to multiples of
+64 bytes, so TLS and DTLS pad out messages with remaining space.</p>
+
+<p>After subtracting 8 bytes for the length field and 1 byte of mandatory
+padding, we are left with a maximum message length of 55 bytes that
+can be encoded within one block.  This means that messages less than
+55 bytes can be processed with only four compression function
+evaluations, and that in general the number of compressions is equal
+to</p>
 
 <p>$$\left\lceil\frac{l-55}{64}\right\rceil+4$$</p>
 
-<p>for messages of L bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.</p>
+<p>for messages of $L$ bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.</p>
 
 <p>The authors detail first a distinguishing attack, and then a variation allowing for full plaintext recovery.  All attacks rely on the timing channel.  Specifically, the authors describe in detail how it is possible to place a target ciphertext block at the end of an encrypted record, causing the decryption function to interpret the plaintext block corresponding to the ciphertext block as padding.  Thus the amount of time required to process that block depends on plaintext bytes, leaking information.</p>
 
