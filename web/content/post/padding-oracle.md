@@ -133,7 +133,7 @@ prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:
 
-$$ C_j = E_k(P_j \oplus C_{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
+$$C_j = E_k(P_j \oplus C_{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
 P_j \oplus C_{i - 1} \oplis C_{j - 1}$$
 
 Guess G can be evaluated as equal to or unequal to plaintext

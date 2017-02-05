@@ -149,7 +149,7 @@ prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:&lt;/p&gt;
 
-&lt;p&gt;$$ C_j = E_k(P&lt;em&gt;j \oplus C&lt;/em&gt;{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
+&lt;p&gt;$$C_j = E_k(P&lt;em&gt;j \oplus C&lt;/em&gt;{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
 P&lt;em&gt;j \oplus C&lt;/em&gt;{i - 1} \oplis C_{j - 1}$$&lt;/p&gt;
 
 &lt;p&gt;Guess G can be evaluated as equal to or unequal to plaintext
