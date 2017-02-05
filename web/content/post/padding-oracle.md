@@ -133,10 +133,8 @@ prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:
 
-$$ E_k(P_j \oplus C_{j-1}) = C_j $$
-
---- C<sub>_i_</sub> == C<sub>_j_</sub> iff P<sub>i</sub> ==
-P<sub>_j_</sub> ⊕ C<sub>_i_-1</sub> ⊕ C<sub>_j_-1</sub>
+$$ C_j = E_k(P_j \oplus C_{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
+P_j \oplus C_{i - 1} \oplis C_{j - 1}$$
 
 Guess G can be evaluated as equal to or unequal to plaintext
 P<sub>j</sub> by setting P<sub>_i_</sub>=G ⊕ C<sub>_i_-1</sub> ⊕
@@ -177,7 +175,7 @@ until the user’s request header (including their HTTPS cookies) is
 revealed to the attacker.
 
 <center>![beast](/images/paddingoracle/beast.png)<br>
-<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.
+<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.</span>
 </caption>
 
 There are a few issues mentioned associated with this attack, but that

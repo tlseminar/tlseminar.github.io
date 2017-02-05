@@ -51,7 +51,7 @@
     },
     "datePublished": "2017-01-31",
     "description": "",
-    "wordCount":  2120 
+    "wordCount":  2126 
   }
 </script>
 
@@ -306,10 +306,8 @@ prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:</p>
 
-<p>$$ E_k(P<em>j \oplus C</em>{j-1}) = C_j $$</p>
-
-<p>&mdash; C<sub><em>i</em></sub> == C<sub><em>j</em></sub> iff P<sub>i</sub> ==
-P<sub><em>j</em></sub> ⊕ C<sub><em>i</em>-1</sub> ⊕ C<sub><em>j</em>-1</sub></p>
+<p>$$ C_j = E_k(P<em>j \oplus C</em>{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
+P<em>j \oplus C</em>{i - 1} \oplis C_{j - 1}$$</p>
 
 <p>Guess G can be evaluated as equal to or unequal to plaintext
 P<sub>j</sub> by setting P<sub><em>i</em></sub>=G ⊕ C<sub><em>i</em>-1</sub> ⊕
@@ -350,7 +348,7 @@ until the user’s request header (including their HTTPS cookies) is
 revealed to the attacker.</p>
 
 <p><center><img src="/images/paddingoracle/beast.png" alt="beast" /><br>
-<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.
+<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.</span>
 </caption></p>
 
 <p>There are a few issues mentioned associated with this attack, but that

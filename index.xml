@@ -149,10 +149,8 @@ prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:&lt;/p&gt;
 
-&lt;p&gt;$$ E_k(P&lt;em&gt;j \oplus C&lt;/em&gt;{j-1}) = C_j $$&lt;/p&gt;
-
-&lt;p&gt;&amp;mdash; C&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;&lt;/sub&gt; == C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;&lt;/sub&gt; iff P&lt;sub&gt;i&lt;/sub&gt; ==
-P&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;&lt;/sub&gt; ⊕ C&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;-1&lt;/sub&gt; ⊕ C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;-1&lt;/sub&gt;&lt;/p&gt;
+&lt;p&gt;$$ C_j = E_k(P&lt;em&gt;j \oplus C&lt;/em&gt;{j-1}) \textrm{\ so, \ } C_i == C_j \iff P_i ==
+P&lt;em&gt;j \oplus C&lt;/em&gt;{i - 1} \oplis C_{j - 1}$$&lt;/p&gt;
 
 &lt;p&gt;Guess G can be evaluated as equal to or unequal to plaintext
 P&lt;sub&gt;j&lt;/sub&gt; by setting P&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;&lt;/sub&gt;=G ⊕ C&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;-1&lt;/sub&gt; ⊕
@@ -193,7 +191,7 @@ until the user’s request header (including their HTTPS cookies) is
 revealed to the attacker.&lt;/p&gt;
 
 &lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/paddingoracle/beast.png&#34; alt=&#34;beast&#34; /&gt;&lt;br&gt;
-&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Figure: &lt;/em&gt;Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Figure: &lt;/em&gt;Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.&lt;/span&gt;
 &lt;/caption&gt;&lt;/p&gt;
 
 &lt;p&gt;There are a few issues mentioned associated with this attack, but that
