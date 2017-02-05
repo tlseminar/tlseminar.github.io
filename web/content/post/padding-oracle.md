@@ -132,7 +132,9 @@ ciphertext prior to the block in question XORed with the ciphertext
 prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
 correct:
-> E<sub>_k_</sub>(P<sub>_j_⊕</sub>C<sub>_j_-1</sub>) = C<sub>_j_</sub>
+
+$$ E_k(P_j \oplus C_{j-1}) = C_j $$
+
 --- C<sub>_i_</sub> == C<sub>_j_</sub> iff P<sub>i</sub> ==
 P<sub>_j_</sub> ⊕ C<sub>_i_-1</sub> ⊕ C<sub>_j_-1</sub>
 

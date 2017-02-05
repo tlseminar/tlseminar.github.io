@@ -147,9 +147,11 @@ guess at a plaintext block can be evaluated by encrypting the
 ciphertext prior to the block in question XORed with the ciphertext
 prior to the current block XORed with the guess; if the new ciphertext
 matches that of the block in question, then the guess is
-correct:
-&amp;gt; E&lt;sub&gt;&lt;em&gt;k&lt;/em&gt;&lt;/sub&gt;(P&lt;sub&gt;_j_⊕&lt;/sub&gt;C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;-1&lt;/sub&gt;) = C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;&lt;/sub&gt;
-&amp;mdash; C&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;&lt;/sub&gt; == C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;&lt;/sub&gt; iff P&lt;sub&gt;i&lt;/sub&gt; ==
+correct:&lt;/p&gt;
+
+&lt;p&gt;$$ E_k(P&lt;em&gt;j \oplus C&lt;/em&gt;{j-1}) = C_j $$&lt;/p&gt;
+
+&lt;p&gt;&amp;mdash; C&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;&lt;/sub&gt; == C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;&lt;/sub&gt; iff P&lt;sub&gt;i&lt;/sub&gt; ==
 P&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;&lt;/sub&gt; ⊕ C&lt;sub&gt;&lt;em&gt;i&lt;/em&gt;-1&lt;/sub&gt; ⊕ C&lt;sub&gt;&lt;em&gt;j&lt;/em&gt;-1&lt;/sub&gt;&lt;/p&gt;
 
 &lt;p&gt;Guess G can be evaluated as equal to or unequal to plaintext
