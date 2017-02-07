@@ -994,9 +994,11 @@ Privacy (Oakland) 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/mitlsu
 &lt;p&gt;Benjamin Beurdouche, Antoine Delignat-Lavaud, Nadim Kobeissi, Alfredo Pironti, Karthikeyan Bhargavan. &lt;em&gt;FLEXTLS: A Tool for Testing TLS Implementations&lt;/em&gt;.
 USENIX Workshop on Offensive Technologies, 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/flextls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
-&lt;h2 id=&#34;performance-and-cost&#34;&gt;Performance and Cost&lt;/h2&gt;
+&lt;h2 id=&#34;measurement&#34;&gt;Measurement&lt;/h2&gt;
 
 &lt;p&gt;Cristian Coarfa, Peter Druschel, and Dan S. Wallach. &lt;em&gt;Performance Analysis of TLS Web Servers&lt;/em&gt;.  ACM Transactions on Computer Systems (earlier version in NDSS 2002), February 2006. [&lt;a href=&#34;https://tlseminar.github.io/docs/performance.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
+
+&lt;p&gt;Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson. &lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;. NDSS 2017. [&lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
 
 &lt;h2 id=&#34;certificates&#34;&gt;Certificates&lt;/h2&gt;
 

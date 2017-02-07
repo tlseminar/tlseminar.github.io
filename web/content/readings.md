@@ -114,9 +114,11 @@ _Using Frankencerts for Automated Adversarial Testing of Certificate Validation 
 Benjamin Beurdouche, Antoine Delignat-Lavaud, Nadim Kobeissi, Alfredo Pironti, Karthikeyan Bhargavan. _FLEXTLS: A Tool for Testing TLS Implementations_.
 USENIX Workshop on Offensive Technologies, 2015. [[PDF](/docs/flextls.pdf)]
 
-## Performance and Cost
+## Measurement
 
 Cristian Coarfa, Peter Druschel, and Dan S. Wallach. _Performance Analysis of TLS Web Servers_.  ACM Transactions on Computer Systems (earlier version in NDSS 2002), February 2006. [[PDF](/docs/performance.pdf)]
+
+Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson. _The Security Impact of HTTPS Interception_. NDSS 2017. [[PDF](https://jhalderm.com/pub/papers/interception-ndss17.pdf)]
 
 ## Certificates
 
@@ -145,3 +147,4 @@ learning with errors problem_.  IEEE Symposium on Security and Privacy (Oakland)
 
 Erdem Alkim, Léo Ducas, Thomas Pöppelmann, and Peter Schwabe.
 _Post-quantum Key Exchange—A New Hope_.  USENIX Security Symposiumn 2016. [[PDF](https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_alkim.pdf)] [[Talk Video](https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/alkim)]
+
