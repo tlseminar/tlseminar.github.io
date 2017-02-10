@@ -6,8 +6,6 @@ title = "Padding Oracle Attacks"
 slug = "padding-oracle"
 +++
 
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
-
 # Introduction 
 
 [Last week](/https://tlseminar.github.io/first-few-milliseconds/), we
