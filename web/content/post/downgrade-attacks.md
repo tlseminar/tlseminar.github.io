@@ -64,125 +64,6 @@ The factors of \\(30 = 2 * 3 * 5\\) are too small for the prime \\(p\\) to be se
 
 A strong prime \\(p = 2q + 1\\) (\\(q\\) is prime) avoids this problem of reducibility by ensuring that \\((p-1)\div 2\\) cannot be composite (and, by extension, that Pohlig-Hellman cannot obtain information from \\(p\\)).  Based on this information, it is easy to see why a server that supports export-grade DH and reuses weak primes represents such a grave threat to the integrity of TLS in all its forms.
 
-
-# DROWN: Breaking TLS using SSLv2
-
-[Paper Link](https://tlseminar.github.io/docs/drown.pdf)
-| [Website](https://drownattack.com/)
-
-DROWN attack is inspired by the [Bleichenbacher’s padding oracle attack] (http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf) over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a [padding oracle] (https://tlseminar.github.io/padding-oracle/). The padding scheme is shown below where first two bytes are fixed ‘0x00 0x02’ followed by 8 bytes of random padding string succeeded by a ‘0x00’ byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:
-
-<center><img src="/images/downgrade-attacks/pkcs1padding.png" alt="PKCSPadding" style="width:500px;"/><br>
-<sup>PKCS#1 v1.5 Padding Scheme </sup></center>
-
-The client in SSLv2 protocol sends ClientMasterKey message to SSLv2 server which the server decrypts and responds with ServerVerify message which tells whether the ClientMasterKey message was conformant with the padding scheme. The figure below depicts the SSLv2 protocol. The attacker can modify the original ClientMasterKey message and if the SSLv2 server confirms the padding, the attacker would immediately get to know that the first two bytes of the modified message is ‘0x00 0x02’. This way, the attacker can repeatedly modify the original message and query the oracle. After multiple successful guesses for modified message, the attacker can narrow down the guesses for the original message and recover the master_key.
-
-<center><img src="/images/downgrade-attacks/sslv2flaw.png" alt="SSLv2Flaw" style="width:500px;"/><br>
-<sup>Flaw in SSLv2 protocol where the server reveals the correctness of padding <br>
-Source: https://tlseminar.github.io/docs/drown.pdf</sup></center>
-
-Moreover, SSLv2 allowed export-grade ciphersuites which supported 40-bit key. A Bleichenbacher attacker could brute-force the key by repeatedly querying the SSLv2 server.
-
-Needless to say, TLS patched the above flaws and (most) servers made the SSLv2 protocol obsolete. However, it was not uncommon for TLS servers to share same RSA keys with SSLv2 servers. This made the TLS servers vulnerable to a modified form of Bleichenbacher attack which uses a SSLv2 server as padding oracle to decrypt the shared RSA key. DROWN instantiated this protocol-level attack and decrypted a TLS 1.2 handshake using 2048-bit RSA in 8 hours at a cost of $440 on Amazon EC2. As if this wasn't embarrassing enough, the authors of DROWN pointed out some implementation bugs in OpenSSL which lead to another attack called Special DROWN that could decrypt a TLS ciphertext in under 1 minute using a single CPU. Both the attacks are described below.
-
-## DROWN Attack 
-
-DROWN attack requires that a TLS server and a SSLv2 server share an RSA key. The attacker records multiple TLS handshake messages between a client and the TLS server. The aim of the attacker is to decrypt the RSA key of the TLS handshake. To do so, the attacker forces the client to establish a connection with SSLv2 server having the same RSA key so that the attacker can initiate the Bleichenbacher attack to recover the RSA key. Now the main hurdle for the attacker is that the format of TLS handshake message may not comply with PKCS#1 v1.5 padding scheme of SSLv2. The attacker converts the TLS ciphertext to SSLv2 ciphertext using the concept of trimmers introduced by [Bardou et al.] (https://hal.inria.fr/hal-00691958/document) which reduces the size of the TLS message. The use of trimmers require repeated querying to SSLv2 server by shifting the message bytes. The recovered SSLv2 plaintext is then converted back to TLS plaintext which reveals the RSA key of TLS handshake.
-
-<center><img src="/images/downgrade-attacks/drownattack.png" alt="DROWN" style="width:500px;"/><br>
-<sup>SSLv2-based Bleichenbacher attack on TLS <br>
-Source: https://tlseminar.github.io/docs/drown.pdf</sup></center> 
-
-
-## Special DROWN Attack
-
-The OpenSSL implementation had two bugs which led to a more efficient Bleichenbacher attack on an OpenSSL implementation of SSLv2 server.
-
-<b>OpenSSL extra clear oracle:</b> OpenSSL implementation allowed non-export cipher messages to contain clear_key_data which lead to potential overwriting of key bytes with null bytes. An attacker could vary the number of null bytes to decrypt the whole key one byte at a time.
-
-<b>OpenSSL leaky export oracle:</b> OpenSSL in export cipher mode allowed valid oracle response for correctly padded message of ‘any’ length.
-
-These bugs remained in OpenSSL implementation from 1998 up until its patch in 2015, when the authors of DROWN contacted the OpenSSL developers.
-
-## Prevention of DROWN
-
-The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like [AES_GCM](https://tools.ietf.org/html/rfc5288)) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.
-
-
-# State-Level Threats to Diffie-Hellman
-
-## Current Situation
-
-In recent years, the general bar for internet security has raised substantially. HTTPS is now the norm for most heavily trafficked websites and is spreading through services such as Let’s Encrypt, that allow for domain owners to easily get SSL certificates for a website at no cost. In general, this trend looks positive: for key exchange protocols, stronger 768 and 1024-bit groups are now the norm rather than the exception. Individual users and institutions have also begun to better understand the need for security and IPSec Virtual Private Networks (VPNs) and SSH connects are being more broadly practiced.
-
-## Academic Power
-
-However, while standards have advanced and security has increased in general, computational power has also increased proportionally. Although ideas such as Moore’s Law, that computing power at a certain price level effectively doubles every 18 months, the practical implications are not as often taken into account. These days, DH-512 is easily within the reach of “academic power,” that is to say, within the reach of institutions with access to midsize computing facilities. 
-
-With recent hardware, to “crack” DH-512 takes 2.5 core-years in the sieving phase, 7.7 core-years in the linear algebra phase, but only 10 core-minutes in the descent phase. So, given a 2000-3000 core cluster, all of the phases combined except the descent phase takes about 140 hours. 
-
-<center><img src="/images/downgrade-attacks/dh512.png" alt="DH-512 Computational Cost" style="width:500px;"/>
-<br>
-<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)></sup>
-<br>
-</center>
-
-However, the descent phase only takes about 70 seconds. What does this mean? That after 1 week of pre-computation, an individual calculation can be completed in about 70s. If this is combined with something called a “downgrade attack,” which will be described below, connections to about **8%** of top 1 million sites that use HTTPS can be broken in real time. 
-
->### Sidebar: What’s a Core Year?
->A “core-year” is a measure of the amount of work that an average computer core can complete in a year. To give a point of reference in terms of concrete cost, a single-core Amazon EC2 instance costs about $0.02 / hours. To run that core for a year would cost about $0.02 * (24 *365) = $175. A core-day and a core-minute are defined similarly.
-
->Although it may seem like this isn’t as serious of a problem, since current practice is usually to use DH-768 or DH-1024 --for example, 91.0% of IKEv2 servers support a 1024-bit connection-- in actuality even those are vulnerable to attack. In 2009, a new record was achieved for integer factorization with a 768 bit integer factorization completed with academic resources over the span of 2 years. This would imply that breaking DH-678 takes about 36,500 core-years in pre-computation and 2 core-days in decent. As costly as this sounds, it is actually within reach of academic computational resources.
-
-
-## Structural Costs
-
-Ok, so a DH-768 connection can probably be broken by a state-level actor, but what about a DH-1024 connection? Surely that is ok? Let’s take a look at the costliness of DH-2014 in comparison to 768 bit DH. Time algorithmic time complexity increases by a factor of about 1220, the space complexity by a factor of 95, leaving us with this: 
-
-<center><img src="/images/downgrade-attacks/dhall.png" alt="Computational cost of different DH group sizes" style="width:500px;"/>
-<br>
-<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)</sup>
-<br>
-</center>
-
-Although the costs seem astronomically high, they are actually within the reach of a state-level actor. If we assume that some special purpose ASICs are developed to help speed up the sieving pre-computation such that it can be completed in one year (this would cost around $8 million), and we get access to, say, a Titan supercomputer for one year (at a cost of $122 million) to complete the linear algebra phase in one year, we find that we can complete all of our pre-computation for the small cost of $130 million dollars. Why “small”? Compare this cost to the budget of a state-level actor such as the NSA: their 2012 budget was $10.5 billion, making this computation just 1% of that budget. 
-
-## What’s so Good About Breaking One Group?
-
-But, you might object, what is the value in doing this pre-computation and breaking one group? Doesn’t this just mean that the NSA can only break a couple connections per year? Unfortunately, no. As Edward Snowden said, “If performing number field sieve pre-computations for at least a small number of 1024-bit Diffie-Hellman groups is possible, breaking any key exchanges made with those groups in close to real time is no difficulty.” This is because once the pre-computations are completed for a single group, that work can then be used to crack numerous connections.
-
-## IKE (IPsec VPNs)	
-
-Let’s now take a step back and look at IKE, the Internet Key Exchange, which perhaps is the most vulnerable to these kinds of attacks. IKE is a protocol used, in the IPsec protocol, to create a “Security Association (SA),” which is just a set of shared security attributes between two network parties such as cryptographic algorithm being used, the algorithm mode, credentials, etc. In order to establish the SA, two parties go through a process like this:
-
-<center><img src="/images/downgrade-attacks/ike.png" alt="IKE Protocol Description" style="width:600px;"/>
-<br>
-<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)</sup>
-<br>
-</center>
-
-While the exact details of how the protocol works are not important, it is important to note that to perform IKE passive decryption, an adversary would have to have access to a known pre-shared key, both sides of the IKE handshake, and both the handshake traffic and ESP traffic. 
-
-Also important to note is that the vast majority of IKE systems use one particular 1024-bit DH group, the Oakley Group 2, for the protocol. We find that 86.1% of IKEv1 servers and 91.0% of IKEv2 servers support Oakley Group 2, and 66.1% of IKEv1 servers and 63.9% of IKEv2 servers chose Oakley Group 2 for the protocol. This means that a state-level actor with access to the pre-shared key, both sides of the IKE handshake, and both the handshake traffic and ESP traffic would be able to **passively decrypt 66%** of VPN server traffic...in near real-time.
-
-
-## Show me the Adversary
-
-Is this all hypothetical? Does any such adversary actually exist? Unfortunately, signs point to this answer being yes. A 2012 Wired article revealed information that the NSA, several years before 2012, made an “enormous breakthrough” in its ability to cryptanalyze current public encryption. While the exact details are not known, it may be reasonable to assume that the NSA completed the pre-computation for a 1024-bit DH group, such as the Oakley Group 2, allowing them passive decrypted access to a swath of internet traffic. 
-
-<center><img src="/images/downgrade-attacks/impact.png" alt="Impact of a break"/>
-<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)</sup></center>
-
-The impact of such a break to IKE has already been noted. Other protocols would also be vulnerable to the break. SSH, for example, supports Oakley Group 2, Oakley Group 14, or a server-defined group that is negotiated through a DH-GEX handshake. According to recent data, 21.8% of servers prefer Oakley Group 2, and 37.4% prefer the server-defined group. However, of that 37.4%, almost all of them just provided Oakley Group 2 rather than a real custom group. Thus, a state-level attacker that performed the break could passively eavesdrop on connections to 25.7% of all publicly accessible SSH servers.
-
-Unfortunately, HTTPS connections are similarly affected. Of the top 1 million site that support DHE, 84% use a 1024-bit or smaller group, and 94% of those use one of five common groups. Thus, 17.9% of connections to the top 1 million sites could be passively eavesdropped with the pre-computation for a single 1024-bit prime.
-
-
-## Mitigations
-
-Is there any hope that a connection can really be secure given this information? Luckily, some mitigations can be put into place. First, servers can move to using elliptic curve cryptography (EEC). A transition to a elliptic curve Diffe-Hellman key exchange (ECDH) with appropriate parameters would thwart all known feasible cryptanalytic attacks as EEC discrete log algorithms don't gain too much advantage from precomputation. When EEC is not an option, it is recommended that primes at least 2048 bits in length be used. It would be ideal if browser vendors and clients raise the minimum accepted size for DH groups to at least 1024 bits. If large primes are not supported, then always use a fresh 1024-bit group to mitigate the efficacy of precomputation-based attacks. It is parameter reuse that allows state-level attackers to easily perform wide-scale passive decryption.
-
-
 # Bleichenbacher’s Padding Oracle Attack
   
 Bleichenbacher’s padding oracle attack is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.
@@ -247,3 +128,118 @@ D. Bleichenbacher. Chosen ciphertext attacks against protocols based on the RSA 
 BARDOU, R., FOCARDI, R., KAWAMOTO, Y., SIMIONATO, L., STEEL, G., AND TSAY, J.-K. Efficient padding oracle attacks on cryptographic hardware. In Advances in Cryptology–CRYPTO 2012. Springer, 2012, pp. 608–625.    
 
 N. Aviram S. Schinzel J. Somorovsky N. Heninger M. Dankel J. Steube L. Valenta D. Adrian J. A. Halderman V. Dukhovni E. Kasper S. Cohney S. Engels C. Paar Y. Shavitt "DROWN: Breaking TLS with SSLv2" Mar. 2016 [online] Available: https://drownattack.com/.   
+
+
+# DROWN: Breaking TLS using SSLv2
+
+[Paper Link](https://tlseminar.github.io/docs/drown.pdf)
+| [Website](https://drownattack.com/)
+
+DROWN attack is inspired by the [Bleichenbacher’s padding oracle attack](#bleichenbacher-attack-http-archiv-infsec-ethz-ch-education-fs08-secsem-bleichenbacher98-pdf) over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a [padding oracle] (https://tlseminar.github.io/padding-oracle/). The padding scheme is shown below where first two bytes are fixed ‘0x00 0x02’ followed by 8 bytes of random padding string succeeded by a ‘0x00’ byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:
+
+<center><img src="/images/downgrade-attacks/pkcs1padding.png" alt="PKCSPadding" style="width:500px;"/><br>
+<sup>PKCS#1 v1.5 Padding Scheme </sup></center>
+
+The client in SSLv2 protocol sends ClientMasterKey message to SSLv2 server which the server decrypts and responds with ServerVerify message which tells whether the ClientMasterKey message was conformant with the padding scheme. The figure below depicts the SSLv2 protocol. The attacker can modify the original ClientMasterKey message and if the SSLv2 server confirms the padding, the attacker would immediately get to know that the first two bytes of the modified message is ‘0x00 0x02’. This way, the attacker can repeatedly modify the original message and query the oracle. After multiple successful guesses for modified message, the attacker can narrow down the guesses for the original message and recover the master_key.
+
+<center><img src="/images/downgrade-attacks/sslv2flaw.png" alt="SSLv2Flaw" style="width:500px;"/><br>
+<sup>Flaw in SSLv2 protocol where the server reveals the correctness of padding <br>
+Source: https://tlseminar.github.io/docs/drown.pdf</sup></center>
+
+Moreover, SSLv2 allowed export-grade ciphersuites which supported 40-bit key. A Bleichenbacher attacker could brute-force the key by repeatedly querying the SSLv2 server.
+
+Needless to say, TLS patched the above flaws and (most) servers made the SSLv2 protocol obsolete. However, it was not uncommon for TLS servers to share same RSA keys with SSLv2 servers. This made the TLS servers vulnerable to a modified form of Bleichenbacher attack which uses a SSLv2 server as padding oracle to decrypt the shared RSA key. DROWN instantiated this protocol-level attack and decrypted a TLS 1.2 handshake using 2048-bit RSA in 8 hours at a cost of $440 on Amazon EC2. As if this wasn't embarrassing enough, the authors of DROWN pointed out some implementation bugs in OpenSSL which lead to another attack called Special DROWN that could decrypt a TLS ciphertext in under 1 minute using a single CPU. Both the attacks are described below.
+
+## DROWN Attack 
+
+DROWN attack requires that a TLS server and a SSLv2 server share an RSA key. The attacker records multiple TLS handshake messages between a client and the TLS server. The aim of the attacker is to decrypt the RSA key of the TLS handshake. To do so, the attacker forces the client to establish a connection with SSLv2 server having the same RSA key so that the attacker can initiate the Bleichenbacher attack to recover the RSA key. Now the main hurdle for the attacker is that the format of TLS handshake message may not comply with PKCS#1 v1.5 padding scheme of SSLv2. The attacker converts the TLS ciphertext to SSLv2 ciphertext using the concept of trimmers introduced by [Bardou et al.] (https://hal.inria.fr/hal-00691958/document) which reduces the size of the TLS message. The use of trimmers require repeated querying to SSLv2 server by shifting the message bytes. The recovered SSLv2 plaintext is then converted back to TLS plaintext which reveals the RSA key of TLS handshake.
+
+<center><img src="/images/downgrade-attacks/drownattack.png" alt="DROWN" style="width:500px;"/><br>
+<sup>SSLv2-based Bleichenbacher attack on TLS <br>
+Source: https://tlseminar.github.io/docs/drown.pdf</sup></center> 
+
+
+## Special DROWN Attack
+
+The OpenSSL implementation had two bugs which led to a more efficient Bleichenbacher attack on an OpenSSL implementation of SSLv2 server.
+
+<b>OpenSSL extra clear oracle:</b> OpenSSL implementation allowed non-export cipher messages to contain clear_key_data which lead to potential overwriting of key bytes with null bytes. An attacker could vary the number of null bytes to decrypt the whole key one byte at a time.
+
+<b>OpenSSL leaky export oracle:</b> OpenSSL in export cipher mode allowed valid oracle response for correctly padded message of ‘any’ length.
+
+These bugs remained in OpenSSL implementation from 1998 up until its patch in 2015, when the authors of DROWN contacted the OpenSSL developers.
+
+## Prevention of DROWN
+
+The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like [AES_GCM](https://tools.ietf.org/html/rfc5288)) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.
+
+
+# State-Level Threats to Diffie-Hellman
+
+## Current Situation
+
+In recent years, the general bar for internet security has raised substantially. HTTPS is now the norm for most heavily trafficked websites and is spreading through services such as Let’s Encrypt, that allow for domain owners to easily get SSL certificates for a website at no cost. In general, this trend looks positive: for key exchange protocols, stronger 768 and 1024-bit groups are now the norm rather than the exception. Individual users and institutions have also begun to better understand the need for security and IPSec Virtual Private Networks (VPNs) and SSH connects are being more broadly practiced.
+
+## Academic Power
+
+However, while standards have advanced and security has increased in general, computational power has also increased proportionally. Although ideas such as Moore’s Law, that computing power at a certain price level effectively doubles every 18 months, the practical implications are not as often taken into account. These days, DH-512 is easily within the reach of “academic power,” that is to say, within the reach of institutions with access to midsize computing facilities. 
+
+With recent hardware, to “crack” DH-512 takes 2.5 core-years in the sieving phase, 7.7 core-years in the linear algebra phase, but only 10 core-minutes in the descent phase. So, given a 2000-3000 core cluster, all of the phases combined except the descent phase takes about 140 hours. 
+
+<center><img src="/images/downgrade-attacks/dh512.png" alt="DH-512 Computational Cost" style="width:500px;"/>
+<br>
+<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)></sup>
+<br>
+</center>
+
+However, the descent phase only takes about 70 seconds. What does this mean? That after 1 week of pre-computation, an individual calculation can be completed in about 70s. If this is combined with something called a “downgrade attack,” which will be described below, connections to about **8%** of top 1 million sites that use HTTPS can be broken in real time. 
+
+>### Sidebar: What’s a Core Year?
+>A “core-year” is a measure of the amount of work that an average computer core can complete in a year. To give a point of reference in terms of concrete cost, a single-core Amazon EC2 instance costs about $0.02 / hours. To run that core for a year would cost about $0.02 * (24 *365) = $175. A core-day and a core-minute are defined similarly.
+
+>Although it may seem like this isn’t as serious of a problem, since current practice is usually to use DH-768 or DH-1024 --for example, 91.0% of IKEv2 servers support a 1024-bit connection-- in actuality even those are vulnerable to attack. In 2009, a new record was achieved for integer factorization with a 768 bit integer factorization completed with academic resources over the span of 2 years. This would imply that breaking DH-678 takes about 36,500 core-years in pre-computation and 2 core-days in decent. As costly as this sounds, it is actually within reach of academic computational resources.
+
+## Structural Costs
+
+Ok, so a DH-768 connection can probably be broken by a state-level actor, but what about a DH-1024 connection? Surely that is ok? Let’s take a look at the costliness of DH-2014 in comparison to 768 bit DH. Time algorithmic time complexity increases by a factor of about 1220, the space complexity by a factor of 95, leaving us with this: 
+
+<center><img src="/images/downgrade-attacks/dhall.png" alt="Computational cost of different DH group sizes" style="width:500px;"/>
+<br>
+<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)</sup>
+<br>
+</center>
+
+Although the costs seem astronomically high, they are actually within the reach of a state-level actor. If we assume that some special purpose ASICs are developed to help speed up the sieving pre-computation such that it can be completed in one year (this would cost around $8 million), and we get access to, say, a Titan supercomputer for one year (at a cost of $122 million) to complete the linear algebra phase in one year, we find that we can complete all of our pre-computation for the small cost of $130 million dollars. Why “small”? Compare this cost to the budget of a state-level actor such as the NSA: their 2012 budget was $10.5 billion, making this computation just 1% of that budget. 
+
+## What’s so Good About Breaking One Group?
+
+But, you might object, what is the value in doing this pre-computation and breaking one group? Doesn’t this just mean that the NSA can only break a couple connections per year? Unfortunately, no. As Edward Snowden said, “If performing number field sieve pre-computations for at least a small number of 1024-bit Diffie-Hellman groups is possible, breaking any key exchanges made with those groups in close to real time is no difficulty.” This is because once the pre-computations are completed for a single group, that work can then be used to crack numerous connections.
+
+## IKE (IPsec VPNs)	
+
+Let’s now take a step back and look at IKE, the Internet Key Exchange, which perhaps is the most vulnerable to these kinds of attacks. IKE is a protocol used, in the IPsec protocol, to create a “Security Association (SA),” which is just a set of shared security attributes between two network parties such as cryptographic algorithm being used, the algorithm mode, credentials, etc. In order to establish the SA, two parties go through a process like this:
+
+<center><img src="/images/downgrade-attacks/ike.png" alt="IKE Protocol Description" style="width:600px;"/>
+<br>
+<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)</sup>
+<br>
+</center>
+
+While the exact details of how the protocol works are not important, it is important to note that to perform IKE passive decryption, an adversary would have to have access to a known pre-shared key, both sides of the IKE handshake, and both the handshake traffic and ESP traffic. 
+
+Also important to note is that the vast majority of IKE systems use one particular 1024-bit DH group, the Oakley Group 2, for the protocol. We find that 86.1% of IKEv1 servers and 91.0% of IKEv2 servers support Oakley Group 2, and 66.1% of IKEv1 servers and 63.9% of IKEv2 servers chose Oakley Group 2 for the protocol. This means that a state-level actor with access to the pre-shared key, both sides of the IKE handshake, and both the handshake traffic and ESP traffic would be able to **passively decrypt 66%** of VPN server traffic...in near real-time.
+
+## Show me the Adversary
+
+Is this all hypothetical? Does any such adversary actually exist? Unfortunately, signs point to this answer being yes. A 2012 Wired article revealed information that the NSA, several years before 2012, made an “enormous breakthrough” in its ability to cryptanalyze current public encryption. While the exact details are not known, it may be reasonable to assume that the NSA completed the pre-computation for a 1024-bit DH group, such as the Oakley Group 2, allowing them passive decrypted access to a swath of internet traffic. 
+
+<center><img src="/images/downgrade-attacks/impact.png" alt="Impact of a break"/>
+<sup>[https://weakdh.org/weakdh-ccs-slides.pdf](https://weakdh.org/weakdh-ccs-slides.pdf)</sup></center>
+
+The impact of such a break to IKE has already been noted. Other protocols would also be vulnerable to the break. SSH, for example, supports Oakley Group 2, Oakley Group 14, or a server-defined group that is negotiated through a DH-GEX handshake. According to recent data, 21.8% of servers prefer Oakley Group 2, and 37.4% prefer the server-defined group. However, of that 37.4%, almost all of them just provided Oakley Group 2 rather than a real custom group. Thus, a state-level attacker that performed the break could passively eavesdrop on connections to 25.7% of all publicly accessible SSH servers.
+
+Unfortunately, HTTPS connections are similarly affected. Of the top 1 million site that support DHE, 84% use a 1024-bit or smaller group, and 94% of those use one of five common groups. Thus, 17.9% of connections to the top 1 million sites could be passively eavesdropped with the pre-computation for a single 1024-bit prime.
+
+## Mitigations
+
+Is there any hope that a connection can really be secure given this information? Luckily, some mitigations can be put into place. First, servers can move to using elliptic curve cryptography (EEC). A transition to a elliptic curve Diffe-Hellman key exchange (ECDH) with appropriate parameters would thwart all known feasible cryptanalytic attacks as EEC discrete log algorithms don't gain too much advantage from precomputation. When EEC is not an option, it is recommended that primes at least 2048 bits in length be used. It would be ideal if browser vendors and clients raise the minimum accepted size for DH groups to at least 1024 bits. If large primes are not supported, then always use a fresh 1024-bit group to mitigate the efficacy of precomputation-based attacks. It is parameter reuse that allows state-level attackers to easily perform wide-scale passive decryption.
