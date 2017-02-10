@@ -66,11 +66,11 @@ A strong prime \\(p = 2q + 1\\) (\\(q\\) is prime) avoids this problem of reduci
 
 # Bleichenbacher’s Padding Oracle Attack
   
-Bleichenbacher’s padding oracle attack is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.
+[Bleichenbacher’s padding oracle attack](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)  is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.
 
-## [PKCS#1 v1.5 encryption padding](https://tools.ietf.org/html/rfc2313)
+## PKCS#1 v1.5 encryption padding
 
-Bleichenbacher’s padding oracle attack relies on the structure of RSA PKCS#1 v1.5 padding. Although RSA PKCS#1 v2.0 implements OAEP, SSL/TLS still uses PKCS#1 v1.5. The PKCS#1 v1.5 encryption padding scheme randomizes encryptions by prepending a random padding string PS to a message k (here, a symmetric session key) before RSA encryption:  
+Bleichenbacher’s padding oracle attack relies on the structure of [RSA PKCS#1 v1.5 padding](https://tools.ietf.org/html/rfc2313). Although RSA PKCS#1 v2.0 implements OAEP, SSL/TLS still uses PKCS#1 v1.5. The PKCS#1 v1.5 encryption padding scheme randomizes encryptions by prepending a random padding string PS to a message k (here, a symmetric session key) before RSA encryption:  
 
 1. The plaintext message is k, \\(l_k = |k|\\)
 The encrypter generates a random byte string PS,
@@ -86,7 +86,7 @@ $$~0x00 \notin {m[3],...,m[10]}$$
 If this condition holds, the decrypter searches for the first value i > 10 such that m[i] = 0x00. Then, it extracts \\(k = m[i+1]||...||m[l_m]\\). Otherwise, the ciphertext is rejected. In SSLv3 and TLS, RSA PKCS#1 v1.5 is used to encapsulate the premaster secret exchanged during the handshake. Thus, k is interpreted as the premaster secret. In SSLv2, RSA PKCS#1 v1.5 is used for encapsulation of an equivalent key denoted the master_key.
 
 
-## [Bleichenbacher attack](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)
+## Bleichenbacher attack
 
 Bleichenbacher’s attack is a padding oracle attack; it exploits the fact that RSA ciphertexts should decrypt to PKCS#1 v1.5-compliant plaintexts. If an implementation receives an RSA ciphertext that decrypts to an invalid PKCS#1 v1.5 plaintext, it might naturally leak this information via an error message, by closing the connection, or by taking longer to process the error condition. This behavior can leak information about the plaintext that can be modeled as a cryptographic oracle for the decryption process. Bleichenbacher demonstrated how such an oracle could be exploited to decrypt RSA ciphertexts.
 
@@ -135,7 +135,7 @@ N. Aviram S. Schinzel J. Somorovsky N. Heninger M. Dankel J. Steube L. Valenta D
 [Paper Link](https://tlseminar.github.io/docs/drown.pdf)
 | [Website](https://drownattack.com/)
 
-DROWN attack is inspired by the [Bleichenbacher’s padding oracle attack](#bleichenbacher-attack-http-archiv-infsec-ethz-ch-education-fs08-secsem-bleichenbacher98-pdf) over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a [padding oracle] (https://tlseminar.github.io/padding-oracle/). The padding scheme is shown below where first two bytes are fixed ‘0x00 0x02’ followed by 8 bytes of random padding string succeeded by a ‘0x00’ byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:
+DROWN attack is inspired by the [Bleichenbacher’s padding oracle attack](#bleichenbacher-attack) over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a [padding oracle] (https://tlseminar.github.io/padding-oracle/). The padding scheme is shown below where first two bytes are fixed ‘0x00 0x02’ followed by 8 bytes of random padding string succeeded by a ‘0x00’ byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:
 
 <center><img src="/images/downgrade-attacks/pkcs1padding.png" alt="PKCSPadding" style="width:500px;"/><br>
 <sup>PKCS#1 v1.5 Padding Scheme </sup></center>
