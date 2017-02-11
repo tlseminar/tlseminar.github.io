@@ -30,6 +30,10 @@ ecosystem around TLS is within scope for your project.
 - Contribute to tools automating use of ACME (e.g., for Let's Encrypt
   certificates).
 
+## Certificates
+
+- Analyze the built-in CAs trusted by Apple, Google, Microsoft, and Mozilla (or some other set of important vendors), and the process vendors use to decide whether or not a root CA should be included.
+
 ## Client UI
 
 - Most of the security indicators used by a browser can be spoofed,
