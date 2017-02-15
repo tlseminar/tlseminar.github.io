@@ -125,17 +125,16 @@ In addition, newer versions of [PKSC#1](https://tools.ietf.org/html/rfc3447) des
 
 ## Sources
 
-**TODO: make the papers have links to actual papers**
 
-https://github.com/duesee/bleichenbacher/blob/master/main.py  
-http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html  
-https://cryptopals.com/sets/6/challenges/47  
+[Bleichenbachers "Million message attack" on RSA](https://github.com/duesee/bleichenbacher/blob/master/main.py)  
+[Practical Padding Oracle Attacks on RSA](http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html)  
+[Bleichenbacher's PKCS 1.5 Padding Oracle challenges](https://cryptopals.com/sets/6/challenges/47)  
 
-D. Bleichenbacher. Chosen ciphertext attacks against protocols based on the RSA encryption standard. In Advances in Cryptology: Proceedings of CRYPTO ’98, volume 1462 of LNCS, pages 1–12, 1998.  
+[D. Bleichenbacher. Chosen ciphertext attacks against protocols based on the RSA encryption standard. In Advances in Cryptology: Proceedings of CRYPTO ’98, volume 1462 of LNCS, pages 1–12, 1998.](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)  
   
-Bardou, R., Focardi, R., Kawamoto, Y., Simionato, L., Steel, G., AND Tsay, J.-K. Efficient padding oracle attacks on cryptographic hardware. In Advances in Cryptology–CRYPTO 2012. Springer, 2012, pp. 608–625.    
+[Bardou, R., Focardi, R., Kawamoto, Y., Simionato, L., Steel, G., AND Tsay, J.-K. Efficient padding oracle attacks on cryptographic hardware. In Advances in Cryptology–CRYPTO 2012. Springer, 2012, pp. 608–625.](https://eprint.iacr.org/2012/417.pdf)    
 
-N. Aviram S. Schinzel J. Somorovsky N. Heninger M. Dankel J. Steube L. Valenta D. Adrian J. A. Halderman V. Dukhovni E. Kasper S. Cohney S. Engels C. Paar Y. Shavitt "DROWN: Breaking TLS with SSLv2" Mar. 2016 [online] Available: https://drownattack.com/.   
+[N. Aviram S. Schinzel J. Somorovsky N. Heninger M. Dankel J. Steube L. Valenta D. Adrian J. A. Halderman V. Dukhovni E. Kasper S. Cohney S. Engels C. Paar Y. Shavitt "DROWN: Breaking TLS with SSLv2" Mar. 2016 [online] Available: https://drownattack.com/.](https://tlseminar.github.io/docs/drown.pdf) 
 
 
 # DROWN: Breaking TLS using SSLv2
