@@ -132,6 +132,202 @@
   </header>
   
   
+  <p class="fronthead"><A href="/certificates/">Certificates</a> (Fri, 10 Feb 2017)</p>
+    
+
+<h1 id="introduction">Introduction</h1>
+
+<p>So far, we have learned some real-world TLS attacks and how they bring potential vulnerabiliting in different situations. Since the core SSL/TLS technology has persisted as the basis for securing many aspects of today’s Internet for more than twenty years, including data transfer, user passwords, and site authentication, it is important to also consider issues beyond the protocol.</p>
+
+<p>This week, we’ll go on to discuss practical issues with TLS including
+HTTPS, certificates, key management and an attack called SSLstripping.</p>
+
+<h1 id="trust-issues-and-enhancements">Trust Issues and Enhancements</h1>
+
+<p><strong><a href="https://tlseminar.github.io/docs/soktls.pdf"><em>SoK: SSL and HTTPS: Revisiting past challenges and evaluating certificate trust model enhancements</em></a>, Jeremy Clark and Paul C. van Oorschot, IEEE Symposium on Security and Privacy (&ldquo;Oakland&rdquo;), 2013.</strong></p>
+
+<h3 id="certificates">Certificates</h3>
+
+<p>The TLS protocol enables a client and a server to establish and communicate over a secure channel. Assuming such a secure channel can be created, authenticating the server still remains a challenge. HTTPS attempts to solve this problem using certificates, which bind public keys to servers. Web browsers trust certificates that are issued by certificate authorities (CAs).</p>
+
+<p>A certificate is bound to a server through its domain name. When requesting a certificate for a domain name from a CA, the requester is challenged to demonstrate control of the domain name. Upon successful validation, the CA will digitally sign a domain validated (DV) certificate for the entity.</p>
+
+<p>Stronger verification techniques are available due to security issues with hostname validation. A common verification technique used by CAs is to send an email to an email address associated with the domain. This becomes an issue when an attacker is able to spoof DNS records, such as through a DNS cache poisoning attack. Issues may also arise when an attacker is able to register an email address at the domain. For example, an attacker was able to convince a CA that owned <code>login.live.com</code> by registering <code>sslcertificates@live.com</code>. In response, CAs offer extended validation (EV) certificates to entities willing to pay a premium and undergo more stringent validation.</p>
+
+<h3 id="anchoring-trust">Anchoring Trust</h3>
+
+<p>Although anyone can create a certificate for any site they want, clients should only trust a certificate if it has been signed by a CA they already trust. Browsers com pre-configured with a default list of CAs known as trust anchors. Mozilla&rsquo;s Firefox 15 browser includes approximately 150 trust anchors.</p>
+
+<p>Users may also add additional trust anchors to their system. This is commonly done by organizations in order to MITM their users HTTPS connections to perform content inspection, or by users who want to inspect the contents of their own HTTPS requests.</p>
+
+<p>Because any trust anchor is able to issue trusted certificates for a website, an adversary need only target the weakest CA in order to obtain a fraudulent certificate. Furthermore, governments are in a position to compel CAs to create valid certificates to be used in MITM attacks.</p>
+
+<p>To prevent misuse of fraudulent certificates, webservers may use HTTP Public Key Pinning (HPKP) to remember a presented certificate, and warn the user if a different certificate is ever presented for the same domain in the future. This way, even if an adversary has obtained a certificate that is trusted by a browser, they will be unable to perform a MITM attack. However, this technique requires a user to blindly trust the first certificate that the webserver pins. An effective alternative is for browser vendors to include a list of certificates to pin within the browser.</p>
+
+<h3 id="transitivity-of-trust">Transitivity of Trust</h3>
+
+<p>In addition to signing certificates for webservers, trust anchors can issue certificates allowing other organizations to also act as CAs. While Firefox includes nearly 150 trust anchors from approximately 50 organizations, hundreds of organizations, including the US Department of Homeland Security, are trusted intermediate CAs.</p>
+
+<p>Client software does not generally maintain a list of intermediate CAs. Rather, they use a chain discovery mechanism to trace a server&rsquo;s certificate back to a trust anchor. Such a chain must be carefully validated to check that each intermediate CA occurring in the chain has actually been granted authority to sign further certificates. This check was previously skipped by Microsoft&rsquo;s CryptoAPI and Apple&rsquo;s iOS.</p>
+
+<p>One way to ensure that every intermediate CA is visible to users is to publish a list of every valid certificate. This way, clients are able to know about intermediate CAs before their certificate is encountered. This is important because intermediate CAs can have just as much power as the trust anchors.</p>
+
+<h3 id="maintenance-of-trust-revocation">Maintenance of Trust (Revocation)</h3>
+
+<p>Sometimes a certificate needs to be revoked, such as when a site is compromised or abandoned, the domain name is exchanged, or the CA becomes aware of mistaken issuance. This revocation status must be readily available through the CA, either through a certificate revocation list (CRL) or an online certificate status checking protocol (OCSP).</p>
+
+<p>Because this revocation information may be unavailable, browsers choose to accept certificates when the information cannot be located. Thus an adversary who is able to prevent a browser from obtaining revocation information may be able to cause a revoked certificate to be accepted.</p>
+
+<p>Besides the list of all valid certificates described above, one way to combat unreliable revocation is for webservers to provide timestamped OCSP status reports, a technique known as Certificate Status Stapling. Alternatively, if certificates were issued to be valid for a shorter time, the impact of missing a revocation is lessened. Currently, certificates are often valid for years, but a recent proposal calls for certificates that remain valid for only four days. [TODO: add link to this proposal (is it recent now, or when this paper was written?]</p>
+
+<h3 id="indication-and-interpretation-of-trust">Indication and Interpretation of Trust</h3>
+
+<p>When a user browses to a website, they are expected to verify that they are connecting over HTTPS. This is indicated to the users through the <code>https://</code> at the beginning of the URL in the address bar, and the green lock icon displayed by the browser. This icon may typically be clicked on to display more information about the website&rsquo;s certificate. However, studies have shown that many users do not look for these indicators, and may even assume a page is secure based on the type of information being displayed.</p>
+
+<p>Even when a browser displays a warning for a failed HTTPS connection, many users will click through and still log into the site. This may be due to users not understanding the certificate warning, not understanding the risks of visiting a site with an invalid certificate, or making a decision to visit the site anyway despite understanding and weighing the rists. Another common warning is the mixed scripting warnings, indicating that Javascript is being loaded over plain HTTP but being run within the HTTPS site&rsquo;s privileges.</p>
+
+<p>If an adversary expects a user to look for HTTPS indicators, they may be able to spoof common security cues. Some users believe an image of a lock on the website is a sign of a successful HTTPS connections. A more involved example is shown in the image below, where an attacker has simulated a browser address bar, complete with the HTTPS indicators that come with a valid EV certificate.</p>
+
+<p><center><img width=594 alt="Security Indicators" src="/images/TSS2.png"><Br>
+TODO: Image Credit
+</center></p>
+
+<h1 id="coniks-and-certificate-transparency">CONIKS and Certificate Transparency</h1>
+
+<p><strong><a href="https://eprint.iacr.org/2014/1004.pdf"><em>CONIKS: Bringing Key Transparency to End Users</em></a> by Melara et al.</strong></p>
+
+<p>[TODO: fix the reference]</p>
+
+<p>CONIKS is a key management system intended to reduce the workload on clients to verify keys for secure communications. It&rsquo;s an extension of the existing certificate transparency logs for webservers to end users. CONIKS simultaneously helps address the issue of service providers tampering with keys and of trust establishment that would otherwise be done out-of-band manually. The system is intended to prevent equivocation of keys, prevent the addition of unauthorized keys, and allow for transparent and public verification all while being efficient for users.</p>
+
+<p>CONIKS is motivated by a desire to increase the use of end-to-end encryption, which has traditionally struggled with key management. Systems like WhatsApp and Apple&rsquo;s iMessage use centralized storage of public keys which is vulnerable to key removal, key changing, or server takeover. Furthermore, many systems have no way (beyond clunky manual steps) to verify contacts are who they claim to be.</p>
+
+<h3 id="design">Design</h3>
+
+<p>The design of CONIKS involves several non-distinct participants: service providers, end users, and auditors. <em>Service providers</em> manage their own individual namespace of name (e.g., <code>alice@host.com</code>) to key bindings. While not assumed to be trustworthy, service providers are expected to have a reputation to uphold. <em>End-users</em> are the clients and intend to communicate with each other securely. Clients require only a relatively accurate clock and a usable network connection. They are also responsible for serving as <em>auditors</em> who track the key log for forgeries, invalid updates, and new unsolicited keys.</p>
+
+<p>Each service provider constructs its directory of <em>name</em> &rarr; <em>key</em> mappings as a Merkle binary prefix tree, with each tree node representing a unique prefix.</p>
+
+<p><center>
+<img src="/images/merkle.png" width=500 alt="Merkle Tree"></img><br>
+Merkle Prefix tree (image from CONIKS paper
+</center></p>
+
+<p>As in other Merkle trees, interior nodes represent hashes of their left and right children. Leaf nodes are hashed over a nonce (<em>k<sub>n</em></sub>), a node index, the tree depth, and a cryptographic commitment of the user&rsquo;s name and public key. Empty or placeholder nodes are hashed similarly, but instead include a different constant, <em>k<sub>empty</sub></em>.</p>
+
+<p><center>
+<img src="/images/strchain.png" width="650" alg="STR Chain"><br>
+Signed STR chain (Image from CONIKS paper)
+</center></p>
+
+<p>At regular intervals, or epochs, the service provider signs the merkle root of the previous tree and a sequentially increasing number to indicate the order of the blocks. This helps ensure that service providers cannot change the historical record easily, and also must maintain a changed STR chain indefinitely.</p>
+
+<h3 id="common-operations">Common Operations</h3>
+
+<p>Registration in a CONIKS system occurs when the user sends their name and public key to the service provider. Since the server only published a signed record every epoch, it will issue a &ldquo;temporary binding&rdquo; in the mean-time to validate the key, signing the user key, name, and eventual index.</p>
+
+<p>To look up a key, clients will consult the server for a given name and receive the matching public key and a STS proof of inclusion, consisting of all the hashes from the position of the key on the way up the tree. Since interior nodes consist only of hashes of the left and right nodes, the client can verify that the key is at the position the server claims, or that the key is truly missing if the server claims it is.</p>
+
+<p>A general flow for secure communications therefore looks something like this:</p>
+
+<ol>
+<li>Alice contacts the service provider (Carol) and requests the public key for <code>bob@host.com</code>.</li>
+<li>Carol returns the public key and the proof of inclusion hash chain.</li>
+<li>Alice computes the merkle root of the tree and compares to her last known root from the STR chain.</li>
+<li>After proving Carol gave the correct key, Alice encrypts her message with Bob&rsquo;s public key and sends it.</li>
+</ol>
+
+<h3 id="auditing">Auditing</h3>
+
+<p>One of the most important features of CONIKS is the ability for anyone to audit the <em>name</em> &rarr; <em>key</em> mappings. Indeed, clients are encouraged to regularly audit their own keys to ensure they have not been compromised. Auditing works much like key lookup &mdash; the server is consulted for the key mapping to the given name. Clients who are also auditing will confirm that the returned private key matches the saved one they possess, and that the keys have not changed in an authorized way between epochs.</p>
+
+<h3 id="considerations-for-deploying-coniks">Considerations for deploying CONIKS</h3>
+
+<h4 id="initial-key-submission-window">Initial key submission window</h4>
+
+<p>It&rsquo;s important to note that until the next STR is published, clients won&rsquo;t be able to communicate using their public key, as nobody else will have seen it. However, clients can audit their own keys to prevent any malicious actors from changing their initial key upload.</p>
+
+<h4 id="whistleblowing">&lsquo;Whistleblowing&rsquo;</h4>
+
+<p>The CONIKS protocol currently doesn&rsquo;t provide any way for clients to contact each other if they detect malicious activity either in general or on the part of the service provider. If their keys are hijacked, they are responsible for communicating that information to others on their own, which could be over an unsafe channel.</p>
+
+<h4 id="key-change-or-revocation">Key Change or Revocation</h4>
+
+<p>CONIKS doesn&rsquo;t currently provide any way for users to update or revoke their keys directly. One easy path would be for users to sign some message indicating they wish to remove the previous key. However, if a user lost their key they would be unable to revoke their old one.</p>
+
+<h1 id="ssl-stripping">SSL Stripping</h1>
+
+<h5 id="defeating-ssl-using-sslstrip-https-www-youtube-com-watch-v-mfol6imbz7y-by-moxie-marlinspike"><a href="https://www.youtube.com/watch?v=MFol6IMbZ7Y">Defeating SSL Using SSLstrip</a> by Moxie Marlinspike</h5>
+
+<p>[TODO: fix reference (even for video link, should have more information)]</p>
+
+<p>In this part of the blog post we further explore the SSLstrip attack, presented to the class by Team Sesame on February 10th, 2017.</p>
+
+<p><center><img width="500" alt="MITM Framework" src="/images/sslstrip.png"><br>
+In-the-Middle Attack Setup (Image from avicoder)
+</center></p>
+
+<h3 id="overview">Overview</h3>
+
+<p>The SSLStrip attack is both an in-the-middle attack and protocol downgrade attack that relies on websites not implementing HSTS and also browsers&rsquo; inability to prevent users from POST&rsquo;ing sensitive data to HTTP websites.</p>
+
+<p>The SSLStrip python module, when used in conjunction with an MITM framework, replies to the victim&rsquo;s HTTPS requests with HTTP versions of the same page silently stripping the <code>S</code>. On modern browsers the only visual cue is the lack of HTTPS:</p>
+
+<p><center>
+<img src="/images/sslstripindicator.png" width="400"><br>
+Screenshot of Chrome on iPhone 7
+</center></p>
+
+<p>This differs from other HTTPS MITM attacks whereby an attacker forces the victim to connect to a fake access point where tools like mitmproxy can be then used to sign forged certificates for websites on the fly.</p>
+
+<p>However, most browsers have mechanisms to protect against this like HTTP Public Key Pinning (HPKP) and browser warnings:</p>
+
+<p><center>
+<img src="/images/chromenotprivate.png" width="400" alt="Chrome: Not Private"><br>
+Google Chrome Certificate Error (Source: inmotionhosting.com)
+[TODO: give a real source credit for this image]
+</center></p>
+
+<h3 id="necessary-requirements">Necessary Requirements</h3>
+
+<p>In order for an attacker to obtain victim credentials for a given HTTPS website using SSLstrip</p>
+
+<ol>
+<li>The attacker must be on the same LAN as the victim (necessary to obtain MITM status)<br /></li>
+<li>The HTTPS website the victim accesses must have initiated the connection first via HTTP<br /></li>
+<li>The given website must not be on victim&rsquo;s browsers HSTS Preloads (for Chroms, this includes the Google domains and ~7500 other sites)</li>
+</ol>
+
+<p>SSLstrip works by listening for HTTP 301 “Moved Permanently&rdquo; (i.e., Redirect to HTTPS). So unless the victim explicitly types in https:// (HTTPS to begin with) or the website is on the browser&rsquo;s HSTS Preloads, or the website is HTTPS only, the 301 will be issued and at that point sslstrip will intercept this response and instead relay back to the victim a HTTP version of the HTTPS site.</p>
+
+<p>So, Requirement 2 is necessary for sslstrip to work. In the case of the website being on the browser list of HSTS preloads, then the first request over HTTPS is is never dispatched but rather internally redirected by the browser to the HTTPS version which is why Requirement 3 states the given website must not be on the HSTS Preload list (<a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json">https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json</a>).</p>
+
+<h3 id="countermeasures">Countermeasures</h3>
+
+<p>The most obvious countermeasures include:</p>
+
+<ol>
+<li>Browser Indications, SSLight, other addons?</li>
+<li>Server: HSTS (HTTP Strict Transport Security) Preloads</li>
+<li>Server: HTTPS only</li>
+</ol>
+
+<p>[TODO: find the standard capitalization for sslstip and use it consistently - mix of Sslstrip, SSLstrip, SSLStrip, etc. have all been used on this page.]</p>
+
+<p>While improvements have been made to Sslstrip such as using different domains like <code>wwww</code> (and various countermeasures like key pinning and browser displays), in present day the original Sslstrip (2009) does not work against sites with HSTS enabled like <code>facebook.com</code> and <code>gmail.com</code>. Surprisingly though, a 2016 article claimed only 1 in 20 HTTPS servers implemented HSTS correctly! [TODO: include a link to the article!]</p>
+
+<p>Sslstrip is an easily-deployable and effective attack &ldquo;in the wild&rdquo; because of but not limited to session hijacking and the fact most browsers do not alert users they are submitting over http (or conversely most users do not notice <code>http://</code> when submitting sensitive info). In addition, password reuse is widespread and if credentials were obtained from say apple.com or a bank they could be tried against more sensitive websites which do support HSTS (enable two factor authentication!!).</p>
+
+<h3 id="sources">Sources:</h3>
+
+<p>[TODO: don&rsquo;t just have a list of links. If these are already linked in the main text and you don&rsquo;t have anything more to say about them, not need to list as source here. For the others, think of this as a &ldquo;for futher reading&rdquo; section - should explain what each link is, and what someone would find there. Its easy to get lots of things to click-on from ddg/google/bing - only useful to have links like this if you are adding value.]</p>
+
+<p><a href="https://www.troyhunt.com/understanding-http-strict-transport/">https://www.troyhunt.com/understanding-http-strict-transport/</a><br />
+<a href="http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html">http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html</a><br />
+<a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json">https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json</a><br />
+<a href="https://avicoder.me/2016/02/22/SSLstrip-for-newbies/">https://avicoder.me/2016/02/22/SSLstrip-for-newbies/</a></p>
+ 
+  
   <p class="fronthead"><A href="/padding-oracle/">Padding Oracle Attacks</a> (Tue, 31 Jan 2017)</p>
     
 
