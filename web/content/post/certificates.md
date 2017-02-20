@@ -49,7 +49,7 @@ Sometimes a certificate needs to be revoked, such as when a site is compromised 
 
 Because this revocation information may be unavailable, browsers choose to accept certificates when the information cannot be located. Thus an adversary who is able to prevent a browser from obtaining revocation information may be able to cause a revoked certificate to be accepted.
 
-Besides the list of all valid certificates described above, one way to combat unreliable revocation is for webservers to provide timestamped OCSP status reports, a technique known as Certificate Status Stapling. Alternatively, if certificates were issued to be valid for a shorter time, the impact of missing a revocation is lessened. Currently, certificates are often valid for years, but a recent proposal calls for certificates that remain valid for only four days. [TODO: add link to this proposal (is it recent now, or when this paper was written?]
+Besides the list of all valid certificates described above, one way to combat unreliable revocation is for webservers to provide timestamped OCSP status reports, a technique known as Certificate Status Stapling. Alternatively, if certificates were issued to be valid for a shorter time, the impact of missing a revocation is lessened. Currently, certificates are often valid for years, but a 2012 proposal calls for certificates that remain valid for only four days, eliminating the need for a revocation mechanism ([Topalovic et al.](http://www.w2spconf.com/2012/papers/w2sp12-final9.pdf)).
 
 ### Indication and Interpretation of Trust
 
@@ -60,7 +60,7 @@ Even when a browser displays a warning for a failed HTTPS connection, many users
 If an adversary expects a user to look for HTTPS indicators, they may be able to spoof common security cues. Some users believe an image of a lock on the website is a sign of a successful HTTPS connections. A more involved example is shown in the image below, where an attacker has simulated a browser address bar, complete with the HTTPS indicators that come with a valid EV certificate.
 
 <center><img width=594 alt="Security Indicators" src="/images/TSS2.png"><Br>
-TODO: Image Credit
+Fake Address Bar (Image from [Malwarebytes](https://blog.malwarebytes.com/cybercrime/social-engineering-cybercrime/2016/08/tech-support-scams-and-google-chrome-tricks/))
 </center>
 
 # CONIKS and Certificate Transparency
