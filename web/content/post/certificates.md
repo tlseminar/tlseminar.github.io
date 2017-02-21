@@ -124,13 +124,12 @@ The CONIKS protocol currently doesn't provide any way for clients to contact eac
 
 CONIKS doesn't currently provide any way for users to update or revoke their keys directly. One easy path would be for users to sign some message indicating they wish to remove the previous key. However, if a user lost their key they would be unable to revoke their old one.
 
+
 # SSL Stripping
 
-##### [Defeating SSL Using SSLstrip](https://www.youtube.com/watch?v=MFol6IMbZ7Y) by Moxie Marlinspike
+##### [Defeating SSL Using sslstrip](https://www.youtube.com/watch?v=MFol6IMbZ7Y) 2009 Black Hat DC presentation by Moxie Marlinspike
 
-[TODO: fix reference (even for video link, should have more information)]
-
-In this part of the blog post we further explore the SSLstrip attack, presented to the class by Team Sesame on February 10th, 2017.
+In this part of the blog post we further explore the sslstrip attack, presented to the class by Team Sesame on February 10th, 2017.
 
 
 <center><img width="500" alt="MITM Framework" src="/images/sslstrip.png"><br>
@@ -140,9 +139,9 @@ In-the-Middle Attack Setup (Image from avicoder)
 
 ### Overview
 
-The SSLStrip attack is both an in-the-middle attack and protocol downgrade attack that relies on websites not implementing HSTS and also browsers' inability to prevent users from POST'ing sensitive data to HTTP websites. 
+The sslstrip attack is both an in-the-middle attack and protocol downgrade attack that relies on websites not implementing HSTS and also browsers' inability to prevent users from POST'ing sensitive data to HTTP websites. 
 
-The SSLStrip python module, when used in conjunction with an MITM framework, replies to the victim's HTTPS requests with HTTP versions of the same page silently stripping the `S`. On modern browsers the only visual cue is the lack of HTTPS:
+The sslstrip python module, when used in conjunction with an MITM framework, replies to the victim's HTTPS requests with HTTP versions of the same page silently stripping the `S`. On modern browsers the only visual cue is the lack of HTTPS:
 
 <center>
 <img src="/images/sslstripindicator.png" width="400"><br>
@@ -155,21 +154,20 @@ However, most browsers have mechanisms to protect against this like HTTP Public 
 
 <center>
 <img src="/images/chromenotprivate.png" width="400" alt="Chrome: Not Private"><br>
-Google Chrome Certificate Error (Source: inmotionhosting.com)
-[TODO: give a real source credit for this image]
+Self signed SSL certificate warning in Google Chrome, image courtesy of [Inmotionhosting](http://www.inmotionhosting.com/support/website/ssl/self-signed-ssl-certificate-warning).
 </center>
 
 ### Necessary Requirements
 
-In order for an attacker to obtain victim credentials for a given HTTPS website using SSLstrip
+In order for an attacker to obtain victim credentials for a given HTTPS website using sslstrip
 
 1. The attacker must be on the same LAN as the victim (necessary to obtain MITM status)  
 2. The HTTPS website the victim accesses must have initiated the connection first via HTTP  
-3. The given website must not be on victim's browsers HSTS Preloads (for Chroms, this includes the Google domains and ~7500 other sites)
+3. The given website must not be on victim's browsers HSTS Preloads (supported by all modern browsers, this list includes the Google domains and ~7500 other sites)
 
-SSLstrip works by listening for HTTP 301 “Moved Permanently" (i.e., Redirect to HTTPS). So unless the victim explicitly types in https:// (HTTPS to begin with) or the website is on the browser's HSTS Preloads, or the website is HTTPS only, the 301 will be issued and at that point sslstrip will intercept this response and instead relay back to the victim a HTTP version of the HTTPS site. 
+Sslstrip works by listening for HTTP 301 “Moved Permanently" (i.e., Redirect to HTTPS). So unless the victim explicitly types in https:// (HTTPS to begin with) or the website is on the browser's HSTS Preloads, or the website is HTTPS only, the 301 will be issued and at that point sslstrip will intercept this response and instead relay back to the victim a HTTP version of the HTTPS site. 
 
-So, Requirement 2 is necessary for sslstrip to work. In the case of the website being on the browser list of HSTS preloads, then the first request over HTTPS is is never dispatched but rather internally redirected by the browser to the HTTPS version which is why Requirement 3 states the given website must not be on the HSTS Preload list (https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json).
+So, Requirement 2 is necessary for sslstrip to work. In the case of the website being on the browser list of HSTS preloads, then the first request over HTTPS is is never dispatched but rather internally redirected by the browser to the HTTPS version which is why Requirement 3 states the given website must not be on the [HSTS Preload list](https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json).
 
 ### Countermeasures
 
@@ -179,18 +177,19 @@ The most obvious countermeasures include:
 2. Server: HSTS (HTTP Strict Transport Security) Preloads 
 3. Server: HTTPS only 
 
-[TODO: find the standard capitalization for sslstip and use it consistently - mix of Sslstrip, SSLstrip, SSLStrip, etc. have all been used on this page.]
 
-While improvements have been made to Sslstrip such as using different domains like `wwww` (and various countermeasures like key pinning and browser displays), in present day the original Sslstrip (2009) does not work against sites with HSTS enabled like `facebook.com` and `gmail.com`. Surprisingly though, a 2016 article claimed only 1 in 20 HTTPS servers implemented HSTS correctly! [TODO: include a link to the article!]
+
+While improvements have been made to sslstrip such as using different domains like `wwww` (and various countermeasures like key pinning and browser displays), in present day the original sslstrip (2009) does not work against sites with HSTS enabled like `facebook.com` and `gmail.com`. Surprisingly though, a [2016 article](https://news.netcraft.com/archives/2016/03/17/95-of-https-servers-vulnerable-to-trivial-mitm-attacks.html) claimed only 1 in 20 HTTPS servers implemented HSTS correctly! 
 
 Sslstrip is an easily-deployable and effective attack "in the wild" because of but not limited to session hijacking and the fact most browsers do not alert users they are submitting over http (or conversely most users do not notice `http://` when submitting sensitive info). In addition, password reuse is widespread and if credentials were obtained from say apple.com or a bank they could be tried against more sensitive websites which do support HSTS (enable two factor authentication!!). 
 
 
-### Sources:
+### Further Reading:
 
-[TODO: don't just have a list of links. If these are already linked in the main text and you don't have anything more to say about them, not need to list as source here. For the others, think of this as a "for futher reading" section - should explain what each link is, and what someone would find there. Its easy to get lots of things to click-on from ddg/google/bing - only useful to have links like this if you are adding value.]
+Writeup describing modern browser and website protections against MITM attacks:
 
 https://www.troyhunt.com/understanding-http-strict-transport/  
+
+Try it out yourself! This blog post describes how an attacker on Mac OS X could use sslstrip to gather credentials over network. I learned both my online banking website and apple.com were vulnerable to sslstrip (i.e. the domains of these sites were not on my browsers HSTS preload list).
+
 http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html  
-https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json  
-https://avicoder.me/2016/02/22/SSLstrip-for-newbies/
