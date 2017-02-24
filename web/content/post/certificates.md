@@ -65,9 +65,7 @@ Fake Address Bar (Image from [Malwarebytes](https://blog.malwarebytes.com/cyberc
 
 # CONIKS and Certificate Transparency
 
-**[_CONIKS: Bringing Key Transparency to End Users_](https://eprint.iacr.org/2014/1004.pdf) by Melara et al.**
-
-[TODO: fix the reference]
+**[CONIKS: Bringing Key Transparency to End Users](https://eprint.iacr.org/2014/1004.pdf)**, Marcela S. Melara, Aaron Blankstein, Joseph Bonneau, Edward W. Felten, Michael J. Freedman, USENIX Security '15
 
 CONIKS is a key management system intended to reduce the workload on clients to verify keys for secure communications. It's an extension of the existing certificate transparency logs for webservers to end users. CONIKS simultaneously helps address the issue of service providers tampering with keys and of trust establishment that would otherwise be done out-of-band manually. The system is intended to prevent equivocation of keys, prevent the addition of unauthorized keys, and allow for transparent and public verification all while being efficient for users.
 
