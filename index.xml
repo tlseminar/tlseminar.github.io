@@ -1273,7 +1273,17 @@ learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy
 &lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;DROWN: Breaking TLS using SSLv2&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;strong&gt;Class 4: Certificates&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/certificates&#34;&gt;Class 4: Certificates&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/soktls.pdf&#34;&gt;SoK: SSL and HTTPS: Revisiting past challenges and evaluating certificate trust model enhancements&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://eprint.iacr.org/2014/1004.pdf&#34;&gt;CONIKS: Bringing Key Transparency to End Users&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=MFol6IMbZ7Y&#34;&gt;Defeating SSL Using SSLstrip&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/TBD&#34;&gt;Class 5: Verification and Testing&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/TBD&#34;&gt;Class 6: Side Channels&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 </description>
     </item>
     
