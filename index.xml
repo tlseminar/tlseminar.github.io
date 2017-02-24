@@ -1273,7 +1273,17 @@ learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy
 &lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;DROWN: Breaking TLS using SSLv2&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;strong&gt;Class 4: Certificates&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/certificates&#34;&gt;Class 4: Certificates&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/soktls.pdf&#34;&gt;SoK: SSL and HTTPS: Revisiting past challenges and evaluating certificate trust model enhancements&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://eprint.iacr.org/2014/1004.pdf&#34;&gt;CONIKS: Bringing Key Transparency to End Users&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=MFol6IMbZ7Y&#34;&gt;Defeating SSL Using SSLstrip&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/TBD&#34;&gt;Class 5: Verification and Testing&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/TBD&#34;&gt;Class 6: Side Channels&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1494,14 +1504,14 @@ set up in the CS department&amp;rsquo;s financial system.)&lt;/li&gt;
 &lt;table&gt;
 &lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Topic&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team T (Cinnamon)&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team L (Poppyseed)&lt;/b&gt;&lt;/td&gt;&lt;td width=12%&gt;&lt;b&gt;Team S (Sesame)&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
 
-&lt;tr&gt;&lt;td&gt;Class 1 (20 Jan)&lt;/td&gt;&lt;td&gt;Intro&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/class 1&#34;&gt;Class 1&lt;/a&gt; (20 Jan)&lt;/td&gt;&lt;td&gt;Intro&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td&gt;Plan&lt;/td&gt;&lt;/tr&gt;
 
-&lt;tr&gt;&lt;td&gt;Class 2 (27 Jan)&lt;/td&gt;&lt;td&gt;Padding Oracle Attacks&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 3 (3 Feb)&lt;/td&gt;&lt;td&gt;Logjam/DROWN&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 4 (10 Feb)&lt;/td&gt;&lt;td&gt;Certificates&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 5 (17 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 6 (24 Feb)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Class 7 (3 Mar)&lt;/td&gt;&lt;td&gt;TBD/Projects&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/padding-oracle&#34;&gt;Class 2&lt;/a&gt; (27 Jan)&lt;/td&gt;&lt;td&gt;Padding Oracle Attacks&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/downgrade-attacks&#34;&gt;Class 3&lt;/a&gt; (3 Feb)&lt;/td&gt;&lt;td&gt;Logjam/DROWN&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a href=&#34;https://tlseminar.github.io/certificates&#34;&gt;Class 4&lt;/a&gt; (10 Feb)&lt;/td&gt;&lt;td&gt;Certificates&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 5 (17 Feb)&lt;/td&gt;&lt;td&gt;Verification and Testing&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 6 (24 Feb)&lt;/td&gt;&lt;td&gt;Side Channels&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 7 (3 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;td bgcolor=&#34;#66EEAA&#34; style=&#34;text-align:center&#34; colspan=5&gt;Spring Break&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;td&gt;Class 8 (17 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;td&gt;Class 9 (24 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td&gt;Food&lt;/td&gt;&lt;/tr&gt;
