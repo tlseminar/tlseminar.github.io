@@ -6,7 +6,11 @@ draft = false
 slug = "downgrade-attacks"
 +++
 
-**TODO: add a short overview paragraph, giving a roadmap (with links to later sections) to the whole story**
+Last week we learned about [Padding Oracle Attacks](https://tlseminar.github.io/padding-oracle/) which use side-channel information related to ciphertext message padding in order to deduce the underlying plaintext message in a TLS communication. This week we will learn about [Downgrade Attacks](https://en.wikipedia.org/wiki/Downgrade_attack) that force a TLS server to choose weaker encryption and protocol suit thereby making it vulnerable to attacks like man-in-the-middle.
+
+We begin with a brief introduction of Diffie-Hellman Key Exchange protocol commonly used in TLS and then describe the Logjam attack on Diffie-Hellman protocol which relies on pre-computation of discrete-logs of a 512-bit prime used in the protocol. Next we discuss about [State-level Threats to Diffie-Hellman](#state-level-threats-to-diffie-hellman), where we show that the pre-computation of discrete-logs is in the reach of current academic computation power. The practical consequence is that 8% of the top 1 million websites that use HTTPS can be broken in real time.
+
+In the remainder of the article, we discuss about [Bleichenbacher Attack](#bleichenbacher-attack) which is a padding oracle attack on PKCS#1 v1.5 padding used in SSLv2. We conclude with [Drown Attack](#drown-attack) that uses Bleichenbacker attack to gain access to RSA key of a TLS communication.
 
 # Diffie-Hellman Cryptanalysis
 
@@ -27,7 +31,7 @@ The Diffie-Hellman problem (DHP) is as follows:  Given an element \\(g\\) and th
 
 Clearly, if this problem were easy to solve, Diffie-Hellman would be useless, since any eavesdropping adversary could then collect both \\(g^x\\) and \\(g^y\\), compute \\(g^{xy}\\), and subsequently decrypt all of Alice and Bob’s communication.  The Discrete Logarithm Problem (DLP) is thus by far the most efficient means to solve DHP and requires that the eavesdropping adversary compute \\(x\\) given \\(g\\) and \\(g^x\\) – still believed to be a hard problem in general.  But, if \\(p\\) is a weak prime (as explained below), it can solved in a reasonable amount of time with available computing resources.  
 
-**TODO: Add a link to paper** Adrian et al. published a paper in 2015 that demonstrated a weakness in Diffie-Hellman key exchange in the Handshake Protocol of TLS. In order to perform cryptanalysis in such a situation, an attacker must solve DLP by computing arbitrary discrete log values in real-time. While it is not known how to calculate discrete logs efficiently (and believed to be hard), the attack can be accelerated using precomputation. 
+[Adrian et al.](http://delivery.acm.org/10.1145/2820000/2813707/p5-adrian.pdf?ip=128.143.136.161&id=2813707&acc=OA&key=B33240AC40EC9E30%2E95F2ACB8D94EAE2C%2E4D4702B0C3E38B35%2E595DDC89FD3F921D&CFID=905546373&CFTOKEN=37431812&__acm__=1488219223_8a00d679a8028704e982e7dce1863988) published a paper in 2015 that demonstrated a weakness in Diffie-Hellman key exchange in the Handshake Protocol of TLS. In order to perform cryptanalysis in such a situation, an attacker must solve DLP by computing arbitrary discrete log values in real-time. While it is not known how to calculate discrete logs efficiently (and believed to be hard), the attack can be accelerated using precomputation. 
 
 ## Index Calculus
 
@@ -37,7 +41,7 @@ While the logic behind the precomputation cryptanalysis is based on the General 
 
 Using precomputed discrete logs, an attacker can perform an active downgrade attack on a TLS connection. Operating as an in-the-middle attacker, the attacker intercepts a Client Hello message and alters it to instruct the server to use export-grade Diffie-Hellman, which uses 512-bit keys rather than 1024-bit or higher, which allows the attacker to use the precomputed logs. During the Handshake Protocol, the attacker is able to solve the discrete log problem and recover the master secret of that connection. This allows the attacker to communicate directly with the client over an encrypted channel, while the client still thinks he/she is communicating with their intended server.
 
-## The Logjam Attack:  Step-by-Step
+## The Logjam Attack: Step-by-Step
 
 <center>![Alt](https://cryptologie.net/upload/logjam.png)</center>
 <center><sup>https://cryptologie.net/upload/logjam.png</sup></center>
@@ -67,122 +71,6 @@ The factors of \\(30 = 2 * 3 * 5\\) are too small for the prime \\(p\\) to be se
 A strong prime \\(p = 2q + 1\\) (\\(q\\) is prime) avoids this problem of reducibility by ensuring that \\((p-1)\div 2\\) cannot be composite (and, by extension, that Pohlig-Hellman cannot obtain information from \\(p\\)).  
 
 This puts a server that supports export-grade DH and reuses weak primes at severe risk to a motivated attack.
-
-# Bleichenbacher’s Padding Oracle Attack
-  
-[Bleichenbacher’s padding oracle attack](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)  is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.
-
-## PKCS#1 v1.5 encryption padding
-
-Bleichenbacher’s padding oracle attack relies on the structure of [RSA PKCS#1 v1.5 padding](https://tools.ietf.org/html/rfc2313). Although RSA PKCS#1 v2.0 implements OAEP, SSL/TLS still uses PKCS#1 v1.5. The PKCS#1 v1.5 encryption padding scheme randomizes encryptions by prepending a random padding string PS to a message _k_ (here, a symmetric session key) before RSA encryption:  
-
-1. The plaintext message is _k_, \\(l_k = |k|\\).
-The encrypter generates a random byte string PS,
-where |PS| ≥ 8, \\(|PS| = l_m − 3 − l_k \\) and `0x00` \\( \notin{PS[1],...,PS[|PS|]}\\)
-
-2. The encryption block is \\(m =\\) `00` || `02` || \\(PS\\) || `00` || \\(k\\)
-3. The ciphertext is computed as \\(c = m^e\mod{N}\\).
-To decrypt such a ciphertext, the decrypter first computes \\(m = c^d \mod{N}\\). Then it checks whether the decrypted message m is correctly formatted as a PKCS#1 v1.5-encoded message. We say that the ciphertext c and the decrypted message bytes \\(m[1]||m[2]||...||m[l_m]\\) are PKCS#1 v1.5 conformant if:  
-
-    \\( \qquad m[1] || m[2] = \\) `0x00` || `0x02` and `0x00` \\(\notin {m[3],...,m[10]} \\)
-
-    If this condition holds, the decrypter searches for the first value _i_ > 10 such that \\(m[i] =\\) `0x00`. Then, it extracts \\(k = m[i+1]||...||m[l_m]\\). Otherwise, the ciphertext is rejected. 
-
-In SSLv3 and TLS, RSA PKCS#1 v1.5 is used to encapsulate the premaster secret exchanged during the handshake. Thus, _k_ is interpreted as the premaster secret. In SSLv2, RSA PKCS#1 v1.5 is used for encapsulation of an equivalent key denoted the *master_key*.
-
-
-## Bleichenbacher attack
-
-Bleichenbacher’s attack is a padding oracle attack; it exploits the fact that RSA ciphertexts should decrypt to PKCS#1 v1.5-compliant plaintexts. If an implementation receives an RSA ciphertext that decrypts to an invalid PKCS#1 v1.5 plaintext, it might naturally leak this information via an error message, by closing the connection, or by taking longer to process the error condition. This behavior can leak information about the plaintext that can be modeled as a cryptographic oracle for the decryption process. Bleichenbacher demonstrated how such an oracle could be exploited to decrypt RSA ciphertexts.
-
-## Algorithm 
-
-In the simplest attack scenario, the attacker has a valid PKCS#1 v1.5 ciphertext \\(c_0\\) that they wish to decrypt to discover the message m0. They have no access to the private RSA key, but instead have access to an oracle, \\(\delta\\), that will decrypt a ciphertext _c_ and inform the attacker whether the most significant two bytes match the required value for a correct PKCS#1 v1.5 padding:  
-<center>
-\\( \delta \(c\) = 1 \\) if  \\(m = c^d \mod{N} \\) starts with `0x00~02 0`
-$$ \delta \(c\) = 0 \textrm{ otherwise}.$$ 
-</center>
-If the oracle answers with 1, the attacker knows that \\(2B ≤ m ≤ 3B−1\\), where \\(B = 2^{8(l_m−2)}\\).  
-
-The attacker can take advantage of RSA malleability to generate new candidate
-ciphertexts for any s:  
-
-$$c = (c_0 · s_e)\mod{N} = {m_0 ·s}^e \mod{N}$$
-
-The attacker queries the oracle with _c_. If the oracle responds with 0, the attacker increments _s_ and repeats the previous step. Otherwise, the attacker learns that for some _r_, \\(2B ≤ m_{0}s−rN < 3B\\). This allows the attacker to reduce the range of possible solutions to:
-
-$$ \frac{2B+rN}{s} ≤ m_0 < \frac{3B+rN}{s} $$
-
-The attacker proceeds by refining guesses for _s_ and _r_ values and successively decreasing the size of the interval containing \\(m_0\\). At some point the interval will contain a single valid value, \\(m_0\\). [Bleichenbacher’s original paper](**TODO: link**) describes this process in further detail. 
-
-It is worth noting that the author implemented a proof-of-concept of this attack on a custom padding oracle implementation. Over a test set of various 512-bit and 1024-bit keys, between 300,000 and 2 million ciphertexts were required to find the message. While the details of the custom oracle are not known, it is reasonable to assume that this attack is feasible in more realistic scenarios.
-
-## Countermeasures 
-
-In order to protect against this attack, the reciever must not leak information about the PKCS#1 v1.5 validity of the ciphertext. The ciphertext does not decrypt to a valid message, so the decrypter generates a fake plaintext and continues the protocol with this decoy. The attacker should not be able to distinguish the resulting computation from a correctly decrypted ciphertext.  In the case of SSL/TLS, the server generates a random premaster secret to continue the handshake if the decrypted ciphertext is invalid. The client will not possess the session key to send a valid ClientFinished message and the connection will terminate.
-
-In addition, newer versions of [PKSC#1](https://tools.ietf.org/html/rfc3447) describe a new padding type, called OAEP, which uses hash function to add more internal redundancy. This greatly decreases the probability that random strings will result in valid padding, effectively preventing the attack.
-
-## Sources
-
-
-[Bleichenbachers "Million message attack" on RSA](https://github.com/duesee/bleichenbacher/blob/master/main.py)  
-[Practical Padding Oracle Attacks on RSA](http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html)  
-[Bleichenbacher's PKCS 1.5 Padding Oracle challenges](https://cryptopals.com/sets/6/challenges/47)  
-
-[D. Bleichenbacher. Chosen ciphertext attacks against protocols based on the RSA encryption standard. In Advances in Cryptology: Proceedings of CRYPTO ’98, volume 1462 of LNCS, pages 1–12, 1998.](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)  
-  
-[Bardou, R., Focardi, R., Kawamoto, Y., Simionato, L., Steel, G., AND Tsay, J.-K. Efficient padding oracle attacks on cryptographic hardware. In Advances in Cryptology–CRYPTO 2012. Springer, 2012, pp. 608–625.](https://eprint.iacr.org/2012/417.pdf)    
-
-[N. Aviram S. Schinzel J. Somorovsky N. Heninger M. Dankel J. Steube L. Valenta D. Adrian J. A. Halderman V. Dukhovni E. Kasper S. Cohney S. Engels C. Paar Y. Shavitt "DROWN: Breaking TLS with SSLv2" Mar. 2016 [online] Available: https://drownattack.com/.](https://tlseminar.github.io/docs/drown.pdf) 
-
-
-# DROWN: Breaking TLS using SSLv2
-
-[Paper Link](https://tlseminar.github.io/docs/drown.pdf)
-| [Website](https://drownattack.com/)
-
-DROWN attack is inspired by [Bleichenbacher’s padding oracle attack](#bleichenbacher-attack) over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a [padding oracle] (https://tlseminar.github.io/padding-oracle/). The padding scheme is shown below where first two bytes are fixed `0x00 0x02` followed by 8 bytes of random padding string succeeded by a `0x00` byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:
-
-<center><img src="/images/downgrade-attacks/pkcs1padding.png" alt="PKCSPadding" style="width:500px;"/><br>
-<sup>PKCS#1 v1.5 Padding Scheme </sup></center>
-
-The client in SSLv2 protocol sends ClientMasterKey message to SSLv2 server which the server decrypts and responds with ServerVerify message which tells whether the ClientMasterKey message was conformant with the padding scheme. 
-
-The figure below depicts the SSLv2 protocol. The attacker can modify the original ClientMasterKey message and if the SSLv2 server confirms the padding, the attacker would immediately get to know that the first two bytes of the modified message is ‘0x00 0x02’. This way, the attacker can repeatedly modify the original message and query the oracle. After multiple successful guesses for modified message, the attacker can narrow down the guesses for the original message and recover the *master_key*.
-
-<center><img src="/images/downgrade-attacks/sslv2flaw.png" alt="SSLv2Flaw" style="width:500px;"/><br>
-<sup>Flaw in SSLv2 protocol where the server reveals the correctness of padding <br>
-Source: https://tlseminar.github.io/docs/drown.pdf</sup></center>
-
-Moreover, SSLv2 allowed export-grade ciphersuites which supported 40-bit key. A Bleichenbacher attacker could brute-force the key by repeatedly querying the SSLv2 server.
-
-TLS patched the above flaws and (most) servers made the SSLv2 protocol obsolete. However, it was not uncommon for TLS servers to share same RSA keys with SSLv2 servers. This made the TLS servers vulnerable to a modified form of Bleichenbacher attack which uses a SSLv2 server as padding oracle to decrypt the shared RSA key. DROWN instantiated this protocol-level attack and decrypted a TLS 1.2 handshake using 2048-bit RSA in 8 hours at a cost of $440 on Amazon EC2. As if this wasn't devastating enough, the authors of DROWN pointed out some implementation bugs in OpenSSL which lead to another attack called Special DROWN that could decrypt a TLS ciphertext in under 1 minute using a single CPU. Both the attacks are described below.
-
-## DROWN Attack 
-
-DROWN attack requires that a TLS server and a SSLv2 server share an RSA key. The attacker records multiple TLS handshake messages between a client and the TLS server. The aim of the attacker is to decrypt the RSA key of the TLS handshake. To do so, the attacker forces the client to establish a connection with an SSLv2 server having the same RSA key so that the attacker can initiate the Bleichenbacher attack to recover the RSA key. 
-
-Now the main hurdle for the attacker is that the format of TLS handshake message may not comply with PKCS#1 v1.5 padding scheme of SSLv2. The attacker converts the TLS ciphertext to SSLv2 ciphertext using the concept of trimmers introduced by [Bardou et al.] (https://hal.inria.fr/hal-00691958/document) which reduces the size of the TLS message. The use of trimmers require repeated querying to SSLv2 server by shifting the message bytes. The recovered SSLv2 plaintext is then converted back to TLS plaintext which reveals the RSA key of TLS handshake.
-
-<center><img src="/images/downgrade-attacks/drownattack.png" alt="DROWN" style="width:500px;"/><br>
-<sup>SSLv2-based Bleichenbacher attack on TLS <br>
-Source: https://tlseminar.github.io/docs/drown.pdf</sup></center> 
-
-
-## Special DROWN Attack
-
-The OpenSSL implementation had two bugs which led to a more efficient Bleichenbacher attack on an OpenSSL implementation of SSLv2 server.
-
-<b>OpenSSL extra clear oracle:</b> OpenSSL implementation allowed non-export cipher messages to contain *clear_key_data* which lead to potential overwriting of key bytes with null bytes. An attacker could vary the number of null bytes to decrypt the whole key one byte at a time.
-
-<b>OpenSSL leaky export oracle:</b> OpenSSL in export cipher mode allowed valid oracle response for correctly padded message of ‘any’ length.
-
-These bugs remained in OpenSSL implementation from 1998 up until its patch in 2015, when the authors of DROWN contacted the OpenSSL developers.
-
-## Prevention of DROWN
-
-The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like [AES_GCM](https://tools.ietf.org/html/rfc5288)) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.
 
 
 # State-Level Threats to Diffie-Hellman
@@ -256,3 +144,116 @@ Unfortunately, HTTPS connections are similarly affected. Of the top 1 million si
 ## Mitigations
 
 Is there any hope that a connection can really be secure given this information? Luckily, some mitigations can be put into place. First, servers can move to using elliptic curve cryptography (ECC). A transition to a elliptic curve Diffe-Hellman key exchange (ECDH) with appropriate parameters would thwart all known feasible cryptanalytic attacks as ECC discrete log algorithms don't gain too much advantage from precomputation. When ECC is not an option, it is recommended that primes at least 2048 bits in length be used. It would be ideal if browser vendors and clients raise the minimum accepted size for DH groups to at least 1024 bits. If large primes are not supported, then always use a fresh 1024-bit group to mitigate the efficacy of precomputation-based attacks. It is parameter reuse that allows state-level attackers to easily perform wide-scale passive decryption.
+
+
+# Bleichenbacher’s Padding Oracle Attack
+  
+[Bleichenbacher’s padding oracle attack](http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf)  is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.
+
+## PKCS#1 v1.5 encryption padding
+
+Bleichenbacher’s padding oracle attack relies on the structure of [RSA PKCS#1 v1.5 padding](https://tools.ietf.org/html/rfc2313). Although RSA PKCS#1 v2.0 implements OAEP, SSL/TLS still uses PKCS#1 v1.5. The PKCS#1 v1.5 encryption padding scheme randomizes encryptions by prepending a random padding string PS to a message _k_ (here, a symmetric session key) before RSA encryption:  
+
+1. The plaintext message is _k_, \\(l_k = |k|\\).
+The encrypter generates a random byte string PS,
+where |PS| ≥ 8, \\(|PS| = l_m − 3 − l_k \\) and `0x00` \\( \notin{PS[1],...,PS[|PS|]}\\)
+
+2. The encryption block is \\(m =\\) `00` || `02` || \\(PS\\) || `00` || \\(k\\)
+3. The ciphertext is computed as \\(c = m^e\mod{N}\\).
+To decrypt such a ciphertext, the decrypter first computes \\(m = c^d \mod{N}\\). Then it checks whether the decrypted message m is correctly formatted as a PKCS#1 v1.5-encoded message. We say that the ciphertext c and the decrypted message bytes \\(m[1]||m[2]||...||m[l_m]\\) are PKCS#1 v1.5 conformant if:  
+
+    \\( \qquad m[1] || m[2] = \\) `0x00` || `0x02` and `0x00` \\(\notin {m[3],...,m[10]} \\)
+
+    If this condition holds, the decrypter searches for the first value _i_ > 10 such that \\(m[i] =\\) `0x00`. Then, it extracts \\(k = m[i+1]||...||m[l_m]\\). Otherwise, the ciphertext is rejected. 
+
+In SSLv3 and TLS, RSA PKCS#1 v1.5 is used to encapsulate the premaster secret exchanged during the handshake. Thus, _k_ is interpreted as the premaster secret. In SSLv2, RSA PKCS#1 v1.5 is used for encapsulation of an equivalent key denoted the *master_key*.
+
+
+## Bleichenbacher attack
+
+Bleichenbacher’s attack is a padding oracle attack; it exploits the fact that RSA ciphertexts should decrypt to PKCS#1 v1.5-compliant plaintexts. If an implementation receives an RSA ciphertext that decrypts to an invalid PKCS#1 v1.5 plaintext, it might naturally leak this information via an error message, by closing the connection, or by taking longer to process the error condition. This behavior can leak information about the plaintext that can be modeled as a cryptographic oracle for the decryption process. Bleichenbacher demonstrated how such an oracle could be exploited to decrypt RSA ciphertexts.
+
+## Algorithm 
+
+In the simplest attack scenario, the attacker has a valid PKCS#1 v1.5 ciphertext \\(c_0\\) that they wish to decrypt to discover the message m0. They have no access to the private RSA key, but instead have access to an oracle, \\(\delta\\), that will decrypt a ciphertext _c_ and inform the attacker whether the most significant two bytes match the required value for a correct PKCS#1 v1.5 padding:  
+<center>
+\\( \delta \(c\) = 1 \\) if  \\(m = c^d \mod{N} \\) starts with `0x00~02 0`
+$$ \delta \(c\) = 0 \textrm{ otherwise}.$$ 
+</center>
+If the oracle answers with 1, the attacker knows that \\(2B ≤ m ≤ 3B−1\\), where \\(B = 2^{8(l_m−2)}\\).  
+
+The attacker can take advantage of RSA malleability to generate new candidate
+ciphertexts for any s:  
+
+$$c = (c_0 · s_e)\mod{N} = {m_0 ·s}^e \mod{N}$$
+
+The attacker queries the oracle with _c_. If the oracle responds with 0, the attacker increments _s_ and repeats the previous step. Otherwise, the attacker learns that for some _r_, \\(2B ≤ m_{0}s−rN < 3B\\). This allows the attacker to reduce the range of possible solutions to:
+
+$$ \frac{2B+rN}{s} ≤ m_0 < \frac{3B+rN}{s} $$
+
+The attacker proceeds by refining guesses for _s_ and _r_ values and successively decreasing the size of the interval containing \\(m_0\\). At some point the interval will contain a single valid value, \\(m_0\\). [Bleichenbacher’s original paper](http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf) describes this process in further detail. 
+
+It is worth noting that the author implemented a proof-of-concept of this attack on a custom padding oracle implementation. Over a test set of various 512-bit and 1024-bit keys, between 300,000 and 2 million ciphertexts were required to find the message. While the details of the custom oracle are not known, it is reasonable to assume that this attack is feasible in more realistic scenarios.
+
+## Countermeasures 
+
+In order to protect against this attack, the reciever must not leak information about the PKCS#1 v1.5 validity of the ciphertext. The ciphertext does not decrypt to a valid message, so the decrypter generates a fake plaintext and continues the protocol with this decoy. The attacker should not be able to distinguish the resulting computation from a correctly decrypted ciphertext.  In the case of SSL/TLS, the server generates a random premaster secret to continue the handshake if the decrypted ciphertext is invalid. The client will not possess the session key to send a valid ClientFinished message and the connection will terminate.
+
+In addition, newer versions of [PKSC#1](https://tools.ietf.org/html/rfc3447) describe a new padding type, called OAEP, which uses hash function to add more internal redundancy. This greatly decreases the probability that random strings will result in valid padding, effectively preventing the attack.
+
+## Sources of Further Reading
+
+[Padding Oracle Attacks on RSA](http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html)
+
+[Cryptopals Crypto Challenge](https://cryptopals.com/sets/6/challenges/47): A Do-It-Yourself excercise on Bleichenbacher attack.
+
+[Efficient padding oracle attacks on cryptographic hardware](https://hal.inria.fr/hal-00691958/document)
+
+
+# DROWN: Breaking TLS using SSLv2
+
+[Paper Link](https://tlseminar.github.io/docs/drown.pdf)
+| [Website](https://drownattack.com/)
+
+DROWN attack is inspired by [Bleichenbacher’s padding oracle attack](#bleichenbacher-attack) over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a [padding oracle] (https://tlseminar.github.io/padding-oracle/). The padding scheme is shown below where first two bytes are fixed `0x00 0x02` followed by 8 bytes of random padding string succeeded by a `0x00` byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:
+
+<center><img src="/images/downgrade-attacks/pkcs1padding.png" alt="PKCSPadding" style="width:500px;"/><br>
+<sup>PKCS#1 v1.5 Padding Scheme </sup></center>
+
+The client in SSLv2 protocol sends ClientMasterKey message to SSLv2 server which the server decrypts and responds with ServerVerify message which tells whether the ClientMasterKey message was conformant with the padding scheme. 
+
+The figure below depicts the SSLv2 protocol. The attacker can modify the original ClientMasterKey message and if the SSLv2 server confirms the padding, the attacker would immediately get to know that the first two bytes of the modified message is ‘0x00 0x02’. This way, the attacker can repeatedly modify the original message and query the oracle. After multiple successful guesses for modified message, the attacker can narrow down the guesses for the original message and recover the *master_key*.
+
+<center><img src="/images/downgrade-attacks/sslv2flaw.png" alt="SSLv2Flaw" style="width:500px;"/><br>
+<sup>Flaw in SSLv2 protocol where the server reveals the correctness of padding <br>
+Source: https://tlseminar.github.io/docs/drown.pdf</sup></center>
+
+Moreover, SSLv2 allowed export-grade ciphersuites which supported 40-bit key. A Bleichenbacher attacker could brute-force the key by repeatedly querying the SSLv2 server.
+
+TLS patched the above flaws and (most) servers made the SSLv2 protocol obsolete. However, it was not uncommon for TLS servers to share same RSA keys with SSLv2 servers. This made the TLS servers vulnerable to a modified form of Bleichenbacher attack which uses a SSLv2 server as padding oracle to decrypt the shared RSA key. DROWN instantiated this protocol-level attack and decrypted a TLS 1.2 handshake using 2048-bit RSA in 8 hours at a cost of $440 on Amazon EC2. As if this wasn't devastating enough, the authors of DROWN pointed out some implementation bugs in OpenSSL which lead to another attack called Special DROWN that could decrypt a TLS ciphertext in under 1 minute using a single CPU. Both the attacks are described below.
+
+## DROWN Attack 
+
+DROWN attack requires that a TLS server and a SSLv2 server share an RSA key. The attacker records multiple TLS handshake messages between a client and the TLS server. The aim of the attacker is to decrypt the RSA key of the TLS handshake. To do so, the attacker forces the client to establish a connection with an SSLv2 server having the same RSA key so that the attacker can initiate the Bleichenbacher attack to recover the RSA key. 
+
+Now the main hurdle for the attacker is that the format of TLS handshake message may not comply with PKCS#1 v1.5 padding scheme of SSLv2. The attacker converts the TLS ciphertext to SSLv2 ciphertext using the concept of trimmers introduced by [Bardou et al.] (https://hal.inria.fr/hal-00691958/document) which reduces the size of the TLS message. The use of trimmers require repeated querying to SSLv2 server by shifting the message bytes. The recovered SSLv2 plaintext is then converted back to TLS plaintext which reveals the RSA key of TLS handshake.
+
+<center><img src="/images/downgrade-attacks/drownattack.png" alt="DROWN" style="width:500px;"/><br>
+<sup>SSLv2-based Bleichenbacher attack on TLS <br>
+Source: https://tlseminar.github.io/docs/drown.pdf</sup></center> 
+
+
+## Special DROWN Attack
+
+The OpenSSL implementation had two bugs which led to a more efficient Bleichenbacher attack on an OpenSSL implementation of SSLv2 server.
+
+<b>OpenSSL extra clear oracle:</b> OpenSSL implementation allowed non-export cipher messages to contain *clear_key_data* which lead to potential overwriting of key bytes with null bytes. An attacker could vary the number of null bytes to decrypt the whole key one byte at a time.
+
+<b>OpenSSL leaky export oracle:</b> OpenSSL in export cipher mode allowed valid oracle response for correctly padded message of ‘any’ length.
+
+These bugs remained in OpenSSL implementation from 1998 up until its patch in 2015, when the authors of DROWN contacted the OpenSSL developers.
+
+## Prevention of DROWN
+
+The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like [AES_GCM](https://tools.ietf.org/html/rfc5288)) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.
+
