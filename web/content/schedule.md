@@ -15,5 +15,13 @@ See [Teams](/teams) for the class teams and responsibilities.
    - [Imperfect Forward Secrecy: How Diffie-Hellman Fails in Practice](https://tlseminar.github.io/docs/logjam.pdf)
    - [DROWN: Breaking TLS using SSLv2](https://tlseminar.github.io/docs/drown.pdf)
 
-**Class 4: Certificates**
+**[Class 4: Certificates](/certificates)**
+
+   - [SoK: SSL and HTTPS: Revisiting past challenges and evaluating certificate trust model enhancements](/docs/soktls.pdf)
+   - [CONIKS: Bringing Key Transparency to End Users](https://eprint.iacr.org/2014/1004.pdf)
+   - [Defeating SSL Using SSLstrip](https://www.youtube.com/watch?v=MFol6IMbZ7Y)
+
+**[Class 5: Verification and Testing](/TBD)**
+
+**[Class 6: Side Channels](/TBD)**
 

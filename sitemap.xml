@@ -12,6 +12,11 @@
   </url>
   
   <url>
+    <loc>https://tlseminar.github.io/downgrade-attacks/</loc>
+    <lastmod>2017-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://tlseminar.github.io/padding-oracle/</loc>
     <lastmod>2017-01-31T00:00:00+00:00</lastmod>
   </url>

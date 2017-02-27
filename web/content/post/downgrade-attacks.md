@@ -2,7 +2,7 @@
 title = "Downgrade Attacks"
 author = "Team Cinnamon"
 date = "03 Feb 2017"
-draft = true
+draft = false
 slug = "downgrade-attacks"
 +++
 
