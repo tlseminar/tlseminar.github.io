@@ -178,7 +178,7 @@ HTTPS, certificates, key management and an attack called SSLstripping.</p>
 
 <p>Because this revocation information may be unavailable, browsers choose to accept certificates when the information cannot be located. Thus an adversary who is able to prevent a browser from obtaining revocation information may be able to cause a revoked certificate to be accepted.</p>
 
-<p>Besides the list of all valid certificates described above, one way to combat unreliable revocation is for webservers to provide timestamped OCSP status reports, a technique known as Certificate Status Stapling. Alternatively, if certificates were issued to be valid for a shorter time, the impact of missing a revocation is lessened. Currently, certificates are often valid for years, but a recent proposal calls for certificates that remain valid for only four days. [TODO: add link to this proposal (is it recent now, or when this paper was written?]</p>
+<p>Besides the list of all valid certificates described above, one way to combat unreliable revocation is for webservers to provide timestamped OCSP status reports, a technique known as Certificate Status Stapling. Alternatively, if certificates were issued to be valid for a shorter time, the impact of missing a revocation is lessened. Currently, certificates are often valid for years, but a 2012 proposal calls for certificates that remain valid for only four days, eliminating the need for a revocation mechanism (<a href="http://www.w2spconf.com/2012/papers/w2sp12-final9.pdf">Topalovic et al.</a>).</p>
 
 <h3 id="indication-and-interpretation-of-trust">Indication and Interpretation of Trust</h3>
 
@@ -189,14 +189,12 @@ HTTPS, certificates, key management and an attack called SSLstripping.</p>
 <p>If an adversary expects a user to look for HTTPS indicators, they may be able to spoof common security cues. Some users believe an image of a lock on the website is a sign of a successful HTTPS connections. A more involved example is shown in the image below, where an attacker has simulated a browser address bar, complete with the HTTPS indicators that come with a valid EV certificate.</p>
 
 <p><center><img width=594 alt="Security Indicators" src="/images/TSS2.png"><Br>
-TODO: Image Credit
+Fake Address Bar (Image from <a href="https://blog.malwarebytes.com/cybercrime/social-engineering-cybercrime/2016/08/tech-support-scams-and-google-chrome-tricks/">Malwarebytes</a>)
 </center></p>
 
 <h1 id="coniks-and-certificate-transparency">CONIKS and Certificate Transparency</h1>
 
-<p><strong><a href="https://eprint.iacr.org/2014/1004.pdf"><em>CONIKS: Bringing Key Transparency to End Users</em></a> by Melara et al.</strong></p>
-
-<p>[TODO: fix the reference]</p>
+<p><strong><a href="https://eprint.iacr.org/2014/1004.pdf">CONIKS: Bringing Key Transparency to End Users</a></strong>, Marcela S. Melara, Aaron Blankstein, Joseph Bonneau, Edward W. Felten, Michael J. Freedman, USENIX Security &lsquo;15</p>
 
 <p>CONIKS is a key management system intended to reduce the workload on clients to verify keys for secure communications. It&rsquo;s an extension of the existing certificate transparency logs for webservers to end users. CONIKS simultaneously helps address the issue of service providers tampering with keys and of trust establishment that would otherwise be done out-of-band manually. The system is intended to prevent equivocation of keys, prevent the addition of unauthorized keys, and allow for transparent and public verification all while being efficient for users.</p>
 
@@ -257,11 +255,9 @@ Signed STR chain (Image from CONIKS paper)
 
 <h1 id="ssl-stripping">SSL Stripping</h1>
 
-<h5 id="defeating-ssl-using-sslstrip-https-www-youtube-com-watch-v-mfol6imbz7y-by-moxie-marlinspike"><a href="https://www.youtube.com/watch?v=MFol6IMbZ7Y">Defeating SSL Using SSLstrip</a> by Moxie Marlinspike</h5>
+<h5 id="defeating-ssl-using-sslstrip-https-www-youtube-com-watch-v-mfol6imbz7y-2009-black-hat-dc-presentation-by-moxie-marlinspike"><a href="https://www.youtube.com/watch?v=MFol6IMbZ7Y">Defeating SSL Using sslstrip</a> 2009 Black Hat DC presentation by Moxie Marlinspike</h5>
 
-<p>[TODO: fix reference (even for video link, should have more information)]</p>
-
-<p>In this part of the blog post we further explore the SSLstrip attack, presented to the class by Team Sesame on February 10th, 2017.</p>
+<p>In this part of the blog post we further explore the sslstrip attack, presented to the class by Team Sesame on February 10th, 2017.</p>
 
 <p><center><img width="500" alt="MITM Framework" src="/images/sslstrip.png"><br>
 In-the-Middle Attack Setup (Image from avicoder)
@@ -269,9 +265,9 @@ In-the-Middle Attack Setup (Image from avicoder)
 
 <h3 id="overview">Overview</h3>
 
-<p>The SSLStrip attack is both an in-the-middle attack and protocol downgrade attack that relies on websites not implementing HSTS and also browsers&rsquo; inability to prevent users from POST&rsquo;ing sensitive data to HTTP websites.</p>
+<p>The sslstrip attack is both an in-the-middle attack and protocol downgrade attack that relies on websites not implementing HSTS and also browsers&rsquo; inability to prevent users from POST&rsquo;ing sensitive data to HTTP websites.</p>
 
-<p>The SSLStrip python module, when used in conjunction with an MITM framework, replies to the victim&rsquo;s HTTPS requests with HTTP versions of the same page silently stripping the <code>S</code>. On modern browsers the only visual cue is the lack of HTTPS:</p>
+<p>The sslstrip python module, when used in conjunction with an MITM framework, replies to the victim&rsquo;s HTTPS requests with HTTP versions of the same page silently stripping the <code>S</code>. On modern browsers the only visual cue is the lack of HTTPS:</p>
 
 <p><center>
 <img src="/images/sslstripindicator.png" width="400"><br>
@@ -284,23 +280,22 @@ Screenshot of Chrome on iPhone 7
 
 <p><center>
 <img src="/images/chromenotprivate.png" width="400" alt="Chrome: Not Private"><br>
-Google Chrome Certificate Error (Source: inmotionhosting.com)
-[TODO: give a real source credit for this image]
+Self signed SSL certificate warning in Google Chrome, image courtesy of <a href="http://www.inmotionhosting.com/support/website/ssl/self-signed-ssl-certificate-warning">Inmotionhosting</a>.
 </center></p>
 
 <h3 id="necessary-requirements">Necessary Requirements</h3>
 
-<p>In order for an attacker to obtain victim credentials for a given HTTPS website using SSLstrip</p>
+<p>In order for an attacker to obtain victim credentials for a given HTTPS website using sslstrip</p>
 
 <ol>
 <li>The attacker must be on the same LAN as the victim (necessary to obtain MITM status)<br /></li>
 <li>The HTTPS website the victim accesses must have initiated the connection first via HTTP<br /></li>
-<li>The given website must not be on victim&rsquo;s browsers HSTS Preloads (for Chroms, this includes the Google domains and ~7500 other sites)</li>
+<li>The given website must not be on victim&rsquo;s browsers HSTS Preloads (supported by all modern browsers, this list includes the Google domains and ~7500 other sites)</li>
 </ol>
 
-<p>SSLstrip works by listening for HTTP 301 “Moved Permanently&rdquo; (i.e., Redirect to HTTPS). So unless the victim explicitly types in https:// (HTTPS to begin with) or the website is on the browser&rsquo;s HSTS Preloads, or the website is HTTPS only, the 301 will be issued and at that point sslstrip will intercept this response and instead relay back to the victim a HTTP version of the HTTPS site.</p>
+<p>Sslstrip works by listening for HTTP 301 “Moved Permanently&rdquo; (i.e., Redirect to HTTPS). So unless the victim explicitly types in https:// (HTTPS to begin with) or the website is on the browser&rsquo;s HSTS Preloads, or the website is HTTPS only, the 301 will be issued and at that point sslstrip will intercept this response and instead relay back to the victim a HTTP version of the HTTPS site.</p>
 
-<p>So, Requirement 2 is necessary for sslstrip to work. In the case of the website being on the browser list of HSTS preloads, then the first request over HTTPS is is never dispatched but rather internally redirected by the browser to the HTTPS version which is why Requirement 3 states the given website must not be on the HSTS Preload list (<a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json">https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json</a>).</p>
+<p>So, Requirement 2 is necessary for sslstrip to work. In the case of the website being on the browser list of HSTS preloads, then the first request over HTTPS is is never dispatched but rather internally redirected by the browser to the HTTPS version which is why Requirement 3 states the given website must not be on the <a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json">HSTS Preload list</a>.</p>
 
 <h3 id="countermeasures">Countermeasures</h3>
 
@@ -312,20 +307,19 @@ Google Chrome Certificate Error (Source: inmotionhosting.com)
 <li>Server: HTTPS only</li>
 </ol>
 
-<p>[TODO: find the standard capitalization for sslstip and use it consistently - mix of Sslstrip, SSLstrip, SSLStrip, etc. have all been used on this page.]</p>
-
-<p>While improvements have been made to Sslstrip such as using different domains like <code>wwww</code> (and various countermeasures like key pinning and browser displays), in present day the original Sslstrip (2009) does not work against sites with HSTS enabled like <code>facebook.com</code> and <code>gmail.com</code>. Surprisingly though, a 2016 article claimed only 1 in 20 HTTPS servers implemented HSTS correctly! [TODO: include a link to the article!]</p>
+<p>While improvements have been made to sslstrip such as using different domains like <code>wwww</code> (and various countermeasures like key pinning and browser displays), in present day the original sslstrip (2009) does not work against sites with HSTS enabled like <code>facebook.com</code> and <code>gmail.com</code>. Surprisingly though, a <a href="https://news.netcraft.com/archives/2016/03/17/95-of-https-servers-vulnerable-to-trivial-mitm-attacks.html">2016 article</a> claimed only 1 in 20 HTTPS servers implemented HSTS correctly!</p>
 
 <p>Sslstrip is an easily-deployable and effective attack &ldquo;in the wild&rdquo; because of but not limited to session hijacking and the fact most browsers do not alert users they are submitting over http (or conversely most users do not notice <code>http://</code> when submitting sensitive info). In addition, password reuse is widespread and if credentials were obtained from say apple.com or a bank they could be tried against more sensitive websites which do support HSTS (enable two factor authentication!!).</p>
 
-<h3 id="sources">Sources:</h3>
+<h3 id="further-reading">Further Reading:</h3>
 
-<p>[TODO: don&rsquo;t just have a list of links. If these are already linked in the main text and you don&rsquo;t have anything more to say about them, not need to list as source here. For the others, think of this as a &ldquo;for futher reading&rdquo; section - should explain what each link is, and what someone would find there. Its easy to get lots of things to click-on from ddg/google/bing - only useful to have links like this if you are adding value.]</p>
+<p>Writeup describing modern browser and website protections against MITM attacks:</p>
 
-<p><a href="https://www.troyhunt.com/understanding-http-strict-transport/">https://www.troyhunt.com/understanding-http-strict-transport/</a><br />
-<a href="http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html">http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html</a><br />
-<a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json">https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json</a><br />
-<a href="https://avicoder.me/2016/02/22/SSLstrip-for-newbies/">https://avicoder.me/2016/02/22/SSLstrip-for-newbies/</a></p>
+<p><a href="https://www.troyhunt.com/understanding-http-strict-transport/">https://www.troyhunt.com/understanding-http-strict-transport/</a></p>
+
+<p>Try it out yourself! This blog post describes how an attacker on Mac OS X could use sslstrip to gather credentials over network. I learned both my online banking website and apple.com were vulnerable to sslstrip (i.e. the domains of these sites were not on my browsers HSTS preload list).</p>
+
+<p><a href="http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html">http://techjots.blogspot.com/2012/11/sslstrip-on-mac-os-x-mountain-lion.html</a></p>
  
   
   <p class="fronthead"><A href="/downgrade-attacks/">Downgrade Attacks</a> (Fri, 3 Feb 2017)</p>
