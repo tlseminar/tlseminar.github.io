@@ -96,3 +96,79 @@ A possible countermeasure as given by [Brumley and Tuveri](https://gnunet.org/si
 <sup>Countermeasure to OpenSSL's flaw</sup><br>
 <sup>Source: https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</sup></center>
 This ensures that the logarithm is constant and hence leaks no side-channel information. Moreover, the above modification does not cause extra computation overhead.
+
+# Hasted’s Broadcast Attack (add with Chinese Remainder Theorem)
+Hasted's Broadcast Attack relies on cases when the public exponent \\(e\\) is small or when partial knowledge of the
+secret key is available.
+If \\(e\\) (public) is the same across different sites, the attacker can use Chinese Remainder Theorem and decrypt messages!
+
+Hasted’s Broadcast Attack works as follows:
+
+Alice encrypts the same message \\(M\\) with three different public keys \\(n_1\\) \\(n_2\\) and \\(n_3\\)
+, all with public exponent \\(e=3\\), The resulting \\(C_1C_2\\) and \\(C_3\\) are known.
+  
+\\(M^3 \equiv c_1 (mod~n_1)\\) 
+
+\\(M^3 \equiv c_2 (mod~n_2)\\)
+
+\\(M^3 \equiv c_3 (mod~n_3)\\)
+
+An attack can then recover \\(M\\) as follows:
+
+\\(x = C_1N_1N_1^{-1} + C_2N_2N_2^{-1} + C_3N_3N_3^{-1}~mod~n_1n_2n_3 \\)
+
+\\(M = \sqrt[3]{x}\\)
+  
+# Montgomery Reduction
+The Montgomery Reduction is an algorithm  that allows modular arithmetic to be performed 
+efficiently when the modulus is large.
+
+The reduction takes advantage of the fact that \\(x~mod~2^n\\) 
+is easier to compute than \\(x~mod~q\\); the reduction simply strips off all but the \\(n\\) least significant bytes.
+
+Steps needed for the reduction:
+
+- The Montgomery Form of \\(a\\) is \\(aR~mod~q\\), where \\(R\\) is some public \\(2n , n\\) chosen based on underlying hardware.
+
+- Multiplication of \\(ab\\) in Montgomery Form: \\(aRbR = cR2\\).
+
+- Pre-compute \\(RR^{-1}~mod~q\\).
+
+- Reduce: \\(cR^{2}R^{-1}~mod~q = cR~mod~q\\).
+
+- \\(c\\) can be kept in form and reused for additional multiplications during sliding windows.
+
+- To escape Montgomery space and return to \\(q\\) space: multiply again by \\(R^{-1}\\) to arrive at solution \\(c\\). 
+
+- \\(c = ab~mod~q\\) (performing \\(mod\\) by \\(q\\) causes successive subtractions of \\(ab\\) by \\(q\\) till result \\(c\\) in range \\([0,q)\\).
+The paper identifies these "extra reductions")
+
+# Protections against timing attacks:
+There are numerous defenses against timing attacks! For instance:
+
+A decryption routine with the number of operations being independent of input: 
+
+- This is akin to Montgomery's Latter, as described above. Simply carry out the Montgomery extra reduction, 
+even if it's not necessary. This might be hard to mend to existing systems without replacing their entire decryption algorithm
+(What if the compiler optimizes this away?).
+
+By quantizing all RSA computations: 
+
+- This decreases performance because "all decryptions must take the maximum time of
+any decryption".
+
+By blinding, which works as follows:
+  
+- Calculate \\(x = reg~mod~N\\) before actual decryption for random \\(r\\) chosen each time
+
+- Decrypt as normal.
+
+- Unblind: divide by \\(r~mod~N\\) to obtain the decryption of the ciphertext
+  \\(g\\).
+
+- Since \\(r\\) is random, \\(x\\) is also random -- and input \\(g\\) should have minimal
+correlation with total decryption time.
+
+<center><img src="/images/timing-attacks/gap.jpg" alt="PDF Collision" style="width:500px;"/><br>
+([Image credit]
+(http://slideplayer.com/slide/4519452/))
