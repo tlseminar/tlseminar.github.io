@@ -67,3 +67,31 @@ Thus, we see from this simple example that verifying constant-time implementatio
 [Paper link](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf)
 
 Timing attacks target at cryptosystems or protocols that donot run in constant time. [Elliptic curve](https://en.wikipedia.org/wiki/Elliptic_curve_cryptography) based [signature schemes](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via [Montgomery's ladder](https://cr.yp.to/bib/2003/joye-ladder.pdf) which performs a sequence of input independent field operations on elliptic curve. [Brumley and Tuveri](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf) reveal a timing attack vulnerability in OpenSSL's implementation of Montgomery's ladder and consequently reveal the private key of TLS server.
+
+## What is the Montgomery's Ladder?
+Consider the right-to-left square-and-multiply algorithm to compute an exponentiation operation:
+<center><img src="/images/timing-attacks/right-to-left.png" alt="Montgomery ladder" style="width:600px;"/><br>
+<sup>Right-to-Left Square-and-Multiply Algorithm</sup><br><sup>Source: https://cr.yp.to/bib/2003/joye-ladder.pdf</sup></center>
+
+The above algorithm performs more operations when the bit is set, thereby leading to a possible timing attack. Montgomery's power ladder method, on the other hand, performs the same number of operations in both the cases. This prevents timing based side-channel attacks as well as makes the algorithm more efficient by making it parallelizable. The algorithm is as below:
+<center><img src="/images/timing-attacks/montgomery.png" alt="Montgomery ladder" style="width:500px;"/><br>
+<sup>Montgomery's Ladder</sup><br><sup>Source: https://cr.yp.to/bib/2003/joye-ladder.pdf</sup></center>
+
+## OpenSSL's implementation of Montgomery's Ladder
+Elliptic Curve Cryptography for Digital Signature uses the following curve for binary fields:
+<center><img src="/images/timing-attacks/curve.png" alt="ECC" style="width:600px;"/></center>
+NIST recommends two standard curves: 1. Set a2 = 1 and choose a6 pseudo-randomly, or 2. Choose a2 from {0,1} and set a6 = 1.
+Either of the two curves can be used for digital signatures. Parties select private key as 0 < d < n and public key as [d]G and then proceed to generate digital signatures using elliptic cureves as:
+<center><img src="/images/timing-attacks/digital_signatures.png" alt="digital" style="width:500px;"/></center>
+OpenSSL uses Montogmery's ladder to compute the above digital signatures since it requires multiple exponentiation operations. However, OpenSSL's implementation has a flaw that leads to timing attack. Below is the OpenSSL's implementaion:
+<center><img src="/images/timing-attacks/OpenSSL_montgomery.png" alt="OpenSSL" style="width:700px;"/><br>
+<sup>OpenSSL's implementation of Montgomery's Ladder</sup><br>
+<sup>Source: https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</sup></center>
+As marked in the third line of code, OpenSSL optimizes the number of ladder steps and therefore leaks the information about MSB of k.
+
+## Countermeasure
+A possible countermeasure as given by [Brumley and Tuveri](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf) is to pad the scalar k as follows:
+<center><img src="/images/timing-attacks/countermeasure.png" alt="counter" style="width:500px;"/><br>
+<sup>Countermeasure to OpenSSL's flaw</sup><br>
+<sup>Source: https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</sup></center>
+This ensures that the logarithm is constant and hence leaks no side-channel information.
