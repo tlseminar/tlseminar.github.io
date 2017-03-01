@@ -4,7 +4,7 @@
   </header>
   {{ $paginator := .Paginate (where .Data.Pages "Type" "post") }}
   {{ range $paginator.Pages }}
-  <p class="fronthead"><A href="{{ .URL }}">{{ .Title }}</a> ({{ .Author }}, {{ .Date.Format "Mon, 2 Jan 2006" }})</p>
+  <p class="fronthead"><A href="{{ .URL }}">{{ .Title }}</a> ({{ .Params.Author }}, {{ .Date.Format "Mon, 2 Jan 2006" }})</p>
     {{ .Content }} 
   {{ end }}
   {{ partial "bloc/content/pagination" . }}
