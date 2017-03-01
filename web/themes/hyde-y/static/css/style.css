@@ -1163,6 +1163,10 @@ p.indent {
     text-indent: 5px;
     }
 
+div.indented {
+   margin-left: 60px;
+}
+
 div.credits {
    font-size: 9pt;
    text-align: right;

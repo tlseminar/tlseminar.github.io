@@ -6,8 +6,389 @@
     <description>Recent content in Post-rsses on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 Feb 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 01 Mar 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Timing Attacks</title>
+      <link>https://tlseminar.github.io/timing-attacks/</link>
+      <pubDate>Wed, 01 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/timing-attacks/</guid>
+      <description>
+
+&lt;h1 id=&#34;digression-notable-news&#34;&gt;Digression: Notable News&lt;/h1&gt;
+
+&lt;p&gt;Two newsworthy events occurred this week that are of high importance
+and relevant to TLS in general: &lt;a href=&#34;https://tlseminar.github.io/sha1-collisions&#34;&gt;SHA-1 Collisions&lt;/a&gt;
+and the &lt;a href=&#34;https://tlseminar.github.io/cloudflare-leak&#34;&gt;Cloudflare Leak&lt;/a&gt;.  (Those are discussed in
+the separate linked posts.)&lt;/p&gt;
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;Timing attacks exploitd information leaked from timing side-channels to learn private data. In this threat model, an attacker is able to observe the time required for certain parts of a program at runtime and gain information about the execution path followed.&lt;/p&gt;
+
+&lt;p&gt;Consider the following snippet of Python code as an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def comp(a, b):
+    if len(a) != len(b):
+        return False
+    for c1, c2 in zip (a, b):
+        if c1 != c2:
+            return False
+    return True
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;comp()&lt;/code&gt; function performs string comparison, returning &lt;code&gt;True&lt;/code&gt; if the strings are character-wise equal and &lt;code&gt;False&lt;/code&gt; otherwise. Let us assume for the sake of simplicity that the lengths of the strings are public (we are not concerned with timing leaks from the initial length comparison).&lt;/p&gt;
+
+&lt;p&gt;Suppose we compare the strings &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; and &lt;code&gt;&amp;quot;catch&amp;quot;&lt;/code&gt;. These words fail the string comparison immediately, since the first letters are different. Thus, the function returns &lt;code&gt;False&lt;/code&gt; after a single iteration of the loop. In contrast, comparing &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; with &lt;code&gt;&amp;quot;hella&amp;quot;&lt;/code&gt; will require 5 iterations before returning False. An attacker can use the resulting timing delay to determine that &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; and &lt;code&gt;&amp;quot;hella&amp;quot;&lt;/code&gt; share beginning characters, whereas &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; and &lt;code&gt;&amp;quot;catch&amp;quot;&lt;/code&gt; do not. If &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; was a password, an attacker who could measure the timing precisely enough to count loop iterations would be able to incrementally guess each letter of the string.&lt;/p&gt;
+
+&lt;p&gt;One solution to this problem would be to use a Boolean flag initialized to &lt;code&gt;True&lt;/code&gt;. If the words have mismatched characters, the flag will be set to &lt;code&gt;False&lt;/code&gt;, and the flag will be returned after comparing all characters. In theory, this masks the timing leak; in practice, a compiler may optimize such code to return early, reinstating the timing leak. Furthermore, there may still be timing leaks in the execution of the code, such as variation in the instruction cache depending on which statements are entered.&lt;/p&gt;
+
+&lt;p&gt;Thus, we see from this simple example that verifying constant-time implementation of code has many challenges, which we further discuss below.&lt;/p&gt;
+
+&lt;h1 id=&#34;remote-timing-attacks-are-practical&#34;&gt;Remote Timing Attacks are Practical&lt;/h1&gt;
+
+&lt;p&gt;TODO: add full reference for paper
+&lt;a href=&#34;docs/ssl-timing.pdf&#34;&gt;Paper link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;At the heart of RSA decription is a modular exponentiation \( m = c^d mod~N\) where \(N = pq\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \( m = c^d mod~N\) is computed in two steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Evaluate \( m_1 = c^{d_1} mod~p\) and \( m_2 = c^{d_2} mod~q\) (\(d_1\) and \(d_2\) are precomputed from \(d\)).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Combine \(m_1\) and \(m_2\) using CRT to yield m.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Both steps could have timing side channels if not implemented carefully.&lt;/p&gt;
+
+&lt;h3 id=&#34;chinese-remainder-theorem&#34;&gt;Chinese Remainder Theorem&lt;/h3&gt;
+
+&lt;p&gt;Suppose that \(n_1,n_2,&amp;hellip;,n_r\) are pairwise relatively prime positive integers, and let \(c_1,c_2,&amp;hellip;,c_r\) be integers.&lt;/p&gt;
+
+&lt;p&gt;Then the system of congruences,&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;indented&#34;&gt;
+\(X \equiv c_1 (mod~n_1)\)&lt;br /&gt;
+\(X \equiv c_2 (mod~n_2)\)&lt;br /&gt;
+&amp;hellip;&lt;br /&gt;
+\(X \equiv c_r (mod~n_r)\)
+   &lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;has a unique solution modulo \(N = n_1n_2&amp;hellip;n_r\)&lt;/p&gt;
+
+&lt;h3 id=&#34;gauss-s-algorithm&#34;&gt;Gauss’s Algorithm&lt;/h3&gt;
+
+&lt;p&gt;\(X \equiv c_1N_1{N_1}^{-1} + c_2N_2{N_2}^{-1} + &amp;hellip; + c_rN_r{N_r}^{-1}(mod~N)\), where
+   &lt;div class=&#34;indented&#34;&gt;
+\(N_i = N/n_i \)&lt;br /&gt;
+\(N_i{N_1}^{-1} \equiv 1 (mod~n_i)\)
+   &lt;/div&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;hasted-s-broadcast-attack&#34;&gt;Hasted’s Broadcast Attack&lt;/h3&gt;
+
+&lt;p&gt;Hasted&amp;rsquo;s Broadcast Attack relies on cases when the public exponent \(e\) is small or when partial knowledge of the
+secret key is available.
+If \(e\) (public) is the same across different sites, the attacker can use Chinese Remainder Theorem and decrypt messages!&lt;/p&gt;
+
+&lt;p&gt;Hasted’s Broadcast Attack works as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Alice encrypts the same message \(M\) with three different public keys \(n_1\) \(n_2\) and \(n_3\)
+, all with public exponent \(e=3\), The resulting \(C_1C_2\) and \(C_3\) are known.
+&lt;div class=&#34;indented&#34;&gt;
+\(M^3 \equiv C_1 (mod~n_1)\)&lt;br /&gt;
+\(M^3 \equiv C_2 (mod~n_2)\)&lt;br /&gt;
+\(M^3 \equiv C_3 (mod~n_3)\)
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;An attack can then recover \(M\):
+&lt;div class=&#34;indented&#34;&gt;
+\(x = C_1N_1N_1^{-1} + C_2N_2N_2^{-1} + C_3N_3N_3^{-1}~mod~n_1n_2n_3 \)&lt;br /&gt;
+\(M = \sqrt[3]{x}\)
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;montgomery-reduction&#34;&gt;Montgomery Reduction&lt;/h3&gt;
+
+&lt;p&gt;Montgomery Reduction is an algorithm  that allows modular arithmetic to be performed
+efficiently when the modulus is large.&lt;/p&gt;
+
+&lt;p&gt;The reduction takes advantage of the fact that \(x~mod~2^n\)
+is easier to compute than \(x~mod~q\); the reduction simply strips off all but the \(n\) least significant bytes.&lt;/p&gt;
+
+&lt;p&gt;Steps needed for the reduction:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The Montgomery Form of \(a\) is \(aR~mod~q\), where \(R\) is some public \(2n , n\) chosen based on underlying hardware.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Multiplication of \(ab\) in Montgomery Form: \(aRbR = cR2\).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Pre-compute \(RR^{-1}~mod~q\).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Reduce: \(cR^{2}R^{-1}~mod~q = cR~mod~q\).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;\(c\) can be kept in form and reused for additional multiplications during sliding windows.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To escape Montgomery space and return to \(q\) space: multiply again by \(R^{-1}\) to arrive at solution \(c\).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;\(c = ab~mod~q\) (performing \(mod\) by \(q\) causes successive subtractions of \(ab\) by \(q\) till result \(c\) in range \([0,q)\).  The number of &amp;ldquo;extra reductions&amp;rdquo; depends on the private data; the attack exploits these as a timing side channel.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/gap.jpg&#34; alt=&#34;PDF Collision&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;(&lt;a href=&#34;http://slideplayer.com/slide/4519452/&#34;&gt;Image credit&lt;/a&gt;)&lt;/span&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;protections-against-timing-attacks&#34;&gt;Protections against timing attacks&lt;/h3&gt;
+
+&lt;p&gt;There are numerous defenses against timing attacks, but known defenses are either expensive or only provide partial mitigation.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Use a decryption routine with the number of operations is independent of input.  For example, simply carry out the maximum number of Montgomery extra reductions, even if they are not necessary. This might be hard to mend to existing systems without replacing their entire decryption algorithm (and it is important to be wary of &amp;ldquo;overly-optimizing&amp;rdquo; compilers that remove non-functional code that is there to mask a timing leak).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;By quantizing all RSA computations. This decreases performance because &amp;ldquo;all decryptions must take the maximum time of any decryption&amp;rdquo;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;By blinding, which works as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Calculate \(x = reg~mod~N\) before actual decryption for random \(r\) chosen each time&lt;/li&gt;
+&lt;li&gt;Decrypt as normal.&lt;/li&gt;
+&lt;li&gt;Unblind: divide by \(r~mod~N\) to obtain the decryption of the ciphertext
+\(g\).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Since \(r\) is random, \(x\) is also random &amp;ndash; and input \(g\) should have minimal
+correlation with total decryption time.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;remote-timing-attacks-are-still-practical&#34;&gt;Remote Timing Attacks are Still Practical&lt;/h1&gt;
+
+&lt;p&gt;TODO: add cite
+&lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;Paper link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Timing attacks target cryptosystems and protocols that do not run in constant time. &lt;a href=&#34;https://en.wikipedia.org/wiki/Elliptic_curve_cryptography&#34;&gt;Elliptic curve&lt;/a&gt; based &lt;a href=&#34;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&#34;&gt;signature schemes&lt;/a&gt; aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via &lt;a href=&#34;https://cr.yp.to/bib/2003/joye-ladder.pdf&#34;&gt;Montgomery&amp;rsquo;s ladder&lt;/a&gt; which performs a sequence of independent field operations on elliptic curves. &lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;Brumley and Tuveri&lt;/a&gt; reveal a timing attack vulnerability in OpenSSL&amp;rsquo;s implementation of Montgomery&amp;rsquo;s ladder that consequently leaks the server&amp;rsquo;s private key.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-is-montgomery-s-ladder&#34;&gt;What is Montgomery&amp;rsquo;s Ladder?&lt;/h3&gt;
+
+&lt;p&gt;Consider the right-to-left square-and-multiply algorithm to compute an exponentiation operation:
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/right-to-left.png&#34; alt=&#34;Montgomery ladder&#34; style=&#34;width:300px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;Right-to-Left Square-and-Multiply Algorithm&lt;/sup&gt;&lt;br&gt;&lt;sup&gt;Source: &lt;a href=&#34;https://cr.yp.to/bib/2003/joye-ladder.pdf&#34;&gt;https://cr.yp.to/bib/2003/joye-ladder.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The above algorithm performs more operations when the bit is set, thereby leading to a possible timing attack. Montgomery&amp;rsquo;s power ladder method, on the other hand, performs the same number of operations in both the cases. This prevents timing based side-channel attacks as well as makes the algorithm more efficient by making it parallelizable. The algorithm is as below:
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/montgomery.png&#34; alt=&#34;Montgomery ladder&#34; style=&#34;width:300px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;Montgomery&amp;rsquo;s Ladder&lt;/sup&gt;&lt;br&gt;&lt;sup&gt;Source: &lt;a href=&#34;https://cr.yp.to/bib/2003/joye-ladder.pdf&#34;&gt;https://cr.yp.to/bib/2003/joye-ladder.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;openssl-s-implementation-of-montgomery-s-ladder&#34;&gt;OpenSSL&amp;rsquo;s implementation of Montgomery&amp;rsquo;s Ladder&lt;/h3&gt;
+
+&lt;p&gt;OpenSSL uses Elliptic Curve Cryptography for generating Digital Signatures to sign a TLS server&amp;rsquo;s RSA key.
+Elliptic Curve Cryptography for Digital Signature uses the following curve for binary fields:
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/curve.png&#34; alt=&#34;ECC&#34; style=&#34;width:400px;&#34;/&gt;&lt;/center&gt;
+NIST recommends two standard curves: 1. Set \(a_2 = 1\) and choose \(a_6\) pseudo-randomly, or 2. Choose \(a_2\) from \({0,1}\) and set \(a_6 = 1\).
+Either of the two curves can be used for digital signatures.&lt;/p&gt;
+
+&lt;p&gt;Parties select private key as \(0 &amp;lt; d &amp;lt; n\) and public key as \([d]G\) and then proceed to generate digital signatures using elliptic curves as:
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/digital_signatures.png&#34; alt=&#34;digital&#34; style=&#34;width:300px;&#34;/&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;OpenSSL uses Montogmery&amp;rsquo;s ladder to compute the above digital signatures since it requires multiple exponentiation operations. However, OpenSSL&amp;rsquo;s implementation has a flaw that leads to timing attack. Below is OpenSSL&amp;rsquo;s implementation:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/OpenSSL_montgomery.png&#34; alt=&#34;OpenSSL&#34; style=&#34;width:700px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;OpenSSL&amp;rsquo;s implementation of Montgomery&amp;rsquo;s Ladder&lt;/sup&gt;&lt;br&gt;
+&lt;sup&gt;Source: &lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;
+As indicated in the third line of code, OpenSSL optimizes the number of ladder steps and therefore leaks information about the MSB of k. Since the time taken to compute the scalar multiplications is proportional to the logarithm of k, which is revealed by the MSB of k, this leads to a timing attack. The attacker collects multiple digital signatures such that the signatures are generated by random nonce k with leading zero bits; this information is revealed by the above timing attack. The attacker then launches a &lt;a href=&#34;http://www.hpl.hp.com/techreports/1999/HPL-1999-90.pdf&#34;&gt;lattice attack&lt;/a&gt; using the collected digital signatures to reveal the RSA key of the TLS server.&lt;/p&gt;
+
+&lt;h3 id=&#34;countermeasure&#34;&gt;Countermeasure&lt;/h3&gt;
+
+&lt;p&gt;A possible countermeasure as proposed by &lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;Brumley and Tuveri&lt;/a&gt; is to pad the scalar \(k\):
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/countermeasure.png&#34; alt=&#34;counter&#34; style=&#34;width:400px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;Countermeasure to OpenSSL&amp;rsquo;s flaw&lt;/sup&gt;&lt;br&gt;
+&lt;sup&gt;Source: &lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;
+This ensures that the logarithm is constant and hence leaks no side-channel information. Moreover, the above modification does not cause extra computation overhead.&lt;/p&gt;
+
+&lt;h1 id=&#34;cache-timing-attacks&#34;&gt;Cache Timing Attacks&lt;/h1&gt;
+
+&lt;p&gt;At this point, it seems as though we&amp;rsquo;ve seen everything—there couldn&amp;rsquo;t possibly be another side-channel attack, right?&lt;/p&gt;
+
+&lt;p&gt;Wrong.&lt;/p&gt;
+
+&lt;p&gt;Timing attacks are capable of leveraging the &lt;strong&gt;CPU cache&lt;/strong&gt; as a side-channel in order to perform attacks.  Since the issue results from hardware design, it&amp;rsquo;s difficult for application designers to address; the behaviors that influence cache patterns are proprietary features hidden away into today&amp;rsquo;s processors.&lt;/p&gt;
+
+&lt;h3 id=&#34;intel-cpu-cache&#34;&gt;Intel CPU Cache&lt;/h3&gt;
+
+&lt;p&gt;In cache terminology, &lt;strong&gt;hits&lt;/strong&gt; occur when queried data is present in the cache and &lt;strong&gt;misses&lt;/strong&gt; occur when data must be fetched from main memory.  Consider the L1 and L2 caches of the Intel Sandy Bridge processor.  Both are &lt;strong&gt;8-way set associative caches&lt;/strong&gt; consisting of sets with 64-byte lines (64 sets in L1, 512 sets in L2, for a total of 32KB and 256KB in storage, respectively).&lt;/p&gt;
+
+&lt;p&gt;For those unfamiliar with computer architecture, addresses of information in the cache are split into three components:  tag, set, and offset.  An address looks something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1111 0000 1111 0000 1111        000011       110000
+Tag                              Set         Offset
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we&amp;rsquo;ve reviewed the memory hierarchy, let&amp;rsquo;s take a look at some attacks that use variations in cache timing and operation to their advantage.&lt;/p&gt;
+
+&lt;h3 id=&#34;prime-probe&#34;&gt;PRIME+PROBE&lt;/h3&gt;
+
+&lt;p&gt;The PRIME+PROBE attack is carried out by &lt;strong&gt;filling the victim&amp;rsquo;s cache with controlled data&lt;/strong&gt;.  As the victim carries out normal tasks in their machine, some of the attack data is evicted from the cache.  All the while, the attacker monitors the cache contents, keeping careful track of which cache lines were evicted.  In doing so, this provides the attacker with intimate knowledge of the operation and nature of the victim&amp;rsquo;s activities as well as the contents replaced by the victim.&lt;/p&gt;
+
+&lt;h3 id=&#34;evict-time&#34;&gt;EVICT+TIME&lt;/h3&gt;
+
+&lt;p&gt;The EVICT+TIME attack is carried out by evicting a line of an AES lookup table from the cache such that all AES lookup tables are in the cache save for one.  The attacker then runs the encryption process.  As you might imagine, &lt;strong&gt;if the encryption process accesses the partially evicted lookup table, encryption will take longer to complete&lt;/strong&gt;.  By timing exactly how long encryption takes, the attackers are able to determine which indices of which tables were accessed.  Because table lookups depend on the AES encryption key, the attacker thus gains knowledge about the key.&lt;/p&gt;
+
+&lt;h3 id=&#34;cache-games&#34;&gt;Cache Games&lt;/h3&gt;
+
+&lt;p&gt;The Cache Games attack targets AES-128 in OpenSSL v0.9.8 and is capable of recovering the full secret key.  In the attack, a non-privileged spy process conducts a 2.8 second observation of approximately 100 AES encryptions (1.56KB of data) and then performs 3 minutes of computation on a separate machine.  The spy process is able to abuse the default Linux scheduler, unfortunately named the &lt;em&gt;Completely Fair Scheduler&lt;/em&gt;, to monitor cache offset accesses with extremely accurate precision, thus gaining information about the key.&lt;/p&gt;
+
+&lt;p&gt;In order to abuse the CFS, the spy process creates hundreds of threads that immediately block.  After a few cycles, the first thread awakens, checks for memory accesses by the target code, and then signals for the next thread to awaken.  This continues for all threads.  To filter-out noise, Cache Games uses an ANN that takes bitmaps of activations and outputs points with high probability of access.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/cachegames.png&#34; alt=&#34;Cache Games ANN&#34; style=&#34;width:300px;&#34;/&gt;&lt;br /&gt;&lt;sup&gt;An ANN takes bitmaps of activations and outputs &lt;br /&gt;points with high probability of access&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The nature of the AES encryption process—consisting of 10 rounds of 16 memory accesses—allows the spy process to construct a list of partial-key candidates that is continually refined as more encryptions are repeated.  The CFS maintains processes in a red-black tree and associates with each process a total runtime.  The scheduler calculates a &amp;ldquo;max execution time&amp;rdquo; for each process by dividing the total time it has been waiting by the number of processes in the tree.  Whichever process minimizes this value is selected to run next.&lt;/p&gt;
+
+&lt;h4 id=&#34;mitigation&#34;&gt;Mitigation&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Remove or restrict access to high-resolution timers such as &lt;code&gt;rdtsc&lt;/code&gt; (unlikely; necessary to benchmark various hardware properties)&lt;/li&gt;
+&lt;li&gt;Allow certain memory to be marked as &lt;em&gt;uncacheable&lt;/em&gt; (hardware challenge!)&lt;/li&gt;
+&lt;li&gt;Use AES-NI instructions in Intel chips to compute AES (but what about other encryption algorithms?)&lt;/li&gt;
+&lt;li&gt;Scatter-gather:  secret data should not be allowed to influence memory access at coarser-than-cache-line granularity.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;cachebleed&#34;&gt;CacheBleed&lt;/h3&gt;
+
+&lt;p&gt;TODO: add paper link&lt;/p&gt;
+
+&lt;p&gt;In keeping with the trend of affixing &amp;ldquo;-bleed&amp;rdquo; to various information security leakage vulnerabilities, CacheBleed is a recent (c. 2016) attack on RSA decryptions as implemented in OpenSSL v1.0.2 on Intel Sandy Bridge processors.  In the attack, the timing of operations in &lt;strong&gt;cache banks&lt;/strong&gt; is taken advantage of in order to glean information about the RSA decryption multiplier.&lt;/p&gt;
+
+&lt;p&gt;Cache banks were a new feature in Sandy Bridge processors, designed to accommodate accessing multiple instructions in the same cache line in the same cycle.  As it turns out, cache banks can only serve one operation at a time, so if a &lt;em&gt;cache bank conflict&lt;/em&gt; is encountered, one request will be delayed!&lt;/p&gt;
+
+&lt;p&gt;In order to carry-out the attack, the attacker and victim start out running on the same hyperthreaded core, thus sharing the L1 cache.  The attacker then issues a huge number of requests to a single cache bank.  By carefully measuring how many cycles passed in completion of the request, the attacker can discern whether the victim accessed that cache bank at some point.  After many queries, the attack is successful at extracting both 2048-bit and 4096-bit secret keys.&lt;/p&gt;
+
+&lt;h4 id=&#34;mitigation-1&#34;&gt;Mitigation&lt;/h4&gt;
+
+&lt;p&gt;The upside to CacheBleed is that it&amp;rsquo;s highly complicated, requiring shared access to a hyperthreaded core on which RSA decryption is taking place—certainly not a predictable scenario.  In any case, there are other pieces of &amp;ldquo;low-hanging fruit&amp;rdquo; in computer systems that attackers are more likely to target.  Nonetheless, Haswell processors implement cache banks differently such that conflicts are handled more carefully.  The only other mitigation technique is to disable hyperthreading entirely.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Cloudflare Leak</title>
+      <link>https://tlseminar.github.io/cloudflare-leak/</link>
+      <pubDate>Tue, 28 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/cloudflare-leak/</guid>
+      <description>
+
+&lt;h1 id=&#34;the-cloudflare-leak&#34;&gt;The Cloudflare Leak&lt;/h1&gt;
+
+&lt;h3 id=&#34;how-the-incident-developed&#34;&gt;How the Incident Developed&lt;/h3&gt;
+
+&lt;p&gt;Cloudflare is an Internet infrastructure company that provides security and performance services to millions of websites.  On February 17th, 2017, Travis Ormandy, a security researcher from &lt;a href=&#34;https://googleprojectzero.blogspot.com/&#34;&gt;Google&amp;rsquo;s Project Zero&lt;/a&gt;, noticed that some HTTP requests running through Cloudflare were returning corrupted web pages.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/cloudflare/tweet.png&#34; alt=&#34;Travis Ormandy&#39;s Tweet&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;&lt;a href=&#34;https://twitter.com/taviso/status/832744397800214528&#34;&gt;https://twitter.com/taviso/status/832744397800214528&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The problem that Travis noticed was that under certain circumstances, when the Cloudflare &amp;ldquo;edge servers&amp;rdquo; returned a web page, they were going past the end of a buffer and adding to the HTML dumps of memory that contained information such as auth tokens, HTTP POST bodies, HTTP cookies, and other private information &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;[1]&lt;/a&gt;. To make matters worse, search engines both indexed and cached this data such that it was for a while searchable.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/cloudflare/leak.png&#34; alt=&#34;Example Leaked Data&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;&lt;a href=&#34;http://pastebin.com/AKEFci31&#34;&gt;http://pastebin.com/AKEFci31&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Since the discovery of the bug, Cloudflare worked with Google and other search engines to remove affected the cached pages.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-impact&#34;&gt;The Impact&lt;/h3&gt;
+
+&lt;p&gt;Data could have been leaking &lt;a href=&#34;https://www.wired.com/2017/02/crazy-cloudflare-bug-jeopardized-millions-sites/&#34;&gt;as early as September 22nd&lt;/a&gt;, but Cloudflare reported that the period of highest impact was from February 13th through February 18th with around 1 in every 3,300,000 HTTP requests have a potential memory leakage &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;[1]&lt;/a&gt;. It is difficult to assess how much data was leaked, especially since the corrupted results and their cached versions were quickly removed from search engines, but Wired &lt;a href=&#34;https://www.wired.com/2017/02/crazy-cloudflare-bug-jeopardized-millions-sites/&#34;&gt;reported that data from large companies such as Fitbit, Uber, and OKCupid was found in the corrupted pages of a set of affected web pages&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cloudflare asserts that the leak did not reveal any private keys, and even though other sensitive information was leaked, it did not appear in the HTML content of particularly high-traffic sites, so the damage was mitigated.&lt;/p&gt;
+
+&lt;p&gt;Overall, about 3000 customer&amp;rsquo;s sites triggered the bug, but, as previously noted, the data leaked could have come from any other Cloudflare customer. Cloudflare is aware of about 150 customers who were affected in that way.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-bug-itself&#34;&gt;The Bug Itself&lt;/h3&gt;
+
+&lt;p&gt;As mentioned earlier, the problem resulted from a buffer being overrun and thus additional data from memory being written to the HTML of web pages. But how did this happen, and why did it happen now?&lt;/p&gt;
+
+&lt;p&gt;Some of Cloudflare&amp;rsquo;s services rely on modifying, or &amp;ldquo;rewriting,&amp;rdquo; HTML pages as they are routed through the edge servers. In order to do this rewriting, Cloudflare reads and parses the HTML to find elements that require changing. Cloudflare used to use a HTML parser written using a project called &lt;a href=&#34;https://www.colm.net/open-source/ragel/&#34;&gt;Ragel&lt;/a&gt; that converts a description of a regular language into a finite state machine. However, about a year ago they decided that the Ragel-based parser was a source of technical debt and wrote a new parser called cf-html to replace it &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cloudflare first rolled this new parser our for their &lt;a href=&#34;https://blog.cloudflare.com/how-we-brought-https-everywhere-to-the-cloud-part-1/&#34;&gt;Automatic HTTP Rewrites&lt;/a&gt; service and have since been slowly migrating other services away from the Ragel-based parser. In order to use these parsers, Cloudflare adds them as a module to &lt;a href=&#34;https://www.nginx.com/resources/wiki/&#34;&gt;NGINX&lt;/a&gt;, a load-balancer &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;As it turned out, the parser that was written with Ragel actually had a bug in it for several years, but there was no memory leak because of a certain configuration fo the internal NGINX buffers. When cf-html was adopted, the buffers slightly changed, enabling the leakage.&lt;/p&gt;
+
+&lt;p&gt;The actual bug was caused by what you might expect: a pointer error in the C code generated by Ragel (but the bug was not the fault of Ragel).&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/cloudflare/bug.png&#34; alt=&#34;C Code Bug&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;&lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;As can be guessed from this snippit, the cause of the bug was that the check for the end of the bugger was done using the equality operator, &lt;code&gt;==&lt;/code&gt;, instead of &lt;code&gt;&amp;gt;=&lt;/code&gt;, which would have caught the bug. That snippit is the generated code. Let&amp;rsquo;s look at the code that generated that.&lt;/p&gt;
+
+&lt;p&gt;In order to check for a the end of the buffer when parsing a &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt; tag, this piece of code was used:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/cloudflare/bug2.png&#34; alt=&#34;Ragel Bug Code&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;&lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;What it means is that in order to parse the end of the tag, zero or more &lt;code&gt;unquoted_attr_char&lt;/code&gt; are parsed followed by whitespace, &lt;code&gt;/&lt;/code&gt;, or &lt;code&gt;&amp;gt;&lt;/code&gt; signifying the end of the tag. If there is nothing wrong with the script tag, the parser will move to the code in the &lt;code&gt;@{ }&lt;/code&gt;. If there is a problem, the parser will move to the &lt;code&gt;$lerr{ }&lt;/code&gt; section.&lt;/p&gt;
+
+&lt;p&gt;The bug was caused if a web page &lt;strong&gt;ended&lt;/strong&gt; with a malformed HTML tag such as &lt;code&gt;&amp;lt;script type=&lt;/code&gt;. The parser would transition to &lt;code&gt;dd(&amp;quot;script consume_attr failed&amp;quot;)&lt;/code&gt; which is just print debug output, but then &lt;strong&gt;instead of failing, it transitions to &lt;code&gt;fgoto script_consume_attr;&lt;/code&gt;&lt;/strong&gt;, which means it tries to parse another attribute.&lt;/p&gt;
+
+&lt;p&gt;Notice that the &lt;code&gt;@{ }&lt;/code&gt; block has a &lt;code&gt;fhold&lt;/code&gt; while the &lt;code&gt;$lerr{ }&lt;/code&gt; block does not. It was the lack of the &lt;code&gt;fhold&lt;/code&gt; in the second block that caused the leak. In the generated code, &lt;code&gt;fhold&lt;/code&gt; is equivalent to &lt;code&gt;p--&lt;/code&gt; and thus if the malformed tag error happens at the end of the buffer, then &lt;code&gt;p&lt;/code&gt; will actually be after the end of the document and the check for the end of the buffer will fail, causing &lt;code&gt;p&lt;/code&gt; to overrun the buffer.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-response-from-cloudflare&#34;&gt;The Response From Cloudflare&lt;/h3&gt;
+
+&lt;p&gt;Cloudflare seems to have responded relatively well to this bug. After the bug was brought to their attention they performed an initial mitigation, which meant disabling all of the sevices that used &lt;code&gt;cf_html&lt;/code&gt;, in 47 minutes. Luckily, Cloudlfare uses a &amp;lsquo;global kill&amp;rsquo; &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;[1]&lt;/a&gt; feature to enable the global disabling of any service. Since the Email Obfuscation was the main cause of the leak, it was disabled first, and then Automatic HTTPS rewrites were killed about 3 hours later. About 7 hours after the bug was detected, a fix was deployed globablly. As mentioned previously, Cloudflare also contacted search engines to get the affected pages and their cached versions removed from the web.&lt;/p&gt;
+
+&lt;p&gt;What was not as good about Cloudflare&amp;rsquo;s response were the lessons they said they learned in their incident report. Essentially, their lessons learned amounted to saying the bug was a corner case in an &amp;ldquo;ancient piece of software&amp;rdquo; and that they will be looking to &amp;ldquo;fuzz older software&amp;rdquo; to look for other potential problems &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;[1]&lt;/a&gt;.  We hope Cloudflare will take more time to look at this incident more seriously and consider systemic issues that could allow such a problem to occur and persist.&lt;/p&gt;
+
+&lt;h3 id=&#34;further-thoughts&#34;&gt;Further Thoughts&lt;/h3&gt;
+
+&lt;p&gt;Bugs like this expose the difficulty of ensuring software
+correctness. It is quite unlikely that a corner case like this would
+have been caught by human eyes, and even a fuzzer would have had to
+have triggered some exceptional conditions in order to exposed the
+bug. On the other hand, many tools and processes exist for detecting
+these types of problems, and there is little excuse for not using them
+on security-critical software.&lt;/p&gt;
+
+&lt;h3 id=&#34;reference&#34;&gt;Reference&lt;/h3&gt;
+
+&lt;p&gt;[1] &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SHA-1 Collisions</title>
+      <link>https://tlseminar.github.io/sha1-collisions/</link>
+      <pubDate>Tue, 28 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/sha1-collisions/</guid>
+      <description>
+
+&lt;h3 id=&#34;the-first-sha-1-collision&#34;&gt;The First SHA-1 Collision&lt;/h3&gt;
+
+&lt;p&gt;On February 23rd, 2017, researchers from Google and &lt;a href=&#34;https://www.cwi.nl/&#34;&gt;CWI Institute in Amsterdam&lt;/a&gt;) announced &lt;a href=&#34;https://security.googleblog.com/2017/02/announcing-first-sha1-collision.html&#34;&gt;the first SHA-1 collision&lt;/a&gt;.  As proof of this claim, two PDFs were published that yield the same SHA-1 hash despite containing different content (&lt;a href=&#34;https://shattered.it/static/shattered-1.pdf&#34;&gt;PDF 1&lt;/a&gt;, &lt;a href=&#34;https://shattered.it/static/shattered-2.pdf&#34;&gt;PDF 2&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/collision.png&#34; alt=&#34;PDF Collision&#34; style=&#34;width:600px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;&lt;a href=&#34;https://shattered.it/static/shattered.png&#34;&gt;https://shattered.it/static/shattered.png&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;While weaknesses in SHA-1 had been &lt;a href=&#34;http://merlot.usc.edu/csac-f06/papers/Wang05a.pdf&#34;&gt;known since the work by Xiaoyun Wang and colleagues in 2004&lt;/a&gt;, this is the first known attack to find an actual SHA-1 collision. While SHA-1 was deprecated by NIST in 2011, many systems still extensively use SHA-1 (git, SVN, even some &lt;a href=&#34;https://www.riskiq.com/blog/labs/wosign-and-startcom-caught-red-handed/&#34;&gt;certificate authorities&lt;/a&gt;, etc.). The researchers argue that these findings should reinforce the need to more secure hashing algorithms:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;We hope that our practical attack against SHA-1 will finally convince the industry that it is urgent to move to safer alternatives such as SHA-256.&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;attack-details&#34;&gt;Attack Details&lt;/h3&gt;
+
+&lt;p&gt;SHA-1 takes an arbitrary length message and computes a 160-bit hash. It divides the (padded) input into \(k\) blocks \(M_1, M_2, &amp;hellip;, M_k\) of 512 bits. The 160-bit internal state \(CV_j\), called the chaining value, is initialized to some initial value \(CV_0 = IV\). Then, each block \(M_j\) is fed to a compression function \(h\) that updates the chaining value, \(CV_{j+1} = h(CV_j, M_{j+1})\). \(CV_k\) Is the output of the hash.&lt;/p&gt;
+
+&lt;p&gt;The attack implements the best known theoretical collision attack outlined by &lt;a href=&#34;https://marc-stevens.nl/research/papers/EC13-S.pdf&#34;&gt;Stevens (2013)&lt;/a&gt; (one of the leaders of this effort). This attack is an &lt;em&gt;identical-prefix collision attack&lt;/em&gt;, where a given prefix \(P\) is extended with two distinct &lt;em&gt;near collision block pairs&lt;/em&gt; such that they collide for any suffix \(S\):&lt;/p&gt;
+
+&lt;p&gt;$$ \text{SHA-1}(P||M_1^{(1)}||M_2^{(1)}||S) = \text{SHA-1}(P||M_1^{(2)}||M_2^{(2)}||S) $$&lt;/p&gt;
+
+&lt;p&gt;Finding both the first and second near collision block pairs, (\(M_1^{(1)}, M_1^{(2)}\)) and (\(M_2^{(1)}, M_2^{(2)}\)), respectively, was completed using slightly modified algorithms from Stevens&amp;rsquo; work. Broadly speaking, differences in the first block pair cause a small difference in the output chaining value, which is &amp;ldquo;canceled&amp;rdquo; by the difference in the second block pair. The remaining identical suffixes ensure a collision. &lt;em&gt;Differential paths&lt;/em&gt; are leveraged as a precise description of the differences in block pairs and how these differences evolve through the hashing steps. This description is the foundation of a search over the possible block pairs.  Note that once the collision block pairs are found for a particular prefix, any number of colliding inputs can be found since &lt;em&gt;S&lt;/em&gt; can be anything.&lt;/p&gt;
+
+&lt;p&gt;The PDF format is exploited by packaging the differing collision blocks into an embedded JPEG image. In the example collision, the differing blocks are aligned such that the background of the PDFs are different.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/timing-attacks/pdf-enc.png&#34; alt=&#34;PDF Encoding&#34; style=&#34;width:600px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;&lt;a href=&#34;https://shattered.it/static/pdf_format.png&#34;&gt;https://shattered.it/static/pdf_format.png&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;A significant contribution of this work is to apply these algorithms at the scale necessary for practical execution. While the source code for these computations has not yet been released (the authors are allowing a grace period to move to modern hashing algorithms), the changes required to scale this attack are highly non-trivial. Combined, the computations required approximately 6500 CPU years and 100 GPU years. At the time of publishing, the authors estimate the total cost of their attack (via AWS) at $110,000, easily within the reach of criminals. This attack is estimated to be approximately 100,000 times faster than a brute force search.&lt;/p&gt;
+
+&lt;p&gt;Full technical details of the attack are outlined in the released paper:
+Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov. &lt;a href=&#34;https://shattered.it/static/shattered.pdf&#34;&gt;&lt;em&gt;The first collision for full SHA-1&lt;/em&gt;&lt;/a&gt;.  (Released 23 February, 2017)&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Certificates</title>
@@ -213,7 +594,11 @@ Self signed SSL certificate warning in Google Chrome, image courtesy of &lt;a hr
       <guid>https://tlseminar.github.io/downgrade-attacks/</guid>
       <description>
 
-&lt;p&gt;&lt;strong&gt;TODO: add a short overview paragraph, giving a roadmap (with links to later sections) to the whole story&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Last week we learned about &lt;a href=&#34;https://tlseminar.github.io/padding-oracle/&#34;&gt;Padding Oracle Attacks&lt;/a&gt; which use side-channel information related to ciphertext message padding in order to deduce the underlying plaintext message in a TLS communication. This week we will learn about &lt;a href=&#34;https://en.wikipedia.org/wiki/Downgrade_attack&#34;&gt;Downgrade Attacks&lt;/a&gt; that force a TLS server to choose weaker encryption and protocol suit thereby making it vulnerable to attacks like man-in-the-middle.&lt;/p&gt;
+
+&lt;p&gt;We begin with a brief introduction of Diffie-Hellman Key Exchange protocol commonly used in TLS and then describe the Logjam attack on Diffie-Hellman protocol which relies on pre-computation of discrete-logs of a 512-bit prime used in the protocol. Next we discuss about &lt;a href=&#34;#state-level-threats-to-diffie-hellman&#34;&gt;State-level Threats to Diffie-Hellman&lt;/a&gt;, where we show that the pre-computation of discrete-logs is in the reach of current academic computation power. The practical consequence is that 8% of the top 1 million websites that use HTTPS can be broken in real time.&lt;/p&gt;
+
+&lt;p&gt;In the remainder of the article, we discuss about &lt;a href=&#34;#bleichenbacher-attack&#34;&gt;Bleichenbacher Attack&lt;/a&gt; which is a padding oracle attack on PKCS#1 v1.5 padding used in SSLv2. We conclude with &lt;a href=&#34;#drown-attack&#34;&gt;Drown Attack&lt;/a&gt; that uses Bleichenbacker attack to gain access to RSA key of a TLS communication.&lt;/p&gt;
 
 &lt;h1 id=&#34;diffie-hellman-cryptanalysis&#34;&gt;Diffie-Hellman Cryptanalysis&lt;/h1&gt;
 
@@ -234,7 +619,7 @@ Self signed SSL certificate warning in Google Chrome, image courtesy of &lt;a hr
 
 &lt;p&gt;Clearly, if this problem were easy to solve, Diffie-Hellman would be useless, since any eavesdropping adversary could then collect both \(g^x\) and \(g^y\), compute \(g^{xy}\), and subsequently decrypt all of Alice and Bob’s communication.  The Discrete Logarithm Problem (DLP) is thus by far the most efficient means to solve DHP and requires that the eavesdropping adversary compute \(x\) given \(g\) and \(g^x\) – still believed to be a hard problem in general.  But, if \(p\) is a weak prime (as explained below), it can solved in a reasonable amount of time with available computing resources.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;TODO: Add a link to paper&lt;/strong&gt; Adrian et al. published a paper in 2015 that demonstrated a weakness in Diffie-Hellman key exchange in the Handshake Protocol of TLS. In order to perform cryptanalysis in such a situation, an attacker must solve DLP by computing arbitrary discrete log values in real-time. While it is not known how to calculate discrete logs efficiently (and believed to be hard), the attack can be accelerated using precomputation.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://delivery.acm.org/10.1145/2820000/2813707/p5-adrian.pdf?ip=128.143.136.161&amp;amp;id=2813707&amp;amp;acc=OA&amp;amp;key=B33240AC40EC9E30%2E95F2ACB8D94EAE2C%2E4D4702B0C3E38B35%2E595DDC89FD3F921D&amp;amp;CFID=905546373&amp;amp;CFTOKEN=37431812&amp;amp;__acm__=1488219223_8a00d679a8028704e982e7dce1863988&#34;&gt;Adrian et al.&lt;/a&gt; published a paper in 2015 that demonstrated a weakness in Diffie-Hellman key exchange in the Handshake Protocol of TLS. In order to perform cryptanalysis in such a situation, an attacker must solve DLP by computing arbitrary discrete log values in real-time. While it is not known how to calculate discrete logs efficiently (and believed to be hard), the attack can be accelerated using precomputation.&lt;/p&gt;
 
 &lt;h2 id=&#34;index-calculus&#34;&gt;Index Calculus&lt;/h2&gt;
 
@@ -244,7 +629,7 @@ Self signed SSL certificate warning in Google Chrome, image courtesy of &lt;a hr
 
 &lt;p&gt;Using precomputed discrete logs, an attacker can perform an active downgrade attack on a TLS connection. Operating as an in-the-middle attacker, the attacker intercepts a Client Hello message and alters it to instruct the server to use export-grade Diffie-Hellman, which uses 512-bit keys rather than 1024-bit or higher, which allows the attacker to use the precomputed logs. During the Handshake Protocol, the attacker is able to solve the discrete log problem and recover the master secret of that connection. This allows the attacker to communicate directly with the client over an encrypted channel, while the client still thinks he/she is communicating with their intended server.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-logjam-attack-step-by-step&#34;&gt;The Logjam Attack:  Step-by-Step&lt;/h2&gt;
+&lt;h2 id=&#34;the-logjam-attack-step-by-step&#34;&gt;The Logjam Attack: Step-by-Step&lt;/h2&gt;
 
 &lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://cryptologie.net/upload/logjam.png&#34; alt=&#34;Alt&#34; /&gt;&lt;/center&gt;
 &lt;center&gt;&lt;sup&gt;&lt;a href=&#34;https://cryptologie.net/upload/logjam.png&#34;&gt;https://cryptologie.net/upload/logjam.png&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
@@ -276,123 +661,6 @@ Self signed SSL certificate warning in Google Chrome, image courtesy of &lt;a hr
 &lt;p&gt;A strong prime \(p = 2q + 1\) (\(q\) is prime) avoids this problem of reducibility by ensuring that \((p-1)\div 2\) cannot be composite (and, by extension, that Pohlig-Hellman cannot obtain information from \(p\)).&lt;/p&gt;
 
 &lt;p&gt;This puts a server that supports export-grade DH and reuses weak primes at severe risk to a motivated attack.&lt;/p&gt;
-
-&lt;h1 id=&#34;bleichenbacher-s-padding-oracle-attack&#34;&gt;Bleichenbacher’s Padding Oracle Attack&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf&#34;&gt;Bleichenbacher’s padding oracle attack&lt;/a&gt;  is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.&lt;/p&gt;
-
-&lt;h2 id=&#34;pkcs-1-v1-5-encryption-padding&#34;&gt;PKCS#1 v1.5 encryption padding&lt;/h2&gt;
-
-&lt;p&gt;Bleichenbacher’s padding oracle attack relies on the structure of &lt;a href=&#34;https://tools.ietf.org/html/rfc2313&#34;&gt;RSA PKCS#1 v1.5 padding&lt;/a&gt;. Although RSA PKCS#1 v2.0 implements OAEP, SSL/TLS still uses PKCS#1 v1.5. The PKCS#1 v1.5 encryption padding scheme randomizes encryptions by prepending a random padding string PS to a message &lt;em&gt;k&lt;/em&gt; (here, a symmetric session key) before RSA encryption:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The plaintext message is &lt;em&gt;k&lt;/em&gt;, \(l_k = |k|\).
-The encrypter generates a random byte string PS,
-where |PS| ≥ 8, \(|PS| = l_m − 3 − l_k \) and &lt;code&gt;0x00&lt;/code&gt; \( \notin{PS[1],&amp;hellip;,PS[|PS|]}\)&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The encryption block is \(m =\) &lt;code&gt;00&lt;/code&gt; || &lt;code&gt;02&lt;/code&gt; || \(PS\) || &lt;code&gt;00&lt;/code&gt; || \(k\)&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The ciphertext is computed as \(c = m^e\mod{N}\).
-To decrypt such a ciphertext, the decrypter first computes \(m = c^d \mod{N}\). Then it checks whether the decrypted message m is correctly formatted as a PKCS#1 v1.5-encoded message. We say that the ciphertext c and the decrypted message bytes \(m[1]||m[2]||&amp;hellip;||m[l_m]\) are PKCS#1 v1.5 conformant if:&lt;/p&gt;
-
-&lt;p&gt;\( \qquad m[1] || m[2] = \) &lt;code&gt;0x00&lt;/code&gt; || &lt;code&gt;0x02&lt;/code&gt; and &lt;code&gt;0x00&lt;/code&gt; \(\notin {m[3],&amp;hellip;,m[10]} \)&lt;/p&gt;
-
-&lt;p&gt;If this condition holds, the decrypter searches for the first value &lt;em&gt;i&lt;/em&gt; &amp;gt; 10 such that \(m[i] =\) &lt;code&gt;0x00&lt;/code&gt;. Then, it extracts \(k = m[i+1]||&amp;hellip;||m[l_m]\). Otherwise, the ciphertext is rejected.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;In SSLv3 and TLS, RSA PKCS#1 v1.5 is used to encapsulate the premaster secret exchanged during the handshake. Thus, &lt;em&gt;k&lt;/em&gt; is interpreted as the premaster secret. In SSLv2, RSA PKCS#1 v1.5 is used for encapsulation of an equivalent key denoted the &lt;em&gt;master_key&lt;/em&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;bleichenbacher-attack&#34;&gt;Bleichenbacher attack&lt;/h2&gt;
-
-&lt;p&gt;Bleichenbacher’s attack is a padding oracle attack; it exploits the fact that RSA ciphertexts should decrypt to PKCS#1 v1.5-compliant plaintexts. If an implementation receives an RSA ciphertext that decrypts to an invalid PKCS#1 v1.5 plaintext, it might naturally leak this information via an error message, by closing the connection, or by taking longer to process the error condition. This behavior can leak information about the plaintext that can be modeled as a cryptographic oracle for the decryption process. Bleichenbacher demonstrated how such an oracle could be exploited to decrypt RSA ciphertexts.&lt;/p&gt;
-
-&lt;h2 id=&#34;algorithm&#34;&gt;Algorithm&lt;/h2&gt;
-
-&lt;p&gt;In the simplest attack scenario, the attacker has a valid PKCS#1 v1.5 ciphertext \(c_0\) that they wish to decrypt to discover the message m0. They have no access to the private RSA key, but instead have access to an oracle, \(\delta\), that will decrypt a ciphertext &lt;em&gt;c&lt;/em&gt; and inform the attacker whether the most significant two bytes match the required value for a correct PKCS#1 v1.5 padding:&lt;br /&gt;
-&lt;center&gt;
-\( \delta (c) = 1 \) if  \(m = c^d \mod{N} \) starts with &lt;code&gt;0x00~02 0&lt;/code&gt;
-$$ \delta (c) = 0 \textrm{ otherwise}.$$
-&lt;/center&gt;
-If the oracle answers with 1, the attacker knows that \(2B ≤ m ≤ 3B−1\), where \(B = 2^{8(l_m−2)}\).&lt;/p&gt;
-
-&lt;p&gt;The attacker can take advantage of RSA malleability to generate new candidate
-ciphertexts for any s:&lt;/p&gt;
-
-&lt;p&gt;$$c = (c_0 · s_e)\mod{N} = {m_0 ·s}^e \mod{N}$$&lt;/p&gt;
-
-&lt;p&gt;The attacker queries the oracle with &lt;em&gt;c&lt;/em&gt;. If the oracle responds with 0, the attacker increments &lt;em&gt;s&lt;/em&gt; and repeats the previous step. Otherwise, the attacker learns that for some &lt;em&gt;r&lt;/em&gt;, \(2B ≤ m_{0}s−rN &amp;lt; 3B\). This allows the attacker to reduce the range of possible solutions to:&lt;/p&gt;
-
-&lt;p&gt;$$ \frac{2B+rN}{s} ≤ m_0 &amp;lt; \frac{3B+rN}{s} $$&lt;/p&gt;
-
-&lt;p&gt;The attacker proceeds by refining guesses for &lt;em&gt;s&lt;/em&gt; and &lt;em&gt;r&lt;/em&gt; values and successively decreasing the size of the interval containing \(m_0\). At some point the interval will contain a single valid value, \(m_0\). &lt;a href=&#34;**TODO: link**&#34;&gt;Bleichenbacher’s original paper&lt;/a&gt; describes this process in further detail.&lt;/p&gt;
-
-&lt;p&gt;It is worth noting that the author implemented a proof-of-concept of this attack on a custom padding oracle implementation. Over a test set of various 512-bit and 1024-bit keys, between 300,000 and 2 million ciphertexts were required to find the message. While the details of the custom oracle are not known, it is reasonable to assume that this attack is feasible in more realistic scenarios.&lt;/p&gt;
-
-&lt;h2 id=&#34;countermeasures&#34;&gt;Countermeasures&lt;/h2&gt;
-
-&lt;p&gt;In order to protect against this attack, the reciever must not leak information about the PKCS#1 v1.5 validity of the ciphertext. The ciphertext does not decrypt to a valid message, so the decrypter generates a fake plaintext and continues the protocol with this decoy. The attacker should not be able to distinguish the resulting computation from a correctly decrypted ciphertext.  In the case of SSL/TLS, the server generates a random premaster secret to continue the handshake if the decrypted ciphertext is invalid. The client will not possess the session key to send a valid ClientFinished message and the connection will terminate.&lt;/p&gt;
-
-&lt;p&gt;In addition, newer versions of &lt;a href=&#34;https://tools.ietf.org/html/rfc3447&#34;&gt;PKSC#1&lt;/a&gt; describe a new padding type, called OAEP, which uses hash function to add more internal redundancy. This greatly decreases the probability that random strings will result in valid padding, effectively preventing the attack.&lt;/p&gt;
-
-&lt;h2 id=&#34;sources&#34;&gt;Sources&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;TODO: make the papers have links to actual papers&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/duesee/bleichenbacher/blob/master/main.py&#34;&gt;https://github.com/duesee/bleichenbacher/blob/master/main.py&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&#34;http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html&#34;&gt;http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&#34;https://cryptopals.com/sets/6/challenges/47&#34;&gt;https://cryptopals.com/sets/6/challenges/47&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;D. Bleichenbacher. Chosen ciphertext attacks against protocols based on the RSA encryption standard. In Advances in Cryptology: Proceedings of CRYPTO ’98, volume 1462 of LNCS, pages 1–12, 1998.&lt;/p&gt;
-
-&lt;p&gt;Bardou, R., Focardi, R., Kawamoto, Y., Simionato, L., Steel, G., AND Tsay, J.-K. Efficient padding oracle attacks on cryptographic hardware. In Advances in Cryptology–CRYPTO 2012. Springer, 2012, pp. 608–625.&lt;/p&gt;
-
-&lt;p&gt;N. Aviram S. Schinzel J. Somorovsky N. Heninger M. Dankel J. Steube L. Valenta D. Adrian J. A. Halderman V. Dukhovni E. Kasper S. Cohney S. Engels C. Paar Y. Shavitt &amp;ldquo;DROWN: Breaking TLS with SSLv2&amp;rdquo; Mar. 2016 [online] Available: &lt;a href=&#34;https://drownattack.com/&#34;&gt;https://drownattack.com/&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;drown-breaking-tls-using-sslv2&#34;&gt;DROWN: Breaking TLS using SSLv2&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;Paper Link&lt;/a&gt;
-| &lt;a href=&#34;https://drownattack.com/&#34;&gt;Website&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;DROWN attack is inspired by &lt;a href=&#34;#bleichenbacher-attack&#34;&gt;Bleichenbacher’s padding oracle attack&lt;/a&gt; over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a &lt;a href=&#34;https://tlseminar.github.io/padding-oracle/&#34;&gt;padding oracle&lt;/a&gt;. The padding scheme is shown below where first two bytes are fixed &lt;code&gt;0x00 0x02&lt;/code&gt; followed by 8 bytes of random padding string succeeded by a &lt;code&gt;0x00&lt;/code&gt; byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/downgrade-attacks/pkcs1padding.png&#34; alt=&#34;PKCSPadding&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
-&lt;sup&gt;PKCS#1 v1.5 Padding Scheme &lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;p&gt;The client in SSLv2 protocol sends ClientMasterKey message to SSLv2 server which the server decrypts and responds with ServerVerify message which tells whether the ClientMasterKey message was conformant with the padding scheme.&lt;/p&gt;
-
-&lt;p&gt;The figure below depicts the SSLv2 protocol. The attacker can modify the original ClientMasterKey message and if the SSLv2 server confirms the padding, the attacker would immediately get to know that the first two bytes of the modified message is ‘0x00 0x02’. This way, the attacker can repeatedly modify the original message and query the oracle. After multiple successful guesses for modified message, the attacker can narrow down the guesses for the original message and recover the &lt;em&gt;master_key&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/downgrade-attacks/sslv2flaw.png&#34; alt=&#34;SSLv2Flaw&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
-&lt;sup&gt;Flaw in SSLv2 protocol where the server reveals the correctness of padding &lt;br&gt;
-Source: &lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;https://tlseminar.github.io/docs/drown.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;p&gt;Moreover, SSLv2 allowed export-grade ciphersuites which supported 40-bit key. A Bleichenbacher attacker could brute-force the key by repeatedly querying the SSLv2 server.&lt;/p&gt;
-
-&lt;p&gt;TLS patched the above flaws and (most) servers made the SSLv2 protocol obsolete. However, it was not uncommon for TLS servers to share same RSA keys with SSLv2 servers. This made the TLS servers vulnerable to a modified form of Bleichenbacher attack which uses a SSLv2 server as padding oracle to decrypt the shared RSA key. DROWN instantiated this protocol-level attack and decrypted a TLS 1.2 handshake using 2048-bit RSA in 8 hours at a cost of $440 on Amazon EC2. As if this wasn&amp;rsquo;t devastating enough, the authors of DROWN pointed out some implementation bugs in OpenSSL which lead to another attack called Special DROWN that could decrypt a TLS ciphertext in under 1 minute using a single CPU. Both the attacks are described below.&lt;/p&gt;
-
-&lt;h2 id=&#34;drown-attack&#34;&gt;DROWN Attack&lt;/h2&gt;
-
-&lt;p&gt;DROWN attack requires that a TLS server and a SSLv2 server share an RSA key. The attacker records multiple TLS handshake messages between a client and the TLS server. The aim of the attacker is to decrypt the RSA key of the TLS handshake. To do so, the attacker forces the client to establish a connection with an SSLv2 server having the same RSA key so that the attacker can initiate the Bleichenbacher attack to recover the RSA key.&lt;/p&gt;
-
-&lt;p&gt;Now the main hurdle for the attacker is that the format of TLS handshake message may not comply with PKCS#1 v1.5 padding scheme of SSLv2. The attacker converts the TLS ciphertext to SSLv2 ciphertext using the concept of trimmers introduced by &lt;a href=&#34;https://hal.inria.fr/hal-00691958/document&#34;&gt;Bardou et al.&lt;/a&gt; which reduces the size of the TLS message. The use of trimmers require repeated querying to SSLv2 server by shifting the message bytes. The recovered SSLv2 plaintext is then converted back to TLS plaintext which reveals the RSA key of TLS handshake.&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/downgrade-attacks/drownattack.png&#34; alt=&#34;DROWN&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
-&lt;sup&gt;SSLv2-based Bleichenbacher attack on TLS &lt;br&gt;
-Source: &lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;https://tlseminar.github.io/docs/drown.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;special-drown-attack&#34;&gt;Special DROWN Attack&lt;/h2&gt;
-
-&lt;p&gt;The OpenSSL implementation had two bugs which led to a more efficient Bleichenbacher attack on an OpenSSL implementation of SSLv2 server.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;OpenSSL extra clear oracle:&lt;/b&gt; OpenSSL implementation allowed non-export cipher messages to contain &lt;em&gt;clear_key_data&lt;/em&gt; which lead to potential overwriting of key bytes with null bytes. An attacker could vary the number of null bytes to decrypt the whole key one byte at a time.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;OpenSSL leaky export oracle:&lt;/b&gt; OpenSSL in export cipher mode allowed valid oracle response for correctly padded message of ‘any’ length.&lt;/p&gt;
-
-&lt;p&gt;These bugs remained in OpenSSL implementation from 1998 up until its patch in 2015, when the authors of DROWN contacted the OpenSSL developers.&lt;/p&gt;
-
-&lt;h2 id=&#34;prevention-of-drown&#34;&gt;Prevention of DROWN&lt;/h2&gt;
-
-&lt;p&gt;The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like &lt;a href=&#34;https://tools.ietf.org/html/rfc5288&#34;&gt;AES_GCM&lt;/a&gt;) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.&lt;/p&gt;
 
 &lt;h1 id=&#34;state-level-threats-to-diffie-hellman&#34;&gt;State-Level Threats to Diffie-Hellman&lt;/h1&gt;
 
@@ -468,6 +736,117 @@ Source: &lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;https
 &lt;h2 id=&#34;mitigations&#34;&gt;Mitigations&lt;/h2&gt;
 
 &lt;p&gt;Is there any hope that a connection can really be secure given this information? Luckily, some mitigations can be put into place. First, servers can move to using elliptic curve cryptography (ECC). A transition to a elliptic curve Diffe-Hellman key exchange (ECDH) with appropriate parameters would thwart all known feasible cryptanalytic attacks as ECC discrete log algorithms don&amp;rsquo;t gain too much advantage from precomputation. When ECC is not an option, it is recommended that primes at least 2048 bits in length be used. It would be ideal if browser vendors and clients raise the minimum accepted size for DH groups to at least 1024 bits. If large primes are not supported, then always use a fresh 1024-bit group to mitigate the efficacy of precomputation-based attacks. It is parameter reuse that allows state-level attackers to easily perform wide-scale passive decryption.&lt;/p&gt;
+
+&lt;h1 id=&#34;bleichenbacher-s-padding-oracle-attack&#34;&gt;Bleichenbacher’s Padding Oracle Attack&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf&#34;&gt;Bleichenbacher’s padding oracle attack&lt;/a&gt;  is an adaptive chosen ciphertext attack against PKCS#1 v1.5, the RSA padding standard used in SSL and TLS. It enables decryption of RSA ciphertexts if a server distinguishes between correctly and incorrectly padded RSA plaintexts, and was termed the “million-message attack” upon its introduction in 1998, after the number of decryption queries needed to deduce a plaintext. All widely used SSL/TLS servers include countermeasures against Bleichenbacher attacks.&lt;/p&gt;
+
+&lt;h2 id=&#34;pkcs-1-v1-5-encryption-padding&#34;&gt;PKCS#1 v1.5 encryption padding&lt;/h2&gt;
+
+&lt;p&gt;Bleichenbacher’s padding oracle attack relies on the structure of &lt;a href=&#34;https://tools.ietf.org/html/rfc2313&#34;&gt;RSA PKCS#1 v1.5 padding&lt;/a&gt;. Although RSA PKCS#1 v2.0 implements OAEP, SSL/TLS still uses PKCS#1 v1.5. The PKCS#1 v1.5 encryption padding scheme randomizes encryptions by prepending a random padding string PS to a message &lt;em&gt;k&lt;/em&gt; (here, a symmetric session key) before RSA encryption:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The plaintext message is &lt;em&gt;k&lt;/em&gt;, \(l_k = |k|\).
+The encrypter generates a random byte string PS,
+where |PS| ≥ 8, \(|PS| = l_m − 3 − l_k \) and &lt;code&gt;0x00&lt;/code&gt; \( \notin{PS[1],&amp;hellip;,PS[|PS|]}\)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The encryption block is \(m =\) &lt;code&gt;00&lt;/code&gt; || &lt;code&gt;02&lt;/code&gt; || \(PS\) || &lt;code&gt;00&lt;/code&gt; || \(k\)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The ciphertext is computed as \(c = m^e\mod{N}\).
+To decrypt such a ciphertext, the decrypter first computes \(m = c^d \mod{N}\). Then it checks whether the decrypted message m is correctly formatted as a PKCS#1 v1.5-encoded message. We say that the ciphertext c and the decrypted message bytes \(m[1]||m[2]||&amp;hellip;||m[l_m]\) are PKCS#1 v1.5 conformant if:&lt;/p&gt;
+
+&lt;p&gt;\( \qquad m[1] || m[2] = \) &lt;code&gt;0x00&lt;/code&gt; || &lt;code&gt;0x02&lt;/code&gt; and &lt;code&gt;0x00&lt;/code&gt; \(\notin {m[3],&amp;hellip;,m[10]} \)&lt;/p&gt;
+
+&lt;p&gt;If this condition holds, the decrypter searches for the first value &lt;em&gt;i&lt;/em&gt; &amp;gt; 10 such that \(m[i] =\) &lt;code&gt;0x00&lt;/code&gt;. Then, it extracts \(k = m[i+1]||&amp;hellip;||m[l_m]\). Otherwise, the ciphertext is rejected.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In SSLv3 and TLS, RSA PKCS#1 v1.5 is used to encapsulate the premaster secret exchanged during the handshake. Thus, &lt;em&gt;k&lt;/em&gt; is interpreted as the premaster secret. In SSLv2, RSA PKCS#1 v1.5 is used for encapsulation of an equivalent key denoted the &lt;em&gt;master_key&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;bleichenbacher-attack&#34;&gt;Bleichenbacher attack&lt;/h2&gt;
+
+&lt;p&gt;Bleichenbacher’s attack is a padding oracle attack; it exploits the fact that RSA ciphertexts should decrypt to PKCS#1 v1.5-compliant plaintexts. If an implementation receives an RSA ciphertext that decrypts to an invalid PKCS#1 v1.5 plaintext, it might naturally leak this information via an error message, by closing the connection, or by taking longer to process the error condition. This behavior can leak information about the plaintext that can be modeled as a cryptographic oracle for the decryption process. Bleichenbacher demonstrated how such an oracle could be exploited to decrypt RSA ciphertexts.&lt;/p&gt;
+
+&lt;h2 id=&#34;algorithm&#34;&gt;Algorithm&lt;/h2&gt;
+
+&lt;p&gt;In the simplest attack scenario, the attacker has a valid PKCS#1 v1.5 ciphertext \(c_0\) that they wish to decrypt to discover the message m0. They have no access to the private RSA key, but instead have access to an oracle, \(\delta\), that will decrypt a ciphertext &lt;em&gt;c&lt;/em&gt; and inform the attacker whether the most significant two bytes match the required value for a correct PKCS#1 v1.5 padding:&lt;br /&gt;
+&lt;center&gt;
+\( \delta (c) = 1 \) if  \(m = c^d \mod{N} \) starts with &lt;code&gt;0x00~02 0&lt;/code&gt;
+$$ \delta (c) = 0 \textrm{ otherwise}.$$
+&lt;/center&gt;
+If the oracle answers with 1, the attacker knows that \(2B ≤ m ≤ 3B−1\), where \(B = 2^{8(l_m−2)}\).&lt;/p&gt;
+
+&lt;p&gt;The attacker can take advantage of RSA malleability to generate new candidate
+ciphertexts for any s:&lt;/p&gt;
+
+&lt;p&gt;$$c = (c_0 · s_e)\mod{N} = {m_0 ·s}^e \mod{N}$$&lt;/p&gt;
+
+&lt;p&gt;The attacker queries the oracle with &lt;em&gt;c&lt;/em&gt;. If the oracle responds with 0, the attacker increments &lt;em&gt;s&lt;/em&gt; and repeats the previous step. Otherwise, the attacker learns that for some &lt;em&gt;r&lt;/em&gt;, \(2B ≤ m_{0}s−rN &amp;lt; 3B\). This allows the attacker to reduce the range of possible solutions to:&lt;/p&gt;
+
+&lt;p&gt;$$ \frac{2B+rN}{s} ≤ m_0 &amp;lt; \frac{3B+rN}{s} $$&lt;/p&gt;
+
+&lt;p&gt;The attacker proceeds by refining guesses for &lt;em&gt;s&lt;/em&gt; and &lt;em&gt;r&lt;/em&gt; values and successively decreasing the size of the interval containing \(m_0\). At some point the interval will contain a single valid value, \(m_0\). &lt;a href=&#34;http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf&#34;&gt;Bleichenbacher’s original paper&lt;/a&gt; describes this process in further detail.&lt;/p&gt;
+
+&lt;p&gt;It is worth noting that the author implemented a proof-of-concept of this attack on a custom padding oracle implementation. Over a test set of various 512-bit and 1024-bit keys, between 300,000 and 2 million ciphertexts were required to find the message. While the details of the custom oracle are not known, it is reasonable to assume that this attack is feasible in more realistic scenarios.&lt;/p&gt;
+
+&lt;h2 id=&#34;countermeasures&#34;&gt;Countermeasures&lt;/h2&gt;
+
+&lt;p&gt;In order to protect against this attack, the reciever must not leak information about the PKCS#1 v1.5 validity of the ciphertext. The ciphertext does not decrypt to a valid message, so the decrypter generates a fake plaintext and continues the protocol with this decoy. The attacker should not be able to distinguish the resulting computation from a correctly decrypted ciphertext.  In the case of SSL/TLS, the server generates a random premaster secret to continue the handshake if the decrypted ciphertext is invalid. The client will not possess the session key to send a valid ClientFinished message and the connection will terminate.&lt;/p&gt;
+
+&lt;p&gt;In addition, newer versions of &lt;a href=&#34;https://tools.ietf.org/html/rfc3447&#34;&gt;PKSC#1&lt;/a&gt; describe a new padding type, called OAEP, which uses hash function to add more internal redundancy. This greatly decreases the probability that random strings will result in valid padding, effectively preventing the attack.&lt;/p&gt;
+
+&lt;h2 id=&#34;sources-of-further-reading&#34;&gt;Sources of Further Reading&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://secgroup.dais.unive.it/wp-content/uploads/2012/11/Practical-Padding-Oracle-Attacks-on-RSA.html&#34;&gt;Padding Oracle Attacks on RSA&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://cryptopals.com/sets/6/challenges/47&#34;&gt;Cryptopals Crypto Challenge&lt;/a&gt;: A Do-It-Yourself excercise on Bleichenbacher attack.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://hal.inria.fr/hal-00691958/document&#34;&gt;Efficient padding oracle attacks on cryptographic hardware&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;drown-breaking-tls-using-sslv2&#34;&gt;DROWN: Breaking TLS using SSLv2&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;Paper Link&lt;/a&gt;
+| &lt;a href=&#34;https://drownattack.com/&#34;&gt;Website&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;DROWN attack is inspired by &lt;a href=&#34;#bleichenbacher-attack&#34;&gt;Bleichenbacher’s padding oracle attack&lt;/a&gt; over SSLv2 which could decrypt an SSLv2 RSA ciphertext. The attack was possible due to a flaw in SSLv2 protocol which revealed if the decrypted message was conformant with PKCS#1 v1.5 padding or not, thus acting as a &lt;a href=&#34;https://tlseminar.github.io/padding-oracle/&#34;&gt;padding oracle&lt;/a&gt;. The padding scheme is shown below where first two bytes are fixed &lt;code&gt;0x00 0x02&lt;/code&gt; followed by 8 bytes of random padding string succeeded by a &lt;code&gt;0x00&lt;/code&gt; byte. The remaining part of the message is the plaintext which may contain the key to be recovered. The padding scheme is shown below:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/downgrade-attacks/pkcs1padding.png&#34; alt=&#34;PKCSPadding&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;PKCS#1 v1.5 Padding Scheme &lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The client in SSLv2 protocol sends ClientMasterKey message to SSLv2 server which the server decrypts and responds with ServerVerify message which tells whether the ClientMasterKey message was conformant with the padding scheme.&lt;/p&gt;
+
+&lt;p&gt;The figure below depicts the SSLv2 protocol. The attacker can modify the original ClientMasterKey message and if the SSLv2 server confirms the padding, the attacker would immediately get to know that the first two bytes of the modified message is ‘0x00 0x02’. This way, the attacker can repeatedly modify the original message and query the oracle. After multiple successful guesses for modified message, the attacker can narrow down the guesses for the original message and recover the &lt;em&gt;master_key&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/downgrade-attacks/sslv2flaw.png&#34; alt=&#34;SSLv2Flaw&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;Flaw in SSLv2 protocol where the server reveals the correctness of padding &lt;br&gt;
+Source: &lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;https://tlseminar.github.io/docs/drown.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Moreover, SSLv2 allowed export-grade ciphersuites which supported 40-bit key. A Bleichenbacher attacker could brute-force the key by repeatedly querying the SSLv2 server.&lt;/p&gt;
+
+&lt;p&gt;TLS patched the above flaws and (most) servers made the SSLv2 protocol obsolete. However, it was not uncommon for TLS servers to share same RSA keys with SSLv2 servers. This made the TLS servers vulnerable to a modified form of Bleichenbacher attack which uses a SSLv2 server as padding oracle to decrypt the shared RSA key. DROWN instantiated this protocol-level attack and decrypted a TLS 1.2 handshake using 2048-bit RSA in 8 hours at a cost of $440 on Amazon EC2. As if this wasn&amp;rsquo;t devastating enough, the authors of DROWN pointed out some implementation bugs in OpenSSL which lead to another attack called Special DROWN that could decrypt a TLS ciphertext in under 1 minute using a single CPU. Both the attacks are described below.&lt;/p&gt;
+
+&lt;h2 id=&#34;drown-attack&#34;&gt;DROWN Attack&lt;/h2&gt;
+
+&lt;p&gt;DROWN attack requires that a TLS server and a SSLv2 server share an RSA key. The attacker records multiple TLS handshake messages between a client and the TLS server. The aim of the attacker is to decrypt the RSA key of the TLS handshake. To do so, the attacker forces the client to establish a connection with an SSLv2 server having the same RSA key so that the attacker can initiate the Bleichenbacher attack to recover the RSA key.&lt;/p&gt;
+
+&lt;p&gt;Now the main hurdle for the attacker is that the format of TLS handshake message may not comply with PKCS#1 v1.5 padding scheme of SSLv2. The attacker converts the TLS ciphertext to SSLv2 ciphertext using the concept of trimmers introduced by &lt;a href=&#34;https://hal.inria.fr/hal-00691958/document&#34;&gt;Bardou et al.&lt;/a&gt; which reduces the size of the TLS message. The use of trimmers require repeated querying to SSLv2 server by shifting the message bytes. The recovered SSLv2 plaintext is then converted back to TLS plaintext which reveals the RSA key of TLS handshake.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/downgrade-attacks/drownattack.png&#34; alt=&#34;DROWN&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;SSLv2-based Bleichenbacher attack on TLS &lt;br&gt;
+Source: &lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;https://tlseminar.github.io/docs/drown.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;special-drown-attack&#34;&gt;Special DROWN Attack&lt;/h2&gt;
+
+&lt;p&gt;The OpenSSL implementation had two bugs which led to a more efficient Bleichenbacher attack on an OpenSSL implementation of SSLv2 server.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;OpenSSL extra clear oracle:&lt;/b&gt; OpenSSL implementation allowed non-export cipher messages to contain &lt;em&gt;clear_key_data&lt;/em&gt; which lead to potential overwriting of key bytes with null bytes. An attacker could vary the number of null bytes to decrypt the whole key one byte at a time.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;OpenSSL leaky export oracle:&lt;/b&gt; OpenSSL in export cipher mode allowed valid oracle response for correctly padded message of ‘any’ length.&lt;/p&gt;
+
+&lt;p&gt;These bugs remained in OpenSSL implementation from 1998 up until its patch in 2015, when the authors of DROWN contacted the OpenSSL developers.&lt;/p&gt;
+
+&lt;h2 id=&#34;prevention-of-drown&#34;&gt;Prevention of DROWN&lt;/h2&gt;
+
+&lt;p&gt;The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like &lt;a href=&#34;https://tools.ietf.org/html/rfc5288&#34;&gt;AES_GCM&lt;/a&gt;) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.&lt;/p&gt;
 </description>
     </item>
     
