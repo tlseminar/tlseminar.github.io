@@ -208,7 +208,8 @@ correlation with total decryption time.
 
 <center><img src="/images/timing-attacks/gap.jpg" alt="PDF Collision" style="width:500px;"/><br>
 ([Image credit]
-(http://slideplayer.com/slide/4519452/))
+(http://slideplayer.com/slide/4519452/))</center>
+
 
 # Remote Timing Attacks are Still Practical
 [Paper link](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf)
@@ -258,15 +259,15 @@ In cache terminology, <strong>hits</strong> occur when queried data is present i
 For those unfamiliar with computer architecture, addresses of information in the cache are split into three components:  tag, set, and offset.  An address looks something like this:
 ```
 1111 0000 1111 0000 1111        000011       110000
-Tag                    Set         Offset
+Tag                              Set         Offset
 ```
 
 Now that we've reviewed the memory hierarchy, let's take a look at some attacks that use variations in cache timing and operation to their advantage.
 
-###PRIME+PROBE
+### PRIME+PROBE
 The PRIME+PROBE attack is carried out by <strong>filling the victim's cache with controlled data</strong>.  As the victim carries out normal tasks in their machine, some of the attack data is evicted from the cache.  All the while, the attacker monitors the cache contents, keeping careful track of which cache lines were evicted.  In doing so, this provides the attacker with intimate knowledge of the operation and nature of the victim's activities as well as the contents replaced by the victim.
 
-###EVICT+TIME
+### EVICT+TIME
 
 The EVICT+TIME attack is carried out by evicting a line of an AES lookup table from the cache such that all AES lookup tables are in the cache save for one.  The attacker then runs the encryption process.  As you might imagine, <strong>if the encryption process accesses the partially evicted lookup table, encryption will take longer to complete</strong>.  By timing exactly how long encryption takes, the attackers are able to determine which indices of which tables were accessed.  Because table lookups depend on the AES encryption key, the attacker thus gains knowledge about the key.
 
@@ -280,14 +281,14 @@ In order to abuse the CFS, the spy process creates hundreds of threads that imme
 
 The nature of the AES encryption process—consisting of 10 rounds of 16 memory accesses—allows the spy process to construct a list of partial-key candidates that is continually refined as more encryptions are repeated.  The CFS maintains processes in a red-black tree and associates with each process a total runtime.  The scheduler calculates a "max execution time" for each process by dividing the total time it has been waiting by the number of processes in the tree.  Whichever process minimizes this value is selected to run next.
 
-####Mitigation
+#### Mitigation
 
 * Remove or restrict access to high-resolution timers such as ```rdtsc``` (unlikely; necessary to benchmark various hardware properties)
 * Allow certain memory to be marked as <em>uncacheable</em> (hardware challenge!)
 * Use AES-NI instructions in Intel chips to compute AES (but what about other encryption algorithms?)
 * Scatter-gather:  secret data should not be allowed to influence memory access at coarser-than-cache-line granularity.
 
-###Cachebleed
+### Cachebleed
 
 In keeping with the trend of affixing "-bleed" to various information security leakage vulnerabilities, CacheBleed is a very recent (c. 2016) attack on RSA decryptions as implemented in OpenSSL v1.0.2 on Intel Sandy Bridge processors.  In the attack, the timing of operations in <strong>cache banks</strong> is taken advantage of in order to glean information about the RSA decryption multiplier.
 
@@ -295,7 +296,7 @@ Cache banks were a new feature in Sandy Bridge processors, designed to accommoda
 
 In order to carry-out the attack, the attacker and victim start out running on the same hyperthreaded core, thus sharing the L1 cache.  The attacker then issues a huge number of requests to a single cache bank.  By carefully measuring how many cycles passed in completion of the request, the attacker can discern whether the victim accessed that cache bank at some point.  After many queries, the attack is successful at extracting both 2048-bit and 4096-bit secret keys.  
 
-####Mitigation
+#### Mitigation
 
 The upside to CacheBleed is that it's highly complicated, requiring shared access to a hyperthreaded core on which RSA decryption is taking place—certainly not a predictable scenario.  In any case, there are other pieces of "low-hanging fruit" in computer systems that attackers are more likely to target.  Nonetheless, Haswell processors implement cache banks differently such that conflicts are handled more carefully.  The only other mitigation technique is to disable hyperthreading entirely.
 
