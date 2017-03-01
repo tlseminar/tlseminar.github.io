@@ -168,7 +168,7 @@ the separate linked posts.)</p>
 <h1 id="remote-timing-attacks-are-practical">Remote Timing Attacks are Practical</h1>
 
 <p>TODO: add full reference for paper
-<a href="docs/ssl-timing.pdf">Paper link</a></p>
+<a href="/docs/ssl-timing.pdf">Paper link</a></p>
 
 <p>At the heart of RSA decription is a modular exponentiation \( m = c^d mod~N\) where \(N = pq\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \( m = c^d mod~N\) is computed in two steps:</p>
 
@@ -280,7 +280,7 @@ correlation with total decryption time.</p></li>
 <h1 id="remote-timing-attacks-are-still-practical">Remote Timing Attacks are Still Practical</h1>
 
 <p>TODO: add cite
-<a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Paper link</a></p>
+<a href="/docs/stillpractical.pdf">Paper link</a></p>
 
 <p>Timing attacks target cryptosystems and protocols that do not run in constant time. <a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic curve</a> based <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">signature schemes</a> aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via <a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">Montgomery&rsquo;s ladder</a> which performs a sequence of independent field operations on elliptic curves. <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Brumley and Tuveri</a> reveal a timing attack vulnerability in OpenSSL&rsquo;s implementation of Montgomery&rsquo;s ladder that consequently leaks the server&rsquo;s private key.</p>
 

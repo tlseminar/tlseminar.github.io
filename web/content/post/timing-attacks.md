@@ -40,7 +40,7 @@ Thus, we see from this simple example that verifying constant-time implementatio
 # Remote Timing Attacks are Practical
 
 TODO: add full reference for paper
-[Paper link](docs/ssl-timing.pdf)
+[Paper link](/docs/ssl-timing.pdf)
 
 At the heart of RSA decription is a modular exponentiation \\( m = c^d mod~N\\) where \\(N = pq\\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \\( m = c^d mod~N\\) is computed in two steps:
 
@@ -143,7 +143,7 @@ correlation with total decryption time.
 # Remote Timing Attacks are Still Practical
 
 TODO: add cite
-[Paper link](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf)
+[Paper link](/docs/stillpractical.pdf)
 
 Timing attacks target cryptosystems and protocols that do not run in constant time. [Elliptic curve](https://en.wikipedia.org/wiki/Elliptic_curve_cryptography) based [signature schemes](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via [Montgomery's ladder](https://cr.yp.to/bib/2003/joye-ladder.pdf) which performs a sequence of independent field operations on elliptic curves. [Brumley and Tuveri](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf) reveal a timing attack vulnerability in OpenSSL's implementation of Montgomery's ladder that consequently leaks the server's private key.
 

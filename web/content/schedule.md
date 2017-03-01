@@ -23,5 +23,8 @@ See [Teams](/teams) for the class teams and responsibilities.
 
 **[Class 5: Verification and Testing](/TBD)**
 
-**[Class 6: Side Channels](/TBD)**
+**[Class 6: Side Channels](/timing-attacks)**
+   - Extra late-breaking news: [SHA-1 Collisions](/sha1-collisions), [Cloudflare Leak](/cloudflare-leak)
+   - [Remote Timing Attacks are Practical](/docs/ssl-timing.pdf)
+   - [Remote Timing Attacks are Still Practical](/docs/stillpractical.pdf)
 
