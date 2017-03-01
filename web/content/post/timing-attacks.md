@@ -131,8 +131,34 @@ One solution to this problem would be to use a boolean flag initialized to True.
 Thus, we see from this simple example that verifying constant-time implementation of code has many challenges, which we further discuss below.
 
 # Remote Timing Attacks are Practical
+[Paper link](docs/ssl-timing.pdf)
 
+At the heart of RSA decription is a modular exponentiation \\( m = c^d mod~N\\) where \\(N = pq\\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \\( m = c^d mod~N\\) is computed in two steps.
 
+First, evaluate \\( m_1 = c^{d_1} mod~p\\) and \\( m_2 = c^{d_2} mod~q\\) (\\(d_1\\) and \\(d_2\\) are precomputed from \\(d\\)).
+
+Then, combine \\(m_1\\) and \\(m_2\\) using CRT to yield m.
+
+### Chinese Remainder Theorem
+Suppose that \\(n_1,n_2,...,n_r\\) are pairwise relatively prime positive integers, and let \\(c_1,c_2,...,c_r\\) be integers.
+
+Then the system of congruences,
+
+\\(X \equiv c_1 (mod~n_1)\\) 
+
+\\(X \equiv c_2 (mod~n_2)\\)
+
+... 
+
+\\(X \equiv c_r (mod~n_r)\\)
+
+has a unique solution modulo \\(N = n_1n_2...n_r\\)
+### Gauss’s Algorithm
+\\(X \equiv c_1N_1{N_1}^{-1} + c_2N_2{N_2}^{-1} + ... + c_rN_r{N_r}^{-1}(mod~N)\\), where
+
+\\(N_i = N/n_i \\)
+
+\\(N_i{N_1}^{-1} \equiv 1 (mod~n_i)\\)
 
 ### Hasted’s Broadcast Attack (add with Chinese Remainder Theorem)
 Hasted's Broadcast Attack relies on cases when the public exponent \\(e\\) is small or when partial knowledge of the
