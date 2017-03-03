@@ -7,7 +7,6 @@
 <tr>
 <td>
 Adam Imeson (aei5uj)<Br>
-Benyi Gong (bg3va)<br>
 Bethlehem Naylor (bn9eb)<br>
 Bhuvanesh Murali (bm4cr)<br>
 Haina Li (hl3wb)<br>
@@ -26,7 +25,6 @@ Yuchi Tian (yt8mn)<br>
 <td>
 Collin Berman (cmb5nh)<br>
 Cyrus Malekpour	(cm7bv)<br>
-Haoran Liu (hl4fb)<br>
 Daniel Saha (drs5ma)<br>
 Tianyi Jin (tj2cw)<br>
 </td>
