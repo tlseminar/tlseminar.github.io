@@ -1,7 +1,7 @@
 +++
 date = "24 Feb 2017"
 author = "Team Sesame"
-draft = true
+draft = false
 title = "Testing and Verification of TLS"
 slug = "verification"
 +++
@@ -100,7 +100,7 @@ challenges faced when attempting to show type safety for typical C
 code:
 
 <center>
-<img src="/images/verification/type-safe.png" alt="Type Safety of Code" width="75%"><Br>
+<img src="/images/verification/type-safe.png" alt="Type Safety of Code" width="60%"><Br>
 </center>
 
 There are a variety of formal concepts that are used in program verification including model checking, deductive verification, equivalence checking, theorem proving, and correctness by construction. The problem that arises, though, is that some of these rely on concepts that simply are not feasible in commercial-level programs. For example, model checking exhaustively checks whether a model of the program meets a given specification, but every behavior in the program must have proper transitions and states resulting in the state explosion problem. Put simply, as more behaviors are added to simple programs, the number of states in the model exponentially grows. Due to this, it is challenging to scale model checking to large systems, although extensive work has been done toward this goal and often complex programs can be abstracted in ways that enable useful model checking.
@@ -109,17 +109,33 @@ One popular approach to verification is to use expressive type systems. Using th
 
 There’s a lot that can be done with formal verification and TLS is a great possible use for fixing errors created during implementation. There are actually a number of projects for verifying parts of TLS out there that are attempting to combine together to formally verify TLS as a whole. This joint project is known as [Project Everest](https://project-everest.github.io/). Everest is a pretty lofty goal considering the difficulty of formally verifying even small-level programs and scripts, but has made considerable progress towards building a fully verified TLS implementation. The eventual goal of Everest is that when all the projects are combined together, they will generate a C library that not only implements TLS 1.3 but is also proven secure, essentially circumventing any possible flaws in the TLS protocol. 
 
+### Coq
+
 Team Cinnamon displayed a formal verification software called Coq during class. Coq is an assistive tool for the verification of code. The software implements a variety of mathematical and computational strategies to work, in combination with the user, to formally verify code, functions, and theorems. In class we ran through a couple of sample proofs to display the functionality and potential of Coq as a verification software and to give an example of how a formal verification software works.
 
-A download for Coq is available at https://coq.inria.fr/ which offers different versions for different architectures. We ended up using the CoqIDE which allows for editing Coq files with helpful syntax highlighting and is useful when trying to first learn Coq. For a good introduction to Coq, as well as number of exercises for what to do, UPenn has a great Lab strictly focused on Coq available at http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2. 
+A download for Coq is available at [_https://coq.inria.fr/_](https://coq.inria.fr/) which offers different versions for different architectures. We used the CoqIDE which allows for editing Coq files with helpful syntax highlighting and is useful when trying to first learn Coq. For a good introduction to Coq, as well as number of exercises for what to do, a group at UPenn has a [great lab focused on Coq](http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2). 
 
 <center>
 <img src="/images/verification/coq.png" alt="Sample Coq Code"><Br>
 <span class="caption"><em>Source: </em><a href="https://coq.inria.fr/refman/Reference-Manual018.html">The Coq Proof Assistant</a></span>
 </center>
 
-Coq is an extremely powerful software to help formally verify computer programs, but it can be difficult to first learn considering the change in mentality for most programmers. For any problems or difficulties found when using Coq, there is plenty of documentation available within Coq’s own Reference Manual at https://coq.inria.fr/distrib/current/refman/toc.html. 
+Coq is extremely powerful software to help formally verify computer
+programs, but it can be difficult to learn, requiring a change in
+mentality for most programmers. For any problems or difficulties found
+when using Coq, there is plenty of documentation available within
+Coq’s [Reference Manual](https://coq.inria.fr/distrib/current/refman/toc.html).
 
 # Conclusion
 
-In this week’s blog post, we explored some implementation bugs (e.g. Heartbleed, goto fail;) as a means to arrive at the proper approach to ensure that a program works in the way that we want. This brings up the distinction between validation and verification. We can validate code almost indefinitely and never be able to say that it will work for every possible input. When validating, we must accept some potential for statistical error as we can’t test the full population of possible inputs. We could also attempt to formally verify the code, but in some cases this is very difficult if not nearly impossible and the verification could itself contain errors. There are valid arguments that support either testing or verifying, and it is difficult to say which is best. Clearly, the testing approach has failed as we’ve had implementation bugs. Formal verification is a difficult process because TLS is a large system and even formally verifying the smallest programs is difficult. Currently, TLS is being formally verified by Project Everest, who are making slow, but steady progress. Perhaps they will be the ones to get TLS right and see it implemented according to their proven model without flaws (as well as show that formal verification is the better approach moving forward).
+Implementing cryptographic protocols correctly remains a huge
+challenge.  There are tools available now that can prove interesting
+properties about software, including even the absence of certain types
+of side channels.  It is important to remember, though, that anything
+we prove about a program is a proof about a property based on a model
+of the execution environment, and assumptions about adversary
+capabilities.  As verification and testing tools get more
+sophisticated, those models can come increasingly close to the actual
+environment and capabilities of real adversaries, but today, there
+remains a large gap.
+

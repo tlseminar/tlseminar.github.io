@@ -495,6 +495,153 @@ on security-critical software.</p>
 Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov. <a href="https://shattered.it/static/shattered.pdf"><em>The first collision for full SHA-1</em></a>.  (Released 23 February, 2017)</p>
  
   
+  <p class="fronthead"><A href="/verification/">Testing and Verification of TLS</a> (Team Sesame, Fri, 24 Feb 2017)</p>
+    
+
+<h1 id="introduction">Introduction</h1>
+
+<p>TLS/SSL is the most widely adopted protocol for securing online communication. However, as we have seen in the past few weeks, creative attackers have found it riddled with <a href="/padding-oracle">exploitable</a> <a href="/downgrade-attacks">weaknesses</a>. Rather than just reacting to attacks as they are discovered, many projects instead proactively seek out potential security flaws to implement remedies before vulnerabilities are exploited. This is done primarily by testing and verification, the topic of this week&rsquo;s blog post.</p>
+
+<p>First, we will examine some motivating attacks on TLS implementations, including the Heartbleed attack, CRIME attack, and the infamous “goto fail”, as well as their solutions. Next, we will discuss differential testing, a technique that creates well-formed but forged certificates, called &ldquo;frankencerts&rdquo;, and uses them to compare the responses of many popular implementations such as OpenSSL - and how they strengthened their defenses afterward (or didn’t). Finally, we introduce verification, which takes advantage of the relationship between computer systems and mathematics to rigorously prove properties about programs, either by type-checking existing programs or building a program from scratch starting with abstract refinement types.</p>
+
+<h3 id="heartbleed">Heartbleed</h3>
+
+<blockquote>
+<p><a href="http://heartbleed.com/"><em>Heartbleed</em></a> by Codenomicon (2014)</p>
+</blockquote>
+
+<p>OpenSSL’s heartbleed bug exploits heartbeat requests between a client and a server. In the OpenSSL implementation, the client does not check the actual lengths of the message but trusts the length field in the request message. If the real message is shorter than the length specified in the length field, then the payload returned in the response heartbleed can also contain what happened to be in the allocated memory buffer. In this manner, secret keys, login credentials, sensitive data, and miscellaneous memory are all at risk of exposure.</p>
+
+<p><center>
+<img src="/images/verification/heartbleed.png" alt="Heartbleed" width="75%"><Br>
+<span class="caption"><em>Source: </em><a href="https://en.wikipedia.org/wiki/Heartbleed#/media/File:Simplified_Heartbleed_explanation.svg">Wikipedia</a></span>
+</center></p>
+
+<h3 id="compression-ratio-info-leak-mass-exploitation-crime">Compression Ratio Info-Leak Mass Exploitation (CRIME)</h3>
+
+<blockquote>
+<p><a href="https://docs.google.com/presentation/d/11eBmGiHbYcHR9gL5nDyZChu_-lCa2GizeuOfaLU2HOU/edit#slide=id.g1e3070b2_0_10"><em>The CRIME Attack</em></a> by Juliano Rizzo and Thai Duong (2013)</p>
+</blockquote>
+
+<p>CRIME attacks were developed by Juliano Rizzo and Thai Duong in 2012 and exploited TLS Compression by injecting plaintext into victim’s web requests and observing the outcome length. Tampering with web requests is made possible by injecting malicious JavaScript code through a network attack. Through many trials, the attacker can steal user cookies and hijack the session.</p>
+
+<p><center>
+<img src="/images/verification/crime.png" alt="CRIME"><Br>
+<span class="caption"><em>Source: </em><a href="http://2we26u4fam7n16rz3a44uhbe1bq2.wpengine.netdna-cdn.com/wp-content/uploads/101413_1347_BEASTvsCRIM4.png">Infosec Institute</a></span>
+</center></p>
+
+<h3 id="goto-fail">Goto Fail;</h3>
+
+<blockquote>
+<p><a href="https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/"><em>Understanding Apple &lsquo;goto fail&rsquo; Vulnerability</em></a> by Amit Sethi (2014)</p>
+</blockquote>
+
+<p>In February 2014, Apple released a security update on many versions of its operating system that included the following vulnerability in the function SSLVerifySignedServerKeyExchange.
+<div style="padding-left: 100px">
+<pre>if ((err = SSLHashSHA1.update(&amp;hashCtx, &amp;signedParams)) != 0)
+    goto fail;
+    goto fail;
+  &hellip; other checks &hellip;
+  fail:
+    &hellip; buffer frees (cleanups) &hellip;
+    return err;
+</pre>
+</div>
+<center>
+<span class="caption"><em>Source: </em><a href="https://www.dwheeler.com/essays/apple-goto-fail.html">David A. Wheeler</a></span>
+</center></p>
+
+<p>The indentation on the second <code>goto fail;</code> is misleading. The lack of curly brackets meant that the second <code>goto fail;</code> will always be executed, skipping vital signature checking and accepting both good and bad signatures.</p>
+
+<h1 id="differential-testing">Differential Testing</h1>
+
+<blockquote>
+<p><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677"><em>Using Frankencerts for Automated Adversarial Testing of Certificate Validation</em></a> by Chad Brubaker, Suman Jana, Baishakhi Ray, Sarfraz Khurshid, and Vitaly Shmatikov (2014)<br />
+<a href="http://dl.acm.org/citation.cfm?doid=2786805.2786834"><em>An empirical study of goto in C code from GitHub repositories</em></a> by Meiyappan Nagappan, Romain Robbes, Yasutaka Kamei, Éric Tanter, Shane McIntosh, Audris Mockus, and Ahmed E. Hassan (2015)</p>
+</blockquote>
+
+<p>Differential testing is the process of searching for bugs in software by running multiple programs on the same inputs.  If there is a discrepancy between one program’s results on a given input and another’s, it’s likely that one of the implementations is bugged.  A differential testing system will flag such results for human review.</p>
+
+<p>Brubaker et al. used this technique to test server authentication for many implementations of SSL/TLS as presented in their 2014 “Frankencerts” paper.  The researchers initially had to deal with the dual problems of generating test case certificates and successfully interpreting the results of acceptance and rejection.</p>
+
+<p>Generating certificates proved to be a challenge due to the nature of an SSL certificate.  Simply randomly fuzzing valid certificates is unlikely to produce data parsable as a certificate.  Manually creating test cases would take too long and potentially miss edge cases that a more statistically comprehensive generation method would find.  The researchers decided on creating frankencerts by scanning 243,246 current certificates from the internet and randomly permuting their parts.  This process guaranteed that the 8,127,600 frankencerts would be parsable as certificates and resulted in a wide variety of unusual combinations of extensions, key usage constraints, odd CAs, and other possible variations within a cert.</p>
+
+<p>The researchers then ran OpenSSL, NSS, GnuTLS, CyaSSL, PolarSSL, MatrixSSL, OpenJDK, and Bouncy Castle on the frankencerts, looking for discrepancies between results.  Because each of these libraries is intended to implement the same X.509 certificate validation logic, any discrepancy in certificate acceptance between them would indicate that SOMEONE was screwing up.  Thus the researchers dealt with the second issue, that of interpreting the results of their tests.</p>
+
+<p>Running the differential test on all 8 million frankencerts and the quarter-million real certificates  produced 208 discrepancies that, when manually investigated, uncovered many serious flaws in the various implementations (error results are bolded):</p>
+
+<p><center>
+<img src="/images/verification/diff-testing.png" alt="Differential Testing Results"><Br>
+<span class="caption"><em>Source: </em><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677">Chad Brubaker, Suman Jana, Baishakhi Ray, Sarfraz Khurshid, and Vitaly Shmatikov</a></span>
+</center></p>
+
+<p>Any of the invalid acceptances would allow for an in-the-middle attack to be crafted against the implementation in question.  The researchers contacted the developers of the various SSL/TLS implementations affected and reported their results before publishing, allowing the developers time to fix their bugs.</p>
+
+<p>Chen and Su’s mucert builds on the frankencert method.  Mucerts are randomly fuzzed test certificates generated from a seed set of certificates.  The fuzzing, or mutating, occurs in accordance with a number of guidelines that prevent mutations from generating unparseable certificates.  Chen and Su statistically evaluated mucerts and compared them to frankencerts, finding that mucerts attained drastically higher levels of corner case coverage.</p>
+
+<h1 id="verification">Verification</h1>
+
+<blockquote>
+<p><a href="https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/"><em>Verifying s2n HMAC with SAW</em></a> by Joey Dodds (2016) <br>
+<a href="https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/"><em>Implementing TLS with Verified Cryptographic Security</em></a> by Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti,and Pierre-Yves Strub (2013) <br>
+<a href="http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2"><em>Software Foundations</em></a> by Benjamin C. Pierce (2017)</p>
+</blockquote>
+
+<p>Software testing can only assert properties about program behaviors covered in the test suite. There will always be missed edge cases and odd bugs that will show up in code. This is where we turn to formal specifications to ‘prove’ the correctness of our code.</p>
+
+<p>But how do we go about ‘proving’ this correctness? Let’s look at what we’re trying to solve in the first case:</p>
+
+<p>For each behavior X in code, formally prove that X does what it should and nothing else. For those that are familiar with proofs and mathematical abstractions, this is known as a non-existence proof. In formal verification, we must prove that a program satisfies a formal specification of its behavior. By using the methods of mathematics, we can make strong statements regarding the correctness of our cryptographic implementations, for example, TLS.</p>
+
+<p>To get down to formal verification, we must first define the difference between <em>verification</em> and <em>validation</em>. Validation asks questions like <em>Does it meet the requirements?</em>, <em>Is it the right product?</em>, and <em>Does it function according to design?</em>.  Whereas, verification asks the question <em>does this software meet a given specification under given assumptions?</em>.</p>
+
+<p>One requirement for nearly any stronger property is to first show the code satisfied type safety. A program is considered type safe if and only if the only operations that can be performed on data are those sanctioned by the type of data. For example, we can look at the following program where integers, floats, and doubles are being implicitly cast amongst one another. In a type safe program, an integer could never be treated as a float (more importantly, a pointer type would never be treated as a non-pointer, and vice versa).</p>
+
+<p>While the below program is well-typed, it illustrates some of the
+challenges faced when attempting to show type safety for typical C
+code:</p>
+
+<p><center>
+<img src="/images/verification/type-safe.png" alt="Type Safety of Code" width="60%"><Br>
+</center></p>
+
+<p>There are a variety of formal concepts that are used in program verification including model checking, deductive verification, equivalence checking, theorem proving, and correctness by construction. The problem that arises, though, is that some of these rely on concepts that simply are not feasible in commercial-level programs. For example, model checking exhaustively checks whether a model of the program meets a given specification, but every behavior in the program must have proper transitions and states resulting in the state explosion problem. Put simply, as more behaviors are added to simple programs, the number of states in the model exponentially grows. Due to this, it is challenging to scale model checking to large systems, although extensive work has been done toward this goal and often complex programs can be abstracted in ways that enable useful model checking.</p>
+
+<p>One popular approach to verification is to use expressive type systems. Using the Curry-Howard isomorphism, we are able to directly relate programs with mathematical proofs and therefore have the ability to create refinement types which are types endowed with a predicate which is assumed to hold for any element of the refined type. What this means is that we can define our program using refinement types to encode the safety properties of the system which can be type-checked and proven to hold that safety property true.</p>
+
+<p>There’s a lot that can be done with formal verification and TLS is a great possible use for fixing errors created during implementation. There are actually a number of projects for verifying parts of TLS out there that are attempting to combine together to formally verify TLS as a whole. This joint project is known as <a href="https://project-everest.github.io/">Project Everest</a>. Everest is a pretty lofty goal considering the difficulty of formally verifying even small-level programs and scripts, but has made considerable progress towards building a fully verified TLS implementation. The eventual goal of Everest is that when all the projects are combined together, they will generate a C library that not only implements TLS 1.3 but is also proven secure, essentially circumventing any possible flaws in the TLS protocol.</p>
+
+<h3 id="coq">Coq</h3>
+
+<p>Team Cinnamon displayed a formal verification software called Coq during class. Coq is an assistive tool for the verification of code. The software implements a variety of mathematical and computational strategies to work, in combination with the user, to formally verify code, functions, and theorems. In class we ran through a couple of sample proofs to display the functionality and potential of Coq as a verification software and to give an example of how a formal verification software works.</p>
+
+<p>A download for Coq is available at <a href="https://coq.inria.fr/"><em>https://coq.inria.fr/</em></a> which offers different versions for different architectures. We used the CoqIDE which allows for editing Coq files with helpful syntax highlighting and is useful when trying to first learn Coq. For a good introduction to Coq, as well as number of exercises for what to do, a group at UPenn has a <a href="http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2">great lab focused on Coq</a>.</p>
+
+<p><center>
+<img src="/images/verification/coq.png" alt="Sample Coq Code"><Br>
+<span class="caption"><em>Source: </em><a href="https://coq.inria.fr/refman/Reference-Manual018.html">The Coq Proof Assistant</a></span>
+</center></p>
+
+<p>Coq is extremely powerful software to help formally verify computer
+programs, but it can be difficult to learn, requiring a change in
+mentality for most programmers. For any problems or difficulties found
+when using Coq, there is plenty of documentation available within
+Coq’s <a href="https://coq.inria.fr/distrib/current/refman/toc.html">Reference Manual</a>.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Implementing cryptographic protocols correctly remains a huge
+challenge.  There are tools available now that can prove interesting
+properties about software, including even the absence of certain types
+of side channels.  It is important to remember, though, that anything
+we prove about a program is a proof about a property based on a model
+of the execution environment, and assumptions about adversary
+capabilities.  As verification and testing tools get more
+sophisticated, those models can come increasingly close to the actual
+environment and capabilities of real adversaries, but today, there
+remains a large gap.</p>
+ 
+  
   <p class="fronthead"><A href="/certificates/">Certificates</a> (Team Poppyseed, Fri, 10 Feb 2017)</p>
     
 
@@ -1550,122 +1697,6 @@ someone intercepting the traffic learn?</p></li>
 
 <li><p>What differences can you observe compared to what is described for the TLS 1.0 connections on that web page?</p></li>
 </ol>
- 
-  
-  <p class="fronthead"><A href="/background/">Background Preparation</a> (David Evans, Wed, 14 Dec 2016)</p>
-    
-
-<p>Here are some suggestions for getting the necessary background for the
-seminar.</p>
-
-<h2 id="cryptography">Cryptography</h2>
-
-<p>If you have already taken a cryptography course, you should have
-enough cryptography background already.  If not, here are some
-suggested ways to get enough crypo background over winter break to be
-ready for the seminar.  I believe that for most students, the best way
-to get the expected background for this course is to take my Applied
-Cryptography course (more info below), but there are many options, and
-lots of great resources that go into much more depth than my course if
-you have more time.</p>
-
-<h3 id="on-line-courses">On-Line Courses</h3>
-
-<p><a href="https://www.udacity.com/course/applied-cryptography--cs387"><strong>Udacity cs387: Applied
-Cryptography</strong></a>
-- this is an open on-line course that you can take anytime taught by
-myself (so I am somewhat partial to it!).  There are <a href="http://www.cs.virginia.edu/~evans/courses/cs387/">some additional
-materials for the course
-available</a>,
-including <a href="http://www.cs.virginia.edu/~evans/courses/crypto-notes.pdf">extensive course notes
-(PDF)</a>
-created by Daniel Winter.  This is a very short and informal
-introduction to cryptography, which would be enough background to be
-prepared for the seminar.  (I can&rsquo;t give an unbiased assessment of the
-course, but according to Information Week, it is a recommended course
-to <a href="http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915"><em>&ldquo;Pump Up IT
-Careers&rdquo;</em></a>,
-and <a href="www.prospectmagazine.co.uk/magazine/online-universities-udacity-grand-challenge-david-stavens-dave-evans">Prospect
-Magazine</a>
-claimed the instructor has a &ldquo;Monty Python humor&rdquo; and &ldquo;cult
-following&rdquo;, although you shouldn&rsquo;t believe everything you read in
-British magazines.)</p>
-
-<p>Dan Boneh&rsquo;s <a href="https://www.coursera.org/learn/crypto"><strong>Cryptography
-Course</strong></a> (offered through
-Coursera).  The materials from previous courses are not available
-(although you may be able to find them if you are resourceful), so you
-have to take the course when it is offered by Coursera. There is a
-session starting December 26.  This is an excellent course that is a
-bit longer and goes into more depth on many topics than my course.
-You can read <a href="http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html">Bryan Pendleton&rsquo;s more objective
-comparison</a>.</p>
-
-<p>Christoff Parr and Jan Pelzl&rsquo;s <a href="http://www.crypto-textbook.com/"><strong>Understanding
-Cryptography</strong></a> textbook includes
-Parr&rsquo;s excellent <a href="http://wiki.crypto.rub.de/Buch/movies.php">video
-lectures</a> (chalkboard
-style without editing, so takes some patience to watch).</p>
-
-<h3 id="textbooks">Textbooks</h3>
-
-<p><a href="https://www.crypto101.io/">Crypto 101</a> - a very easy to read and
-practically-focused introduction to cryptography (available as a <a href="/docs/Crypto101.pdf">free,
-creative-commons licensed PDF</a>).</p>
-
-<p><a href="http://www.cs.umd.edu/~jkatz/imc.html"><em>Introduction to Modern
-Cryptography</em></a>, Jonathan Katz
-and Yehuda Lindell.  This provides a lot more depth that is required
-for joining the seminar, but is an excellent book for ambitious
-students with more time.</p>
-
-<h2 id="computing-systems">Computing Systems</h2>
-
-<p>Students in the class will benefit from understanding computing
-systems and having experience with systems-level programming at least
-at the level of a typical introductory operating systems course.
-Students without this experience will either need to put a lot of
-effort into learning it, or select projects and presentation topics
-that focus on other aspects.</p>
-
-<p>Some resources for learning about computing systems are below.</p>
-
-<p><a href="https://www.ops-class.org/">&ldquo;Hack the Kernel&rdquo;</a> - Operating Systems
-class developed by <a href="https://www.bluegroup.systems/people/gwa/">Geoffrey
-Challen</a>.  Provides
-programming assignments you can try on your own, as well as video
-lectures and lots of on-line materials.</p>
-
-<p><a href="http://rust-class.org/">cs4414: Operating Systems</a> - Operating
-systems course I taught in Fall 2013 and Spring 2014. Includes
-<a href="http://rust-class.org/pages/classes.html">videos</a> of lectures, and
-programming assignments in Rust (some of which will need some updating
-to work in the latest version of Rust).</p>
-
-<p>CMU&rsquo;s <a href="http://csapp.cs.cmu.edu/">Computing Systems</a> course and
-textbook by Randal Bryant and David O&rsquo;Hallaron provides an excellent
-introduction to systems programming, as well as a series of <a href="http://csapp.cs.cmu.edu/3e/labs.html">fun
-self-study labs</a>.</p>
-
-<h3 id="rust-programming">Rust Programming</h3>
-
-<p>I&rsquo;m hoping several of the projects will involve contribution to open
-source projects using Rust to provide secure, efficient, and
-iter-operable implementations of TLS and other cryptographic
-functionalities.  It is not a requirement that you use Rust in this
-class, but everyone will be encouraged to get some experience with it.</p>
-
-<p><a href="https://doc.rust-lang.org/nightly/book/"><strong>Rust Programming Language
-Book</strong></a> (this is the
-&ldquo;official&rdquo; Rust book, which includes a tutorial to get started)</p>
-
-<p><a href="http://aml3.github.io/RustTutorial/"><strong>Rust Tutorial</strong></a> (this was
-developed for my <a href="https://rust-class.org/">cs4414 class</a> by Alex
-Lamana, Rob Michaels, and Wil Thomason.  (Some parts may need updating
-to latest version of Rust, so if you go through this, please submit
-updates as pull requests!)</p>
-
-<p><a href="http://rustbyexample.com/"><strong>Rust by Example</strong></a></p>
  
   
   

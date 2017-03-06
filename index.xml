@@ -391,6 +391,159 @@ Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov. &lt;
     </item>
     
     <item>
+      <title>Testing and Verification of TLS</title>
+      <link>https://tlseminar.github.io/verification/</link>
+      <pubDate>Fri, 24 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/verification/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;TLS/SSL is the most widely adopted protocol for securing online communication. However, as we have seen in the past few weeks, creative attackers have found it riddled with &lt;a href=&#34;https://tlseminar.github.io/padding-oracle&#34;&gt;exploitable&lt;/a&gt; &lt;a href=&#34;https://tlseminar.github.io/downgrade-attacks&#34;&gt;weaknesses&lt;/a&gt;. Rather than just reacting to attacks as they are discovered, many projects instead proactively seek out potential security flaws to implement remedies before vulnerabilities are exploited. This is done primarily by testing and verification, the topic of this week&amp;rsquo;s blog post.&lt;/p&gt;
+
+&lt;p&gt;First, we will examine some motivating attacks on TLS implementations, including the Heartbleed attack, CRIME attack, and the infamous “goto fail”, as well as their solutions. Next, we will discuss differential testing, a technique that creates well-formed but forged certificates, called &amp;ldquo;frankencerts&amp;rdquo;, and uses them to compare the responses of many popular implementations such as OpenSSL - and how they strengthened their defenses afterward (or didn’t). Finally, we introduce verification, which takes advantage of the relationship between computer systems and mathematics to rigorously prove properties about programs, either by type-checking existing programs or building a program from scratch starting with abstract refinement types.&lt;/p&gt;
+
+&lt;h3 id=&#34;heartbleed&#34;&gt;Heartbleed&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://heartbleed.com/&#34;&gt;&lt;em&gt;Heartbleed&lt;/em&gt;&lt;/a&gt; by Codenomicon (2014)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;OpenSSL’s heartbleed bug exploits heartbeat requests between a client and a server. In the OpenSSL implementation, the client does not check the actual lengths of the message but trusts the length field in the request message. If the real message is shorter than the length specified in the length field, then the payload returned in the response heartbleed can also contain what happened to be in the allocated memory buffer. In this manner, secret keys, login credentials, sensitive data, and miscellaneous memory are all at risk of exposure.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/heartbleed.png&#34; alt=&#34;Heartbleed&#34; width=&#34;75%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Heartbleed#/media/File:Simplified_Heartbleed_explanation.svg&#34;&gt;Wikipedia&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;compression-ratio-info-leak-mass-exploitation-crime&#34;&gt;Compression Ratio Info-Leak Mass Exploitation (CRIME)&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/11eBmGiHbYcHR9gL5nDyZChu_-lCa2GizeuOfaLU2HOU/edit#slide=id.g1e3070b2_0_10&#34;&gt;&lt;em&gt;The CRIME Attack&lt;/em&gt;&lt;/a&gt; by Juliano Rizzo and Thai Duong (2013)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;CRIME attacks were developed by Juliano Rizzo and Thai Duong in 2012 and exploited TLS Compression by injecting plaintext into victim’s web requests and observing the outcome length. Tampering with web requests is made possible by injecting malicious JavaScript code through a network attack. Through many trials, the attacker can steal user cookies and hijack the session.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/crime.png&#34; alt=&#34;CRIME&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;http://2we26u4fam7n16rz3a44uhbe1bq2.wpengine.netdna-cdn.com/wp-content/uploads/101413_1347_BEASTvsCRIM4.png&#34;&gt;Infosec Institute&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;goto-fail&#34;&gt;Goto Fail;&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/&#34;&gt;&lt;em&gt;Understanding Apple &amp;lsquo;goto fail&amp;rsquo; Vulnerability&lt;/em&gt;&lt;/a&gt; by Amit Sethi (2014)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In February 2014, Apple released a security update on many versions of its operating system that included the following vulnerability in the function SSLVerifySignedServerKeyExchange.
+&lt;div style=&#34;padding-left: 100px&#34;&gt;
+&lt;pre&gt;if ((err = SSLHashSHA1.update(&amp;amp;hashCtx, &amp;amp;signedParams)) != 0)
+    goto fail;
+    goto fail;
+  &amp;hellip; other checks &amp;hellip;
+  fail:
+    &amp;hellip; buffer frees (cleanups) &amp;hellip;
+    return err;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;center&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.dwheeler.com/essays/apple-goto-fail.html&#34;&gt;David A. Wheeler&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The indentation on the second &lt;code&gt;goto fail;&lt;/code&gt; is misleading. The lack of curly brackets meant that the second &lt;code&gt;goto fail;&lt;/code&gt; will always be executed, skipping vital signature checking and accepting both good and bad signatures.&lt;/p&gt;
+
+&lt;h1 id=&#34;differential-testing&#34;&gt;Differential Testing&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677&#34;&gt;&lt;em&gt;Using Frankencerts for Automated Adversarial Testing of Certificate Validation&lt;/em&gt;&lt;/a&gt; by Chad Brubaker, Suman Jana, Baishakhi Ray, Sarfraz Khurshid, and Vitaly Shmatikov (2014)&lt;br /&gt;
+&lt;a href=&#34;http://dl.acm.org/citation.cfm?doid=2786805.2786834&#34;&gt;&lt;em&gt;An empirical study of goto in C code from GitHub repositories&lt;/em&gt;&lt;/a&gt; by Meiyappan Nagappan, Romain Robbes, Yasutaka Kamei, Éric Tanter, Shane McIntosh, Audris Mockus, and Ahmed E. Hassan (2015)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Differential testing is the process of searching for bugs in software by running multiple programs on the same inputs.  If there is a discrepancy between one program’s results on a given input and another’s, it’s likely that one of the implementations is bugged.  A differential testing system will flag such results for human review.&lt;/p&gt;
+
+&lt;p&gt;Brubaker et al. used this technique to test server authentication for many implementations of SSL/TLS as presented in their 2014 “Frankencerts” paper.  The researchers initially had to deal with the dual problems of generating test case certificates and successfully interpreting the results of acceptance and rejection.&lt;/p&gt;
+
+&lt;p&gt;Generating certificates proved to be a challenge due to the nature of an SSL certificate.  Simply randomly fuzzing valid certificates is unlikely to produce data parsable as a certificate.  Manually creating test cases would take too long and potentially miss edge cases that a more statistically comprehensive generation method would find.  The researchers decided on creating frankencerts by scanning 243,246 current certificates from the internet and randomly permuting their parts.  This process guaranteed that the 8,127,600 frankencerts would be parsable as certificates and resulted in a wide variety of unusual combinations of extensions, key usage constraints, odd CAs, and other possible variations within a cert.&lt;/p&gt;
+
+&lt;p&gt;The researchers then ran OpenSSL, NSS, GnuTLS, CyaSSL, PolarSSL, MatrixSSL, OpenJDK, and Bouncy Castle on the frankencerts, looking for discrepancies between results.  Because each of these libraries is intended to implement the same X.509 certificate validation logic, any discrepancy in certificate acceptance between them would indicate that SOMEONE was screwing up.  Thus the researchers dealt with the second issue, that of interpreting the results of their tests.&lt;/p&gt;
+
+&lt;p&gt;Running the differential test on all 8 million frankencerts and the quarter-million real certificates  produced 208 discrepancies that, when manually investigated, uncovered many serious flaws in the various implementations (error results are bolded):&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/diff-testing.png&#34; alt=&#34;Differential Testing Results&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677&#34;&gt;Chad Brubaker, Suman Jana, Baishakhi Ray, Sarfraz Khurshid, and Vitaly Shmatikov&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Any of the invalid acceptances would allow for an in-the-middle attack to be crafted against the implementation in question.  The researchers contacted the developers of the various SSL/TLS implementations affected and reported their results before publishing, allowing the developers time to fix their bugs.&lt;/p&gt;
+
+&lt;p&gt;Chen and Su’s mucert builds on the frankencert method.  Mucerts are randomly fuzzed test certificates generated from a seed set of certificates.  The fuzzing, or mutating, occurs in accordance with a number of guidelines that prevent mutations from generating unparseable certificates.  Chen and Su statistically evaluated mucerts and compared them to frankencerts, finding that mucerts attained drastically higher levels of corner case coverage.&lt;/p&gt;
+
+&lt;h1 id=&#34;verification&#34;&gt;Verification&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/&#34;&gt;&lt;em&gt;Verifying s2n HMAC with SAW&lt;/em&gt;&lt;/a&gt; by Joey Dodds (2016) &lt;br&gt;
+&lt;a href=&#34;https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/&#34;&gt;&lt;em&gt;Implementing TLS with Verified Cryptographic Security&lt;/em&gt;&lt;/a&gt; by Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti,and Pierre-Yves Strub (2013) &lt;br&gt;
+&lt;a href=&#34;http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2&#34;&gt;&lt;em&gt;Software Foundations&lt;/em&gt;&lt;/a&gt; by Benjamin C. Pierce (2017)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Software testing can only assert properties about program behaviors covered in the test suite. There will always be missed edge cases and odd bugs that will show up in code. This is where we turn to formal specifications to ‘prove’ the correctness of our code.&lt;/p&gt;
+
+&lt;p&gt;But how do we go about ‘proving’ this correctness? Let’s look at what we’re trying to solve in the first case:&lt;/p&gt;
+
+&lt;p&gt;For each behavior X in code, formally prove that X does what it should and nothing else. For those that are familiar with proofs and mathematical abstractions, this is known as a non-existence proof. In formal verification, we must prove that a program satisfies a formal specification of its behavior. By using the methods of mathematics, we can make strong statements regarding the correctness of our cryptographic implementations, for example, TLS.&lt;/p&gt;
+
+&lt;p&gt;To get down to formal verification, we must first define the difference between &lt;em&gt;verification&lt;/em&gt; and &lt;em&gt;validation&lt;/em&gt;. Validation asks questions like &lt;em&gt;Does it meet the requirements?&lt;/em&gt;, &lt;em&gt;Is it the right product?&lt;/em&gt;, and &lt;em&gt;Does it function according to design?&lt;/em&gt;.  Whereas, verification asks the question &lt;em&gt;does this software meet a given specification under given assumptions?&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;One requirement for nearly any stronger property is to first show the code satisfied type safety. A program is considered type safe if and only if the only operations that can be performed on data are those sanctioned by the type of data. For example, we can look at the following program where integers, floats, and doubles are being implicitly cast amongst one another. In a type safe program, an integer could never be treated as a float (more importantly, a pointer type would never be treated as a non-pointer, and vice versa).&lt;/p&gt;
+
+&lt;p&gt;While the below program is well-typed, it illustrates some of the
+challenges faced when attempting to show type safety for typical C
+code:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/type-safe.png&#34; alt=&#34;Type Safety of Code&#34; width=&#34;60%&#34;&gt;&lt;Br&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;There are a variety of formal concepts that are used in program verification including model checking, deductive verification, equivalence checking, theorem proving, and correctness by construction. The problem that arises, though, is that some of these rely on concepts that simply are not feasible in commercial-level programs. For example, model checking exhaustively checks whether a model of the program meets a given specification, but every behavior in the program must have proper transitions and states resulting in the state explosion problem. Put simply, as more behaviors are added to simple programs, the number of states in the model exponentially grows. Due to this, it is challenging to scale model checking to large systems, although extensive work has been done toward this goal and often complex programs can be abstracted in ways that enable useful model checking.&lt;/p&gt;
+
+&lt;p&gt;One popular approach to verification is to use expressive type systems. Using the Curry-Howard isomorphism, we are able to directly relate programs with mathematical proofs and therefore have the ability to create refinement types which are types endowed with a predicate which is assumed to hold for any element of the refined type. What this means is that we can define our program using refinement types to encode the safety properties of the system which can be type-checked and proven to hold that safety property true.&lt;/p&gt;
+
+&lt;p&gt;There’s a lot that can be done with formal verification and TLS is a great possible use for fixing errors created during implementation. There are actually a number of projects for verifying parts of TLS out there that are attempting to combine together to formally verify TLS as a whole. This joint project is known as &lt;a href=&#34;https://project-everest.github.io/&#34;&gt;Project Everest&lt;/a&gt;. Everest is a pretty lofty goal considering the difficulty of formally verifying even small-level programs and scripts, but has made considerable progress towards building a fully verified TLS implementation. The eventual goal of Everest is that when all the projects are combined together, they will generate a C library that not only implements TLS 1.3 but is also proven secure, essentially circumventing any possible flaws in the TLS protocol.&lt;/p&gt;
+
+&lt;h3 id=&#34;coq&#34;&gt;Coq&lt;/h3&gt;
+
+&lt;p&gt;Team Cinnamon displayed a formal verification software called Coq during class. Coq is an assistive tool for the verification of code. The software implements a variety of mathematical and computational strategies to work, in combination with the user, to formally verify code, functions, and theorems. In class we ran through a couple of sample proofs to display the functionality and potential of Coq as a verification software and to give an example of how a formal verification software works.&lt;/p&gt;
+
+&lt;p&gt;A download for Coq is available at &lt;a href=&#34;https://coq.inria.fr/&#34;&gt;&lt;em&gt;https://coq.inria.fr/&lt;/em&gt;&lt;/a&gt; which offers different versions for different architectures. We used the CoqIDE which allows for editing Coq files with helpful syntax highlighting and is useful when trying to first learn Coq. For a good introduction to Coq, as well as number of exercises for what to do, a group at UPenn has a &lt;a href=&#34;http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2&#34;&gt;great lab focused on Coq&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/coq.png&#34; alt=&#34;Sample Coq Code&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://coq.inria.fr/refman/Reference-Manual018.html&#34;&gt;The Coq Proof Assistant&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Coq is extremely powerful software to help formally verify computer
+programs, but it can be difficult to learn, requiring a change in
+mentality for most programmers. For any problems or difficulties found
+when using Coq, there is plenty of documentation available within
+Coq’s &lt;a href=&#34;https://coq.inria.fr/distrib/current/refman/toc.html&#34;&gt;Reference Manual&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;Implementing cryptographic protocols correctly remains a huge
+challenge.  There are tools available now that can prove interesting
+properties about software, including even the absence of certain types
+of side channels.  It is important to remember, though, that anything
+we prove about a program is a proof about a property based on a model
+of the execution environment, and assumptions about adversary
+capabilities.  As verification and testing tools get more
+sophisticated, those models can come increasingly close to the actual
+environment and capabilities of real adversaries, but today, there
+remains a large gap.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Certificates</title>
       <link>https://tlseminar.github.io/certificates/</link>
       <pubDate>Fri, 10 Feb 2017 00:00:00 +0000</pubDate>
@@ -1882,50 +2035,6 @@ learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy
       
       <guid>https://tlseminar.github.io/resources/</guid>
       <description>&lt;p&gt;Links to resources will be added here soon.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://tlseminar.github.io/schedule/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://tlseminar.github.io/schedule/</guid>
-      <description>&lt;p&gt;See &lt;a href=&#34;https://tlseminar.github.io/teams&#34;&gt;Teams&lt;/a&gt; for the class teams and responsibilities.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/class 1&#34;&gt;Class 1&lt;/a&gt; - Introduction&lt;/strong&gt;&lt;br /&gt;
-   - &lt;a href=&#34;https://tlseminar.github.io/first-few-milliseconds&#34;&gt;The First Few Milliseconds of an TLS 1.2 Connection&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/padding-oracle&#34;&gt;Class 2: Oracle Padding Attacks&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;Analysis of the SSL 3.0 Protocol&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf&#34;&gt;Security Flaws Introduced by CBC Padding&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/beast.pdf&#34;&gt;Here Come The XOR Ninjas&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/TLStiming.pdf&#34;&gt;Lucky Thirteen: Breaking the TLS and DTLS Record Protocols&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/downgrade-attacks&#34;&gt;Class 3: Downgrade Attacks&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/logjam.pdf&#34;&gt;Imperfect Forward Secrecy: How Diffie-Hellman Fails in Practice&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;DROWN: Breaking TLS using SSLv2&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/certificates&#34;&gt;Class 4: Certificates&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/soktls.pdf&#34;&gt;SoK: SSL and HTTPS: Revisiting past challenges and evaluating certificate trust model enhancements&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://eprint.iacr.org/2014/1004.pdf&#34;&gt;CONIKS: Bringing Key Transparency to End Users&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=MFol6IMbZ7Y&#34;&gt;Defeating SSL Using SSLstrip&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/TBD&#34;&gt;Class 5: Verification and Testing&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://tlseminar.github.io/timing-attacks&#34;&gt;Class 6: Side Channels&lt;/a&gt;&lt;/strong&gt;
-   - Extra late-breaking news: &lt;a href=&#34;https://tlseminar.github.io/sha1-collisions&#34;&gt;SHA-1 Collisions&lt;/a&gt;, &lt;a href=&#34;https://tlseminar.github.io/cloudflare-leak&#34;&gt;Cloudflare Leak&lt;/a&gt;
-   - &lt;a href=&#34;https://tlseminar.github.io/docs/ssl-timing.pdf&#34;&gt;Remote Timing Attacks are Practical&lt;/a&gt;
-   - &lt;a href=&#34;https://tlseminar.github.io/docs/stillpractical.pdf&#34;&gt;Remote Timing Attacks are Still Practical&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
