@@ -22,11 +22,13 @@ See [Teams](/teams) for the class teams and responsibilities.
    - [Defeating SSL Using SSLstrip](https://www.youtube.com/watch?v=MFol6IMbZ7Y)
 
 **[Class 5: Verification and Testing](/verification)**
+
    - [*Heartbleed*](http://heartbleed.com/), [*The CRIME Attack*](https://docs.google.com/presentation/d/11eBmGiHbYcHR9gL5nDyZChu_-lCa2GizeuOfaLU2HOU/edit#slide=id.g1e3070b2_0_10), [*Understanding Apple 'goto fail' Vulnerability*](https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/)
    - Differential Testing: [*Using Frankencerts for Automated Adversarial Testing of Certificate Validation*](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677), [*An empirical study of goto in C code from GitHub repositories*](http://dl.acm.org/citation.cfm?doid=2786805.2786834)
    - Verification: [*Verifying s2n HMAC with SAW*](https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/), [*Implementing TLS with Verified Cryptographic Security*](https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/), [*Software Foundations*](http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2)
 
 **[Class 6: Side Channels](/timing-attacks)**
+
    - Extra late-breaking news: [SHA-1 Collisions](/sha1-collisions), [Cloudflare Leak](/cloudflare-leak)
    - [Remote Timing Attacks are Practical](/docs/ssl-timing.pdf)
    - [Remote Timing Attacks are Still Practical](/docs/stillpractical.pdf)
