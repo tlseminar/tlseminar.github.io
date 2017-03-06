@@ -484,7 +484,7 @@ Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov. &lt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/&#34;&gt;&lt;em&gt;Verifying s2n HMAC with SAW&lt;/em&gt;&lt;/a&gt; by Joey Dodds (2016) &lt;br&gt;
 &lt;a href=&#34;https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/&#34;&gt;&lt;em&gt;Implementing TLS with Verified Cryptographic Security&lt;/em&gt;&lt;/a&gt; by Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti,and Pierre-Yves Strub (2013) &lt;br&gt;
-&lt;a href=&#34;http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2&#34;&gt;&lt;em&gt;Software Foundations&lt;/em&gt;&lt;/a&gt; by Benjamin C. Pierce (2017)&lt;/p&gt;
+&lt;a href=&#34;http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2&#34;&gt;&lt;em&gt;Software Foundations&lt;/em&gt;&lt;/a&gt; by Benjamin C. Pierce, et al. (2017)&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;Software testing can only assert properties about program behaviors covered in the test suite. There will always be missed edge cases and odd bugs that will show up in code. This is where we turn to formal specifications to ‘prove’ the correctness of our code.&lt;/p&gt;

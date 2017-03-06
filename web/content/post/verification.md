@@ -83,7 +83,7 @@ Chen and Su’s mucert builds on the frankencert method.  Mucerts are randomly f
 
 > [*Verifying s2n HMAC with SAW*](https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/) by Joey Dodds (2016) <br>
 > [*Implementing TLS with Verified Cryptographic Security*](https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/) by Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti,and Pierre-Yves Strub (2013) <br>
-> [*Software Foundations*](http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2) by Benjamin C. Pierce (2017)
+> [*Software Foundations*](http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2) by Benjamin C. Pierce, et al. (2017)
 
 Software testing can only assert properties about program behaviors covered in the test suite. There will always be missed edge cases and odd bugs that will show up in code. This is where we turn to formal specifications to ‘prove’ the correctness of our code. 
 
