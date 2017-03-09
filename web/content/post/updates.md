@@ -22,7 +22,6 @@ wrap-up their remaining blogging responsibilities as they were (that
 is, Team Poppyseed is still responsible for completing the blog for
 Class 7, which hopefully is well underway already).
 
-
 <table>
 <tr bgcolor="#FFC"><td style="text-align:center"><b>Team Pineapple</b></td><td bgcolor="#CFF" style="text-align:center"><b>Team Mango</b></td></tr>
 <tr>
@@ -60,10 +59,13 @@ Team Mango is scheduled to lead the next class on March 17 (this is
 what was assigned to Team Cinnamon, so not a new responsibility for
 most of the team, and the new recruits from Team Poppyseed should have
 limited roles expected for this first presentation since they just
-joined the reformulated team).  
+joined the reformulated team).  Team Pineapple is responsible for
+Blogging and Food for the class.  Note that according to the survey
+results, 73.4% of the class is sick of bagels.  So, Team Pineapple is
+challenged to come up with something more interesting for breakfast.
 
 The full revised schedule is below.  Note that the team that is not
-leading the class is responsible for both Blogging and Food.
+leading the class is responsible for both Blogging and Food.  
 
 
 <table>
