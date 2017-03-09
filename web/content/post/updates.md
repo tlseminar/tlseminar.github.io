@@ -8,6 +8,11 @@ slug = "update"
 
 I hope everyone is enjoying Spring Break!
 
+You can see the results of the survey here: [Mid-Course Survey
+Results](/docs/mid-course-survey.pdf) (I edited one response that
+mentioned another student since that wasn't intended to be public, but
+otherwise it is everything that was submitted.)
+
 Based on the survey responses, and the depletion of Team Poppyseed, I
 have made some adjustments to the teams and schedule.  Team Sesame,
 Team Cinnamon, and Team Poppyseed have been turned into a Smoked
