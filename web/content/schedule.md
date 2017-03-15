@@ -9,7 +9,7 @@ See [Teams](/teams) for the class teams and responsibilities.
 <tr><td><a href="/downgrade-attacks">Class 3</a> (3 Feb)</td><td>Logjam/DROWN</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
 <tr><td><a href="/certificates">Class 4</a> (10 Feb)</td><td>Certificates</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
 <tr><td><a href="/verification">Class 5</a> (17 Feb)</td><td>Verification and Testing</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td><A href="/timing-attacks">Class 6 (24 Feb)</td><td>Side Channels</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td><A href="/timing-attacks">Class 6</a> (24 Feb)</td><td>Side Channels</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
 <tr><td>Class 7 (3 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
 </table>
 
