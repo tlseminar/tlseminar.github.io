@@ -1,5 +1,34 @@
 See [Teams](/teams) for the class teams and responsibilities.
 
+<table>
+<tr bgcolor="#CCC"><td style="text-align:center" width="22%"><b>Date</b></td><td style="text-align:center"><b>Topic</b></td><td style="text-align:center" width="14%"><b>Cinnamon</b></td><td style="text-align:center" width="14%"><b>Poppyseed</b></td><td style="text-align:center" width=12%><b>Sesame</b></td></tr>
+
+<tr><td><a href="/class 1">Class 1</a> (20 Jan)</td><td>Intro</td><td>Plan</td><td bgcolor="#44AAEE">Blog</td><td>Plan</td></tr>
+
+<tr><td><a href="/padding-oracle">Class 2</a> (27 Jan)</td><td>Padding Oracle Attacks</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td><a href="/downgrade-attacks">Class 3</a> (3 Feb)</td><td>Logjam/DROWN</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td><a href="/certificates">Class 4</a> (10 Feb)</td><td>Certificates</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td><a href="/verification">Class 5</a> (17 Feb)</td><td>Verification and Testing</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td><A href="/timing-attacks">Class 6 (24 Feb)</td><td>Side Channels</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td>Class 7 (3 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+</table>
+
+<table>
+<tr><td bgcolor="#66EEAA" style="text-align:center" colspan=5>Spring Break</td></tr>
+</table>
+
+<table>
+<tr bgcolor="#CCC"><td width="22%" style="text-align:center"><b>Date</b></td><td style="text-align:center"><b>Topic</b></td><td style="text-align:center" width=20%><b>Team Mango</b></td><td style="text-align:center" width=20%><b>Team Pineapple</b></td></tr>
+
+<tr><td>Class 8 (17 Mar)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
+<tr><td>Class 9 (24 Mar)</td><td>TBD</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 10 (31 Mar)</td><td>TBD</td><td colspan=2 bgcolor="#888888"></td></tr>
+<tr><td>Class 11 (7 Apr)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
+<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 13 (21 Apr)</td><td>TBD</td><td bgcolor="#888888" colspan=2></td></tr>
+<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td bgcolor="#888888" colspan=2></td></tr>
+</table>
+
 **[Class 1](/class 1) - Introduction**  
    - [The First Few Milliseconds of an TLS 1.2 Connection](/first-few-milliseconds)
 
