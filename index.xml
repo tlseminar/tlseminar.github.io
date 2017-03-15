@@ -1952,160 +1952,24 @@ support TLS, that is substantially better than what they do?&lt;/p&gt;&lt;/li&gt
     
     <item>
       <title></title>
-      <link>https://tlseminar.github.io/readings/</link>
+      <link>https://tlseminar.github.io/projects/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://tlseminar.github.io/readings/</guid>
+      <guid>https://tlseminar.github.io/projects/</guid>
       <description>
 
-&lt;h1 id=&#34;readings&#34;&gt;Readings&lt;/h1&gt;
+&lt;h1 id=&#34;projects&#34;&gt;Projects&lt;/h1&gt;
 
-&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;(See &lt;a href=&#34;https://tlseminar.github.io/projectideas&#34;&gt;Project Ideas&lt;/a&gt; page for some ideas for projects.)&lt;/p&gt;
 
-&lt;p&gt;Wikipedia&amp;rsquo;s &lt;a href=&#34;https://en.wikipedia.org/wiki/Transport_Layer_Security&#34;&gt;&lt;em&gt;Transport Layer
-Security&lt;/em&gt;&lt;/a&gt;
-page includes a quite extensive summary of TLS vulnerabilities.&lt;/p&gt;
+&lt;h3 id=&#34;minimal-tls&#34;&gt;Minimal TLS&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;&lt;em&gt;The First Few Milliseconds of an HTTPS Connection&lt;/em&gt;&lt;/a&gt;, Jeff Moser, 2009.&lt;br /&gt;
-&lt;a href=&#34;http://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with&#34;&gt;Discussion about TLS1.2/1.3 Updates&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/cmalekpour/minimal-tls&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+Team members: &lt;a href=&#34;https://github.com/FreddieJin&#34;&gt;Tianyi Jin&lt;/a&gt;, &lt;a href=&#34;https://github.com/cmalekpour&#34;&gt;Cyrus Malekpour&lt;/a&gt;, &lt;a href=&#34;https://github.com/bhuvanesh8&#34;&gt;Bhuvanesh Murali&lt;/a&gt;, &lt;a href=&#34;https://github.com/drs5ma&#34;&gt;Daniel Saha&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;protocol-specification&#34;&gt;Protocol Specification&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Problem.&lt;/strong&gt; In recent years, TLS implementations have been targeted with memory corruption or leakage issues, which they are vulnerable. Since they are implemented in C/C++, it is difficult to make these implementations resistant to such attacks. Many implementations also attempt to include a wide variety of cipher suites, which drastically increases the amount of crypto code that needs to be audited and written securely.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://tlswg.github.io/tls13-spec/&#34;&gt;The Transport Layer Security (TLS) Protocol Version
-1.3&lt;/a&gt; (Internet Draft, 22 December
-2016 is latest version as of today, 29 December 2016.)&lt;/p&gt;
-
-&lt;p&gt;Earlier versions:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://tools.ietf.org/html/rfc5246&#34;&gt;The Transport Layer Security (TLS) Protocol Version 1.2&lt;/a&gt; [&lt;a href=&#34;https://tools.ietf.org/pdf/rfc5246.pdf&#34;&gt;PDF&lt;/a&gt;], August 2008.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://tools.ietf.org/html/rfc3268&#34;&gt;Advanced Encryption Standard (AES) Ciphersuites for Transport Layer Security (TLS)&lt;/a&gt; [&lt;a href=&#34;https://tools.ietf.org/pdf/rfc3268.pdf&#34;&gt;PDF&lt;/a&gt;], June 2002.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://tools.ietf.org/html/rfc6101&#34;&gt;The Secure Sockets Layer (SSL) Protocol Version 3.0&lt;/a&gt; [&lt;a href=&#34;https://tools.ietf.org/pdf/rfc6101.pdf&#34;&gt;PDF&lt;/a&gt;], August 2011.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://datatracker.ietf.org/doc/rfc2246/&#34;&gt;The TLS Protocol Version 1.0&lt;/a&gt;, January 1999.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;protocol-analysis&#34;&gt;Protocol Analysis&lt;/h2&gt;
-
-&lt;p&gt;David Wagner, Bruce Schneier. &lt;em&gt;Analysis of the SSL 3.0 Protocol&lt;/em&gt;.  In
-&lt;em&gt;Second USENIX Workshop on Electronic Commerce Proceedings&lt;/em&gt;,
-1996. [&lt;a href=&#34;https://tlseminar.github.io/docs/analysisssl3.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;attacks&#34;&gt;Attacks&lt;/h2&gt;
-
-&lt;p&gt;RFC on known attacks: &lt;em&gt;Summarizing Known Attacks on Transport Layer Security (TLS) and Datagram TLS (DTLS)&lt;/em&gt;. Y. Sheffer, et al. RFC 7457. February 2015. [&lt;a href=&#34;https://tools.ietf.org/html/rfc7457&#34;&gt;HTML&lt;/a&gt;] [&lt;a href=&#34;https://tools.ietf.org/pdf/rfc7457.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Daniel Bleichenbacher. &lt;em&gt;Chosen Ciphertext Attacks Against Protocols Based on the RSA Encryption Standard PKCS #1&lt;/em&gt;. CRYPTO 1998. [&lt;a href=&#34;http://archiv.infsec.ethz.ch/education/fs08/secsem/Bleichenbacher98.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Serge Vaudenay. &lt;em&gt;Security Flaws Induced by CBC Padding Applications to
-SSL, IPSEC, WTLS&amp;hellip;&lt;/em&gt;. EuroCRYPT
-2002. [&lt;a href=&#34;http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;David Brumley and Daniel Boneh. &lt;em&gt;Remote Timing Attacks are Practical&lt;/em&gt;.  USENIX Security Symposium 2003, and Computer Networks, August 2005. &lt;a href=&#34;Followed by: Billy Bob Brumley and Nicola Tuveri. _Remote Timing Attacks are Still Practical_. ESORICS 2011 [[PDF](https://eprint.iacr.org/2011/232.pdf)] [[ePrint](https://eprint.iacr.org/2011/232)]&#34;&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/remotetiming.pdf&#34;&gt;PDF&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Brice Canvel, Alain Hiltgen, Serge Vaudenay, and Martin Vuagnoux. &lt;em&gt;Password Interception in a SSL/TLS Channel&lt;/em&gt;. CRYPTO 2003. [&lt;a href=&#34;http://www.iacr.org/cryptodb/archive/2003/CRYPTO/1069/1069.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Thai Duong and Juliano Rizzo. &lt;em&gt;Here Come The &amp;oplus; Ninjas&lt;/em&gt;.  2011. [&lt;a href=&#34;https://tlseminar.github.io/docs/beast.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Nadhem AlFardan, Daniel J. Bernstein, Kenneth G. Paterson, Bertram Poettering, and Jacob C.N. Schuldt.
-&lt;em&gt;On the Security of RC4 in TLS&lt;/em&gt;. USENIX Security Symposium 2013. [&lt;a href=&#34;https://www.usenix.org/system/files/conference/usenixsecurity13/sec13-paper_alfardan.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.usenix.org/conference/usenixsecurity13/technical-sessions/paper/alFardan&#34;&gt;Video&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Nadhem J. AlFardan and Kenneth G. Paterson. &lt;em&gt;Lucky Thirteen: Breaking the TLS and DTLS Record Protocols&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013. [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/TLStiming.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;http://www.isg.rhul.ac.uk/tls/Lucky13.html&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;David Adrian, Karthikeyan Bhargavan, Zakir Durumeric, Pierrick Gaudry,
-Matthew Green, J. Alex Halderman, Nadia Heninger, Drew Springall,
-Emmanuel Thomé, Luke Valenta, Benjamin VanderSloot, Eric Wustrow,
-Santiago Zanella-Béguelin, and Paul Zimmermann. &lt;em&gt;Imperfect Forward
-Secrecy: How Diffie-Hellman Fails in Practice&lt;/em&gt;.  22nd ACM Conference
-on Computer and Communications Security (CCS ’15), October
-2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/logjam.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://weakdh.org/&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Nimrod Aviram, Sebastian Schinzel, Juraj Somorovsky, Nadia Heninger,
-Maik Dankel, Jens Steube, Luke Valenta, David Adrian, J. Alex
-Halderman, Viktor Dukhovni, Emilia Käsper, Shaanan Cohney, Susanne
-Engels, Christof Paar, and Yuval Shavitt. &lt;em&gt;DROWN: Breaking TLS using
-SSLv2&lt;/em&gt;. 25th USENIX Security Symposium, Austin, TX, August
-2016. [&lt;a href=&#34;https://tlseminar.github.io/docs/drown.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://drownattack.com/&#34;&gt;Website&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;formal-methods&#34;&gt;Formal Methods&lt;/h2&gt;
-
-&lt;p&gt;John C. Mitchell, Vitaly Shmatikov, and Ulrich Stern. &lt;em&gt;Finite-State Analysis of SSL 3.0&lt;/em&gt;. USENIX Security Symposium, January 1998. [&lt;a href=&#34;https://tlseminar.github.io/docs/finitestate.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Lawrence C. Paulson. &lt;em&gt;Inductive Analysis of the Internet Protocol TLS&lt;/em&gt;. ACM Transactions of Information and System Security, August 1999. [&lt;a href=&#34;https://tlseminar.github.io/docs/inductiveanalysis.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Karthikeyan Bhargavan, Ricardo Corin, Cédric Fournet, Eugen Zalinescu.
-&lt;em&gt;Cryptographically Verified Implementations for TLS&lt;/em&gt;. ACM CCS
-2008. [&lt;a href=&#34;https://tlseminar.github.io/docs/verifiedtls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Tibor Jager, Florian Kohlar, Sven Schäge, and Jörg Schwenk. &lt;em&gt;On the Security of TLS-DHE in the Standard Model&lt;/em&gt;. May 2011. [&lt;a href=&#34;https://eprint.iacr.org/2011/219&#34;&gt;eprint&lt;/a&gt;] [&lt;a href=&#34;https://eprint.iacr.org/2011/219.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Krawczyk, Hugo, Kenneth G. Paterson, and Hoeteck Wee. &lt;em&gt;On the Security of the TLS Protocol: A Systematic Analysis&lt;/em&gt;. CRYPTO 2013.
-[&lt;a href=&#34;http://eprint.iacr.org/2013/339&#34;&gt;eprint&lt;/a&gt;]
-[&lt;a href=&#34;http://eprint.iacr.org/2013/339.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub. &lt;em&gt;Implementing TLS with Verified Cryptographic Security&lt;/em&gt;
-IEEE Symposium on Security and Privacy (Oakland), 2013. [&lt;a href=&#34;https://tlseminar.github.io/docs/mitls.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://tlseminar.github.io/docs/mitlstr.pdf&#34;&gt;Extended Tech Report, PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Karthikeyan Bhargavan1, Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub, and Santiago Zanella-Beguelin. &lt;em&gt;Proving the TLS Handshake Secure (As It Is)&lt;/em&gt;. CRYPTO 2014. [&lt;a href=&#34;https://tlseminar.github.io/docs/provinghandshake.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;implementation-bugs&#34;&gt;Implementation Bugs&lt;/h2&gt;
-
-&lt;p&gt;Martin Georgiev, Subodh Iyengar, Suman Jana, Rishita Anubhai, Dan
-Boneh, Vitaly Shmatikov. &lt;em&gt;The Most Dangerous Code in the World:
-Validating SSL Certificates in Non-Browser Software&lt;/em&gt;.  ACM CCS 2012.
-[&lt;a href=&#34;https://tlseminar.github.io/docs/mostdangerouscode.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;David Kaloper-Mersinjak, Hannes Mehnert, Anil Madhavapeddy and Peter Sewell. &lt;em&gt;Not-quite-so-broken TLS: lessons in re-engineering a security protocol
-specification and implementation&lt;/em&gt;. USENIX Security 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/nqsbtls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Benjamin Beurdouche, Karthikeyan Bhargavan, Antoine Delignat-Lavaud,
-Cedric Fournet, Markulf Kohlweiss, Alfredo Pironti, Pierre-Yves Strub,
-Jean Karim Zinzindohoue. &lt;em&gt;A Messy State of the Union: Taming the
-Composite State Machines of TLS&lt;/em&gt;.  IEEE Symposium on Security and
-Privacy (Oakland) 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/mitlsunion.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.youtube.com/watch?v=rELp9-oFAw0&#34;&gt;Talk Video&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Suman Jana, Yuan Kang, Samuel Roth, and &lt;a href=&#34;http://rayb.info/&#34;&gt;Baishakhi Ray&lt;/a&gt;. &lt;em&gt;Automatically Detecting Error Handling Bugs using Error Specifications&lt;/em&gt;. USENIX Security 2016. [&lt;a href=&#34;https://tlseminar.github.io/docs/epex.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;testing&#34;&gt;Testing&lt;/h2&gt;
-
-&lt;p&gt;Chad Brubaker, Suman Jana, &lt;a href=&#34;http://rayb.info/&#34;&gt;Baishakhi Ray&lt;/a&gt;, Sarfraz Khurshid, Vitaly Shmatikov.
-&lt;em&gt;Using Frankencerts for Automated Adversarial Testing of Certificate Validation in SSL/TLS Implementations&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2014. [&lt;a href=&#34;https://tlseminar.github.io/docs/frankencerts.pdf&#34;&gt;PDF&lt;/a&gt;].&lt;/p&gt;
-
-&lt;p&gt;Benjamin Beurdouche, Antoine Delignat-Lavaud, Nadim Kobeissi, Alfredo Pironti, Karthikeyan Bhargavan. &lt;em&gt;FLEXTLS: A Tool for Testing TLS Implementations&lt;/em&gt;.
-USENIX Workshop on Offensive Technologies, 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/flextls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;measurement&#34;&gt;Measurement&lt;/h2&gt;
-
-&lt;p&gt;Cristian Coarfa, Peter Druschel, and Dan S. Wallach. &lt;em&gt;Performance Analysis of TLS Web Servers&lt;/em&gt;.  ACM Transactions on Computer Systems (earlier version in NDSS 2002), February 2006. [&lt;a href=&#34;https://tlseminar.github.io/docs/performance.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson. &lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;. NDSS 2017. [&lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;certificates&#34;&gt;Certificates&lt;/h2&gt;
-
-&lt;p&gt;Jeremy Clark and Paul C. van Oorschot. &lt;em&gt;SoK: SSL and HTTPS: Revisiting
-past challenges and evaluating certificate trust model
-enhancements&lt;/em&gt;. IEEE Symposium on Security and Privacy (Oakland) 2013.
-[&lt;a href=&#34;https://tlseminar.github.io/docs/soktls.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Dan Wendlandt, David G. Andersen, and Adrian Perrig. &lt;em&gt;Perspectives: Improving SSH-style Host Authentication with
-Multi-Path Probing&lt;/em&gt;. USENIX ATC 2008. [&lt;a href=&#34;https://tlseminar.github.io/docs/perspectives.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://perspectives-project.org/&#34;&gt;Project Site&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.certificate-transparency.org/&#34;&gt;Certificate Transparency&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&#34;https://datatracker.ietf.org/doc/draft-ietf-acme-acme/?include_text=1&#34;&gt;ACMS&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;extensions&#34;&gt;Extensions&lt;/h2&gt;
-
-&lt;p&gt;David Naylor, Kyle Schomp, Matteo Varvello, Ilias Leontiadis, Jeremy Blackburn, Diego Lopez, Konstantina Papagiannaki, Pablo Rodriguez Rodriguez, and Peter Steenkiste. &lt;em&gt;Multi-Context TLS (mcTLS): Enabling Secure In-Network Functionality in TLS&lt;/em&gt;. SIGCOMM 2015. [&lt;a href=&#34;https://tlseminar.github.io/docs/mcTLS.pdf&#34;&gt;PDF&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h2 id=&#34;post-quantum&#34;&gt;Post-Quantum&lt;/h2&gt;
-
-&lt;p&gt;Joppe W. Bos, Craig Costello, Michael Naehrig, and Douglas
-Stebila. &lt;em&gt;Post-quantum key exchange for the TLS protocol from the ring
-learning with errors problem&lt;/em&gt;.  IEEE Symposium on Security and Privacy (Oakland) 2016.
-[&lt;a href=&#34;http://eprint.iacr.org/2014/599.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.youtube.com/watch?v=BCmSzzQ2ges&#34;&gt;Talk Video&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;Erdem Alkim, Léo Ducas, Thomas Pöppelmann, and Peter Schwabe.
-&lt;em&gt;Post-quantum Key Exchange—A New Hope&lt;/em&gt;.  USENIX Security Symposiumn 2016. [&lt;a href=&#34;https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_alkim.pdf&#34;&gt;PDF&lt;/a&gt;] [&lt;a href=&#34;https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/alkim&#34;&gt;Talk Video&lt;/a&gt;]&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Goal.&lt;/strong&gt; We plan to create a &amp;ldquo;minimal&amp;rdquo; implementation of TLS with the goal of 95% support of browser clients. To accomplish this, we will identify the least possible set of server features and cipher suites we can support to meet this goal, with a strong focus on security. We will implement only a few key TLS extensions (ex: SNI, OCSP) with fail-safes for other features. The project will be written in the Rust programming language to provide good performance while removing the risk of memory corruption attacks.&lt;/p&gt;
 </description>
     </item>
     
