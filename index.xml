@@ -1965,11 +1965,104 @@ support TLS, that is substantially better than what they do?&lt;/p&gt;&lt;/li&gt
 &lt;h3 id=&#34;minimal-tls&#34;&gt;Minimal TLS&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/cmalekpour/minimal-tls&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-Team members: &lt;a href=&#34;https://github.com/FreddieJin&#34;&gt;Tianyi Jin&lt;/a&gt;, &lt;a href=&#34;https://github.com/cmalekpour&#34;&gt;Cyrus Malekpour&lt;/a&gt;, &lt;a href=&#34;https://github.com/bhuvanesh8&#34;&gt;Bhuvanesh Murali&lt;/a&gt;, &lt;a href=&#34;https://github.com/drs5ma&#34;&gt;Daniel Saha&lt;/a&gt;&lt;/p&gt;
+&lt;strong&gt;Team members:&lt;/strong&gt; &lt;a href=&#34;https://github.com/FreddieJin&#34;&gt;Tianyi Jin&lt;/a&gt;, &lt;a href=&#34;https://github.com/cmalekpour&#34;&gt;Cyrus Malekpour&lt;/a&gt;, &lt;a href=&#34;https://github.com/bhuvanesh8&#34;&gt;Bhuvanesh Murali&lt;/a&gt;, &lt;a href=&#34;https://github.com/drs5ma&#34;&gt;Daniel Saha&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Problem.&lt;/strong&gt; In recent years, TLS implementations have been targeted with memory corruption or leakage issues, which they are vulnerable. Since they are implemented in C/C++, it is difficult to make these implementations resistant to such attacks. Many implementations also attempt to include a wide variety of cipher suites, which drastically increases the amount of crypto code that needs to be audited and written securely.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Goal.&lt;/strong&gt; We plan to create a &amp;ldquo;minimal&amp;rdquo; implementation of TLS with the goal of 95% support of browser clients. To accomplish this, we will identify the least possible set of server features and cipher suites we can support to meet this goal, with a strong focus on security. We will implement only a few key TLS extensions (ex: SNI, OCSP) with fail-safes for other features. The project will be written in the Rust programming language to provide good performance while removing the risk of memory corruption attacks.&lt;/p&gt;
+
+&lt;h3 id=&#34;quantummenace&#34;&gt;QuantumMenace&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://reidbix.github.io/QuantumMenace/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;: Analyzing postquantum applications for TLS and SSL&lt;br /&gt;
+&lt;strong&gt;Team members:&lt;/strong&gt; Reid Bixler, Collin Berman&lt;/p&gt;
+
+&lt;p&gt;In this blog we will be looking into various topics including post-quantum signatures, effects of quantum computing on TLS, benefits of switching to post-quantum algorithms, benefits of some post-quantum algorithms over others, and whatever other topics come up.&lt;/p&gt;
+
+&lt;h3 id=&#34;decentralizedca&#34;&gt;DecentralizedCA&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://hainali.github.io/DecentralizedCA/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;strong&gt;Team members:&lt;/strong&gt; &lt;a href=&#34;https://github.com/bargavjayaraman&#34;&gt;Bargav Jayaraman&lt;/a&gt;, &lt;a href=&#34;https://github.com/HainaLi/&#34;&gt;Hannah Li&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The project idea is to allow multiple CA servers to collaboratively
+generate a certificate using multi-party computation protocols,
+thereby acting like a &amp;ldquo;Decentralized CA&amp;rdquo;.&lt;/p&gt;
+
+&lt;h3 id=&#34;ssltimer&#34;&gt;ssltimer&lt;/h3&gt;
+
+&lt;p&gt;SSLTimer: Testing an SSL Implementation with respect to Timing Attack Vulnerability&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/yuchi1989/ssltimer/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;strong&gt;Yuchi Tian&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;sok-tle-testing&#34;&gt;sok-tle-testing&lt;/h3&gt;
+
+&lt;p&gt;SoK: Software Testing Methods Applied to SSL/TLS: Lessons in Discovering Implementation Bugs&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://darioncassel.github.io/sok-tls-testing/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;strong&gt;Darion Cassel&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;There have been many attempts at discovering bugs in implementations
+of SSL/TLS. We would like to present a taxonomy of these attempts in
+order to better understand what their essential features are, what
+classes of bugs these features are likely to capture, and what classes
+of bugs are blind spots for this field.&lt;/p&gt;
+
+&lt;h3 id=&#34;tie-tls-invariants-exploration&#34;&gt;TIE: TLS Invariants Exploration&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://lowmanb94.github.io/tie/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;strong&gt;Ben Lowman&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Implementing TLS is hard. Given the wide range of cipher suites,
+target platforms, and legacy code, it is unlikely that any TLS
+implementations are free of bugs (see Heartbleed, Apple’s goto fail,
+CCS injection, etc.). Rigorous testing is required in cases where
+formal verification is not feasible. For most implementations,
+traditional software engineering techniques are the primary means by
+which confidence is gained in the correctness of the implementation.&lt;/p&gt;
+
+&lt;p&gt;My goal is to explore the use of program invariants in testing TLS
+implementations. Inferred program invariants are a compressed
+expression of program state, independent of control flow or
+output. Dynamically inferred invariants (over test cases) could be
+compared to ground truth invariants as a more robust method to verify
+program correctness. It is also likely that different TLS
+implementations exhibit similar invariants. I am interested in
+exploring the possibility of employing Frankencerts-type differential
+testing over dynamically inferred program invariants in addition to
+expected output. This will require abstracting program invariants in a
+meaningful way so that such “similar” invariants can be compared
+directly.&lt;/p&gt;
+
+&lt;h3 id=&#34;line-of-trust&#34;&gt;Line Of Trust&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://lineoftrust.github.io/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;strong&gt;Team members:&lt;/strong&gt; Anant Kharkar, Sam Havron, Bill Young, Joshua Holtzman&lt;/p&gt;
+
+&lt;p&gt;Introducing the Line of Trust (LOTr): Erasing the line of death for fun and pleasure&lt;/p&gt;
+
+&lt;h3 id=&#34;sslskimmer&#34;&gt;SSLskimmer&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://adamimeson.tech/sslskimmer/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;strong&gt;Adam Imeson&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In 2009, Moxie Marlinspike released an attack by the name of
+SSLstrip. It allows man-in-the-middle attackers to strip the security
+from HTTPS server responses, forwarding naked HTTP to the victim. If
+the victim does not notice that they are no longer using a secure
+connection they are likely to submit login details and other sensitive
+information to stripped pages. The attacker reads the information
+before forwarding it to the server.&lt;/p&gt;
+
+&lt;p&gt;I posit that the attack remains effective despite various
+countermeasures implemented by browser vendors and web services. Given
+the general availability of public wifi and its general vulnerability
+to MITM attacks via ARP poisoning, it seems that it is only a matter
+of time until the type of criminals to run credit card skimmers take
+note of SSL skimming opportunities.&lt;/p&gt;
+
+&lt;p&gt;I intend to demonstrate susceptibility to this attack by conducting an
+ethical study of user awareness. I also intend to build and test a
+cheap battery-powered SSLskimmer as a proof of concept.&lt;/p&gt;
 </description>
     </item>
     
