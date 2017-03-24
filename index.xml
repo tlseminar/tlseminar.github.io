@@ -6,8 +6,103 @@
     <description>Recent content on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 20 Mar 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>TLS Interception and SSL Inspection</title>
+      <link>https://tlseminar.github.io/tls-interception/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/tls-interception/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;The fact that &amp;ldquo;SSL inspection&amp;rdquo; is a phrase that exists, should be a blazing red flag that what you think SSL is doing for you is fundamentally broken. &lt;strong&gt;Compounding the problem are the mistakes that SSL inspection software authors are making&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash; &lt;em&gt;&lt;a href=&#34;https://insights.sei.cmu.edu/cert/2015/03/the-risks-of-ssl-inspection.html&#34; title=&#34;The Risks of SSL Inspection&#34;&gt;Will Dormann&lt;/a&gt; (2015), Carnegie Melon Software Engineering Institute CERT/CC Blog&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;recent-history&#34;&gt;Recent History&lt;/h3&gt;
+
+&lt;p&gt;TLS Interception, also referred to as SSL Inspection, is a topic that has been in the news in recent years and months. Back in 2014, researchers from Brigham Young University published a paper titled &lt;a href=&#34;https://arxiv.org/pdf/1407.7146.pdf&#34; title=&#34;TLS Proxies: Friend or Foe?&#34;&gt;TLS Proxies: Friend or Foe?&lt;/a&gt; where they deployed a Flash application via Google Adwords campaign to identify client-server certificate mismatches across the web. They discovered a wide prevalence of adware, malware and TLS proxy products presenting certificates trusted by the client but not issued by the server &amp;ndash; and in most instances acting in a negligent manner by introducing security vulnerabilities. One parental filter they tested replaced untrusted certificates with trusted ones, bypassing browser warning screens. &lt;em&gt;This is exactly the type of passive attack HTTPS aims to prevent&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Vulnerabilities involving two advertising injectors, one of which was preinstalled on &lt;a href=&#34;https://nakedsecurity.sophos.com/2015/02/20/the-lenovo-superfish-controversy-what-you-need-to-know&#34;&gt;Lenovo PCs&lt;/a&gt;, were found to severely compromise the security of end users in February of 2015. Later that same year, German journalist &lt;a href=&#34;https://blog.hboeck.de/archives/869-How-Kaspersky-makes-you-vulnerable-to-the-FREAK-attack-and-other-ways-Antivirus-software-lowers-your-HTTPS-security.html&#34;&gt;Hanno Böck&lt;/a&gt; looked at three popular antivirus suites and found that all lowered security by either exposing end users to vulnerabilities like FREAK and CRIME or supporting less secure encrpytion algorithms.&lt;/p&gt;
+
+&lt;p&gt;In early 2017 researchers teamed up with Google, Mozilla, and Cloudflare for an internet-wide survey - &lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;&lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;&lt;/a&gt; (
+Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson; in NDSS 2017). TLS interception software was assessed based on how the TLS connection observed from the client differed from the TLS parameters advertised by the client. In all but two of the tested products, security was reduced, and in some cases serious vulnerabilities were introduced. Most recently in February of 2017, a Chrome 56 update took down almost a third of Montgomery County Public School&amp;rsquo;s 50,000 fleet of Chromebooks offline, because the school systems web filter, BlueCoat Proxy, &lt;a href=&#34;https://bugs.chromium.org/p/chromium/issues/detail?id=694593&#34;&gt;did not properly handle TLS 1.3&lt;/a&gt;. When Chrome attempted to connect via TLS 1.3, the Bluecoat software abruptly terminated the connection, rather than negotiating for TLS 1.2.&lt;/p&gt;
+
+&lt;h3 id=&#34;how-ssl-tls-interception-works&#34;&gt;How SSL/TLS interception works&lt;/h3&gt;
+
+&lt;p&gt;SSL/TLS interception is performed by software on &amp;ldquo;middleboxes&amp;rdquo; located in between the client and HTTPS website or on the client’s machine, in the case of malware, anti-virus software, and ad injectors.  Middlebox software has both legitimate and illegitimate use cases including proxies or content filters, antivirus suites, content cachers, advertising injectors, and malware.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/tls-interception/middlebox_proxy_setup.png&#34; alt=&#34;Middlebox framework&#34; width=650&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://zakird.com/papers/https_interception.pdf&#34;&gt;The Security Impact of HTTPS Interception (2017)&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Middlebox proxy software relies on the client having previously installed a root certificate onto their operating system. Any outgoing SSL/TLS connections from the client are terminated and re-established by the proxy to the server, which acts as an in-the-middle attacker. In an ideal deployment, the proxy&amp;rsquo;s ClientHello mirrors the TLS parameters expressed in client&amp;rsquo;s ClientHello, to provide the same expected parameters to the client. The proxy can then inspect plaintext and establish a TLS connection back to the client using the installed certificate to circumvent browser warnings and silently intercept the connection between client and server.&lt;/p&gt;
+
+&lt;h4 id=&#34;superfish&#34;&gt;Superfish&lt;/h4&gt;
+
+&lt;p&gt;In 2015, there was in an incident involving Lenovo PC&amp;rsquo;s shipped with a preinstalled image advertisement optimizer developed by Superfish. Superfish used Komodia&amp;rsquo;s tool &amp;ldquo;SSL hijacker&amp;rdquo; to intercept HTTPS connections in order to gather image data for its ad optimization engine. Komodia&amp;rsquo;s tool is similar to to all SSL inspectors &amp;mdash; it first installs root certificates on the client machine and then MITMs all TLS connections to HTTPs websites, issuing the  preinstalled Komodia certificate to the client instead of the target HTTPS server&amp;rsquo;s certificate to bypass browser warnings.&lt;/p&gt;
+
+&lt;p&gt;To enable it to generate trusted (by the browser based on the new root
+CA key installed) certificates for any website the user connects to,
+it needed to generate new certificated on-the-fly, so the private
+signing key for the root CA needed to be stored on the user&amp;rsquo;s
+device. This means that the private key for the certificate was
+visible in the software and could be trivially extracted by the
+end user. In addition, Komodia used the same private key for every
+machine running Superfish. It didn&amp;rsquo;t take long for security researcher
+&lt;a href=&#34;http://blog.erratasec.com/2015/02/extracting-superfish-certificate.html&#34;&gt;Robert
+Grahm&lt;/a&gt;
+to crack the password for the private key (hint: it was &amp;lsquo;komodia&amp;rsquo;). With
+this key, an adversary could MITM any client running Superfish on
+their laptop by using using a copy of this hardcoded certificate. To
+compound this, users were not alerted to the presence of Superfish
+software on their new Lenovo laptops.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.komodia.com/security-notice&#34;&gt;Komodia released a security notice&lt;/a&gt; saying they fixed the issue by updating the software to create &lt;strong&gt;unique&lt;/strong&gt; certificates per installation and &lt;strong&gt;randomly&lt;/strong&gt; generated passwords. They also addressed other potential vulnerabilities such as updating their list of supported cipher suites and verifying certificate revocation statuses (they support OCSP). The countermeasures outlined in their security notice serve as a starting point for all HTTPS interception software developers.&lt;/p&gt;
+
+&lt;h4 id=&#34;privdog&#34;&gt;PrivDog&lt;/h4&gt;
+
+&lt;p&gt;Shortly after the Superfish incident, another piece of TLS interception software named PrivDog made by Adtrustmedia was also &lt;a href=&#34;https://www.kb.cert.org/vuls/id/366544&#34;&gt;found to be vulnerable&lt;/a&gt;. PrivDog is an advertising program which intercepts HTTPS connections and replaces &amp;ldquo;bad&amp;rdquo; advertisements with advertisements approved by Adtrustmedia.&lt;/p&gt;
+
+&lt;p&gt;Privdog, like the aforementioned Superfish, simply replaced certificates for a HTTPS server with new certificates signed by the root certificate they installed on the affected machine. However, the Privdog software performed no validation of the original certificate presented by the target server. Not only did it make untrusted certificates seem trusted, but legitimite websites with &lt;a href=&#34;https://en.wikipedia.org/wiki/Extended_Validation_Certificate&#34;&gt;EV Certificates&lt;/a&gt; were replaced with PrivDog&amp;rsquo;s self signed certificate removing the green browser indication. Any website an affected user visited with an invalid certificate would appear valid, without browser warnings. An adversary could easily MITM a client running PrivDog by simply advertising a self-signed certificate!&lt;/p&gt;
+
+&lt;h3 id=&#34;the-security-impact-of-https-interception&#34;&gt;The Security Impact of HTTPS Interception&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;&lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;&lt;/a&gt;. Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson. &lt;a href=&#34;http://www.internetsociety.org/events/ndss-symposium/ndss-symposium-2017&#34;&gt;Network and Distributed Systems Security Symposium&lt;/a&gt; (NDSS) 2017.&lt;/p&gt;
+
+&lt;p&gt;In early 2017, researchers teamed up with Google, Mozilla and Cloudflare in efforts to measure TLS interception in an internet wide &lt;a href=&#34;https://zakird.com/papers/https_interception.pdf&#34;&gt;study&lt;/a&gt;. They noted that TLS interception software can be detected from the server&amp;rsquo;s point of view by identifying a mismatch between popular browsers TLS handshakes and the observed handshake. Going one step further, by observing the TLS handshakes of popular interception software they were able to construct fingerprints for some of the most widely used interception products.&lt;/p&gt;
+
+&lt;p&gt;The study measured interception from the vantage point of the Cloudflare CDN, Firefox Update servers, and popular e-commerce sites. Important results from the study found that about 5-10% of measured HTTPS connections were intercepted, and much of the software reduced the security of the end user in one way or another, with 97%, 54%, and 32% of connections to Firefox, Cloudflare, and e-commerce sites becoming less secure respectively. Interestingly, the only middlebox software to earn a grade of ‘A’ was BlueCoat Proxy.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img width=&#34;85%&#34; alt=&#34;Grades for middlebox interception&#34; src=&#34;https://tlseminar.github.io/images/tls-interception/middlebox_interception.png&#34;&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;&lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;chrome-56-update-breaks-bluecoat-proxy-v6-5&#34;&gt;Chrome 56 update breaks Bluecoat Proxy v6.5&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note these issues are always bugs in the middlebox products.&lt;/strong&gt; TLS version negotiation is backwards compatible, so a correctly-implemented TLS-terminating proxy should not require changes to work in a TLS-1.3-capable ecosystem [&amp;hellip;] That these products broke is an indication of defects in their TLS implementations&lt;br /&gt;
+&amp;ndash; &lt;em&gt;&lt;a href=&#34;https://bugs.chromium.org/p/chromium/issues/detail?id=694593#c26&#34;&gt;David Benjamin&lt;/a&gt;, Chromium Bug Tracker (2017)&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;On 21 February 2017, shortly after the above paper was published, mishandling of TLS 1.3 connections by BlueCoat Proxy left thousands of clients without internet connection after an automatic Chrome 56 update. The problem wasn’t that BlueCoat Proxy didn’t implement TLS 1.3, but that it didn’t gracefully renegotiate down to TLS 1.2 which it does support. Instead, the software simply terminated the incoming connection. This left tens of thousands of Chromebooks used by Montgomery County Public Schools students temporarily unable to connect to the internet. The temporary solution was for individual users to alter Chrome&amp;rsquo;s internal settings to disable TLS 1.3 &lt;a href=&#34;chrome://flags/#ssl-version-max&#34;&gt;chrome://flags/#ssl-version-max&lt;/a&gt; until a more general solution was delivered by &lt;a href=&#34;https://bugs.chromium.org/p/chromium/issues/detail?id=694593#c12&#34;&gt;the following day&lt;/a&gt; by Chromium, which rolled-back TLS 1.3 support by default.&lt;/p&gt;
+
+&lt;h2 id=&#34;going-forward&#34;&gt;Going Forward&lt;/h2&gt;
+
+&lt;p&gt;Whether it be at the cost of availability or end user security, these incidents expose the fragility of TLS interception software. Google has reached out to middlebox vendors in efforts to help them resolve the issues, but system administrators should consider the risks of TLS interception seriously.  There are, however, situations where it is necessary such as when companies are legally required to monitor traffic of their employees to comply with regulations (such as in the financial industry).  Vendors should independently strive to fix their products for the security of their users at the same time. Organizations who deploy TLS interception software should choose products in an informed manner and carefully consider the risks imposed by interception software.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img alt=&#34;Grades for various clientside interception&#34; src=&#34;https://tlseminar.github.io/images/tls-interception/clientside_interception.png&#34; width=90%&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://zakird.com/papers/https_interception.pdf&#34;&gt;The Security Impact of HTTPS Interception (2017)&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Survey and Revised Schedule</title>
@@ -1947,122 +2042,6 @@ protocol is used to produce a new certificate.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Is there a way to do CloudFlare-style, we make your site appear to
 support TLS, that is substantially better than what they do?&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://tlseminar.github.io/projects/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://tlseminar.github.io/projects/</guid>
-      <description>
-
-&lt;h1 id=&#34;projects&#34;&gt;Projects&lt;/h1&gt;
-
-&lt;p&gt;(See &lt;a href=&#34;https://tlseminar.github.io/projectideas&#34;&gt;Project Ideas&lt;/a&gt; page for some ideas for projects.)&lt;/p&gt;
-
-&lt;h3 id=&#34;minimal-tls&#34;&gt;Minimal TLS&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/cmalekpour/minimal-tls&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Team members:&lt;/strong&gt; &lt;a href=&#34;https://github.com/FreddieJin&#34;&gt;Tianyi Jin&lt;/a&gt;, &lt;a href=&#34;https://github.com/cmalekpour&#34;&gt;Cyrus Malekpour&lt;/a&gt;, &lt;a href=&#34;https://github.com/bhuvanesh8&#34;&gt;Bhuvanesh Murali&lt;/a&gt;, &lt;a href=&#34;https://github.com/drs5ma&#34;&gt;Daniel Saha&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Problem.&lt;/strong&gt; In recent years, TLS implementations have been targeted with memory corruption or leakage issues, which they are vulnerable. Since they are implemented in C/C++, it is difficult to make these implementations resistant to such attacks. Many implementations also attempt to include a wide variety of cipher suites, which drastically increases the amount of crypto code that needs to be audited and written securely.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Goal.&lt;/strong&gt; We plan to create a &amp;ldquo;minimal&amp;rdquo; implementation of TLS with the goal of 95% support of browser clients. To accomplish this, we will identify the least possible set of server features and cipher suites we can support to meet this goal, with a strong focus on security. We will implement only a few key TLS extensions (ex: SNI, OCSP) with fail-safes for other features. The project will be written in the Rust programming language to provide good performance while removing the risk of memory corruption attacks.&lt;/p&gt;
-
-&lt;h3 id=&#34;quantummenace&#34;&gt;QuantumMenace&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://reidbix.github.io/QuantumMenace/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;: Analyzing postquantum applications for TLS and SSL&lt;br /&gt;
-&lt;strong&gt;Team members:&lt;/strong&gt; Reid Bixler, Collin Berman&lt;/p&gt;
-
-&lt;p&gt;In this blog we will be looking into various topics including post-quantum signatures, effects of quantum computing on TLS, benefits of switching to post-quantum algorithms, benefits of some post-quantum algorithms over others, and whatever other topics come up.&lt;/p&gt;
-
-&lt;h3 id=&#34;decentralizedca&#34;&gt;DecentralizedCA&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://hainali.github.io/DecentralizedCA/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Team members:&lt;/strong&gt; &lt;a href=&#34;https://github.com/bargavjayaraman&#34;&gt;Bargav Jayaraman&lt;/a&gt;, &lt;a href=&#34;https://github.com/HainaLi/&#34;&gt;Hannah Li&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;The project idea is to allow multiple CA servers to collaboratively
-generate a certificate using multi-party computation protocols,
-thereby acting like a &amp;ldquo;Decentralized CA&amp;rdquo;.&lt;/p&gt;
-
-&lt;h3 id=&#34;ssltimer&#34;&gt;ssltimer&lt;/h3&gt;
-
-&lt;p&gt;SSLTimer: Testing an SSL Implementation with respect to Timing Attack Vulnerability&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/yuchi1989/ssltimer/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Yuchi Tian&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;sok-tle-testing&#34;&gt;sok-tle-testing&lt;/h3&gt;
-
-&lt;p&gt;SoK: Software Testing Methods Applied to SSL/TLS: Lessons in Discovering Implementation Bugs&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://darioncassel.github.io/sok-tls-testing/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Darion Cassel&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;There have been many attempts at discovering bugs in implementations
-of SSL/TLS. We would like to present a taxonomy of these attempts in
-order to better understand what their essential features are, what
-classes of bugs these features are likely to capture, and what classes
-of bugs are blind spots for this field.&lt;/p&gt;
-
-&lt;h3 id=&#34;tie-tls-invariants-exploration&#34;&gt;TIE: TLS Invariants Exploration&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://lowmanb94.github.io/tie/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Ben Lowman&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Implementing TLS is hard. Given the wide range of cipher suites,
-target platforms, and legacy code, it is unlikely that any TLS
-implementations are free of bugs (see Heartbleed, Apple’s goto fail,
-CCS injection, etc.). Rigorous testing is required in cases where
-formal verification is not feasible. For most implementations,
-traditional software engineering techniques are the primary means by
-which confidence is gained in the correctness of the implementation.&lt;/p&gt;
-
-&lt;p&gt;My goal is to explore the use of program invariants in testing TLS
-implementations. Inferred program invariants are a compressed
-expression of program state, independent of control flow or
-output. Dynamically inferred invariants (over test cases) could be
-compared to ground truth invariants as a more robust method to verify
-program correctness. It is also likely that different TLS
-implementations exhibit similar invariants. I am interested in
-exploring the possibility of employing Frankencerts-type differential
-testing over dynamically inferred program invariants in addition to
-expected output. This will require abstracting program invariants in a
-meaningful way so that such “similar” invariants can be compared
-directly.&lt;/p&gt;
-
-&lt;h3 id=&#34;line-of-trust&#34;&gt;Line Of Trust&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://lineoftrust.github.io/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Team members:&lt;/strong&gt; Anant Kharkar, Sam Havron, Bill Young, Joshua Holtzman&lt;/p&gt;
-
-&lt;p&gt;Introducing the Line of Trust (LOTr): Erasing the line of death for fun and pleasure&lt;/p&gt;
-
-&lt;h3 id=&#34;sslskimmer&#34;&gt;SSLskimmer&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://adamimeson.tech/sslskimmer/&#34;&gt;&lt;strong&gt;Project Site&lt;/strong&gt;&lt;/a&gt;&lt;br /&gt;
-&lt;strong&gt;Adam Imeson&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;In 2009, Moxie Marlinspike released an attack by the name of
-SSLstrip. It allows man-in-the-middle attackers to strip the security
-from HTTPS server responses, forwarding naked HTTP to the victim. If
-the victim does not notice that they are no longer using a secure
-connection they are likely to submit login details and other sensitive
-information to stripped pages. The attacker reads the information
-before forwarding it to the server.&lt;/p&gt;
-
-&lt;p&gt;I posit that the attack remains effective despite various
-countermeasures implemented by browser vendors and web services. Given
-the general availability of public wifi and its general vulnerability
-to MITM attacks via ARP poisoning, it seems that it is only a matter
-of time until the type of criminals to run credit card skimmers take
-note of SSL skimming opportunities.&lt;/p&gt;
-
-&lt;p&gt;I intend to demonstrate susceptibility to this attack by conducting an
-ethical study of user awareness. I also intend to build and test a
-cheap battery-powered SSLskimmer as a proof of concept.&lt;/p&gt;
 </description>
     </item>
     

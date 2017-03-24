@@ -1,7 +1,7 @@
 +++
 date = "20 Mar 2017"
 author = "Team Poppyseed"
-draft = true
+draft = false
 title = "TLS Interception and SSL Inspection"
 slug = "tls-interception"
 +++
@@ -80,8 +80,9 @@ On 21 February 2017, shortly after the above paper was published, mishandling of
 
 ## Going Forward
 
-Whether it be at the cost of availability or end user security, these incidents expose the fragility of TLS interception software. Google has reached out to middlebox vendors in efforts to help them resolve the issues, but vendors should independently strive to fix their products for the security of their users at the same time. Organizations who deploy TLS interception software should choose products in an informed manner, including by consulting resources like the results of the ["The Security Impact of HTTPS Interception"](https://zakird.com/papers/https_interception.pdf) to decide whether a product's treatment of TLS connections reflects their security needs. 
+Whether it be at the cost of availability or end user security, these incidents expose the fragility of TLS interception software. Google has reached out to middlebox vendors in efforts to help them resolve the issues, but system administrators should consider the risks of TLS interception seriously.  There are, however, situations where it is necessary such as when companies are legally required to monitor traffic of their employees to comply with regulations (such as in the financial industry).  Vendors should independently strive to fix their products for the security of their users at the same time. Organizations who deploy TLS interception software should choose products in an informed manner and carefully consider the risks imposed by interception software.
 
-![Grades for various clientside interception](/images/tls-interception/clientside_interception.png)
-
-###### Source: [The Security Impact of HTTPS Interception (2017)](https://zakird.com/papers/https_interception.pdf)
+<center>
+<img alt="Grades for various clientside interception" src="/images/tls-interception/clientside_interception.png" width=90%><br>
+<span class="caption">Source: [The Security Impact of HTTPS Interception (2017)](https://zakird.com/papers/https_interception.pdf)</span>
+</center>
