@@ -8,7 +8,7 @@ slug = "usable-security"
 
 # Introduction
 
-In 1999, Alma Whitten and Doug Tygar performed a usability analysis of PGP 5.0 called [_Why Johnny Can’t Encrypt_](https://arxiv.org/pdf/1510.08555.pdf) *TODO: fix this link, its the wrong paper*. PGP Corp claimed its product “makes complex mathematical cryptography accessible for novice computer users”. 
+In 1999, Alma Whitten and Doug Tygar performed a usability analysis of PGP 5.0 called [_Why Johnny Can’t Encrypt_](https://people.eecs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/USENIX.pdf). PGP Corp claimed its product “makes complex mathematical cryptography accessible for novice computer users”. 
 
 However, Whitten and Tygar’s evaluation, based on experiments with
 users, argued that PGP’s user interface design made computer security
