@@ -51,7 +51,7 @@
     },
     "datePublished": "0001-01-01",
     "description": "",
-    "wordCount":  127 
+    "wordCount":  242 
   }
 </script>
 
@@ -113,7 +113,7 @@
 
 <a href="https://tlseminar.github.io/readings/">Readings</a>
 
-<a href="https://tlseminar.github.io/projectideas/">Projects</a>
+<a href="https://tlseminar.github.io/projects/">Projects</a>
 
 <a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
 
@@ -162,6 +162,35 @@
   <div class="container content">
   <p>See <a href="/teams">Teams</a> for the class teams and responsibilities.</p>
 
+<table>
+<tr bgcolor="#CCC"><td style="text-align:center" width="22%"><b>Date</b></td><td style="text-align:center"><b>Topic</b></td><td style="text-align:center" width="14%"><b>Cinnamon</b></td><td style="text-align:center" width="14%"><b>Poppyseed</b></td><td style="text-align:center" width=12%><b>Sesame</b></td></tr>
+
+<tr><td><a href="/class 1">Class 1</a> (20 Jan)</td><td>Intro</td><td>Plan</td><td bgcolor="#44AAEE">Blog</td><td>Plan</td></tr>
+
+<tr><td><a href="/padding-oracle">Class 2</a> (27 Jan)</td><td>Padding Oracle Attacks</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td><a href="/downgrade-attacks">Class 3</a> (3 Feb)</td><td>Logjam/DROWN</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td><a href="/certificates">Class 4</a> (10 Feb)</td><td>Certificates</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td><a href="/verification">Class 5</a> (17 Feb)</td><td>Verification and Testing</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
+<tr><td><A href="/timing-attacks">Class 6</a> (24 Feb)</td><td>Side Channels</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
+<tr><td><a href="/tls-interception">Class 7</a> (3 Mar)</td><td>TLS Interception</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
+</table>
+
+<table>
+<tr><td bgcolor="#66EEAA" style="text-align:center" colspan=5>Spring Break</td></tr>
+</table>
+
+<table>
+<tr bgcolor="#CCC"><td width="22%" style="text-align:center"><b>Date</b></td><td style="text-align:center"><b>Topic</b></td><td style="text-align:center" width=20%><b>Team Mango</b></td><td style="text-align:center" width=20%><b>Team Pineapple</b></td></tr>
+
+<tr><td><a href="/usable-security">Class 8</a> (17 Mar)</td><td>Usable Security</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
+<tr><td>Class 9 (24 Mar)</td><td>TBD</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 10 (31 Mar)</td><td>TBD</td><td colspan=2 bgcolor="#888888"></td></tr>
+<tr><td>Class 11 (7 Apr)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
+<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 13 (21 Apr)</td><td>TBD</td><td bgcolor="#888888" colspan=2></td></tr>
+<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td bgcolor="#888888" colspan=2></td></tr>
+</table>
+
 <p><strong><a href="/class 1">Class 1</a> - Introduction</strong><br />
    - <a href="/first-few-milliseconds">The First Few Milliseconds of an TLS 1.2 Connection</a></p>
 
@@ -189,12 +218,21 @@
 <li><a href="https://www.youtube.com/watch?v=MFol6IMbZ7Y">Defeating SSL Using SSLstrip</a></li>
 </ul>
 
-<p><strong><a href="/TBD">Class 5: Verification and Testing</a></strong></p>
+<p><strong><a href="/verification">Class 5: Verification and Testing</a></strong></p>
 
-<p><strong><a href="/timing-attacks">Class 6: Side Channels</a></strong>
-   - Extra late-breaking news: <a href="/sha1-collisions">SHA-1 Collisions</a>, <a href="/cloudflare-leak">Cloudflare Leak</a>
-   - <a href="/docs/ssl-timing.pdf">Remote Timing Attacks are Practical</a>
-   - <a href="/docs/stillpractical.pdf">Remote Timing Attacks are Still Practical</a></p>
+<ul>
+<li><a href="http://heartbleed.com/"><em>Heartbleed</em></a>, <a href="https://docs.google.com/presentation/d/11eBmGiHbYcHR9gL5nDyZChu_-lCa2GizeuOfaLU2HOU/edit#slide=id.g1e3070b2_0_10"><em>The CRIME Attack</em></a>, <a href="https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/"><em>Understanding Apple &lsquo;goto fail&rsquo; Vulnerability</em></a></li>
+<li>Differential Testing: <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677"><em>Using Frankencerts for Automated Adversarial Testing of Certificate Validation</em></a>, <a href="http://dl.acm.org/citation.cfm?doid=2786805.2786834"><em>An empirical study of goto in C code from GitHub repositories</em></a></li>
+<li>Verification: <a href="https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/"><em>Verifying s2n HMAC with SAW</em></a>, <a href="https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/"><em>Implementing TLS with Verified Cryptographic Security</em></a>, <a href="http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2"><em>Software Foundations</em></a></li>
+</ul>
+
+<p><strong><a href="/timing-attacks">Class 6: Side Channels</a></strong></p>
+
+<ul>
+<li>Extra late-breaking news: <a href="/sha1-collisions">SHA-1 Collisions</a>, <a href="/cloudflare-leak">Cloudflare Leak</a></li>
+<li><a href="/docs/ssl-timing.pdf">Remote Timing Attacks are Practical</a></li>
+<li><a href="/docs/stillpractical.pdf">Remote Timing Attacks are Still Practical</a></li>
+</ul>
 
 </div>
 

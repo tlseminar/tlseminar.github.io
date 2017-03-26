@@ -16,7 +16,7 @@
 
 [3projects]
     Name = "Projects"
-    URL = "/projectideas/"
+    URL = "/projects/"
 
 [5posts]
     Name = "Posts"

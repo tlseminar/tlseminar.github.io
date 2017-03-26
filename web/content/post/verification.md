@@ -1,7 +1,7 @@
 +++
 date = "24 Feb 2017"
 author = "Team Sesame"
-draft = true
+draft = false
 title = "Testing and Verification of TLS"
 slug = "verification"
 +++
@@ -12,7 +12,7 @@ TLS/SSL is the most widely adopted protocol for securing online communication. H
 
 First, we will examine some motivating attacks on TLS implementations, including the Heartbleed attack, CRIME attack, and the infamous “goto fail”, as well as their solutions. Next, we will discuss differential testing, a technique that creates well-formed but forged certificates, called "frankencerts", and uses them to compare the responses of many popular implementations such as OpenSSL - and how they strengthened their defenses afterward (or didn’t). Finally, we introduce verification, which takes advantage of the relationship between computer systems and mathematics to rigorously prove properties about programs, either by type-checking existing programs or building a program from scratch starting with abstract refinement types.
 
-# Heartbleed
+### Heartbleed
 
 > [*Heartbleed*](http://heartbleed.com/) by Codenomicon (2014)
 
@@ -23,7 +23,7 @@ OpenSSL’s heartbleed bug exploits heartbeat requests between a client and a se
 <span class="caption"><em>Source: </em><a href="https://en.wikipedia.org/wiki/Heartbleed#/media/File:Simplified_Heartbleed_explanation.svg">Wikipedia</a></span>
 </center>
 
-# Compression Ratio Info-Leak Mass Exploitation (CRIME)
+### Compression Ratio Info-Leak Mass Exploitation (CRIME)
 
 > [*The CRIME Attack*](https://docs.google.com/presentation/d/11eBmGiHbYcHR9gL5nDyZChu_-lCa2GizeuOfaLU2HOU/edit#slide=id.g1e3070b2_0_10) by Juliano Rizzo and Thai Duong (2013)
 
@@ -34,22 +34,20 @@ CRIME attacks were developed by Juliano Rizzo and Thai Duong in 2012 and exploit
 <span class="caption"><em>Source: </em><a href="http://2we26u4fam7n16rz3a44uhbe1bq2.wpengine.netdna-cdn.com/wp-content/uploads/101413_1347_BEASTvsCRIM4.png">Infosec Institute</a></span>
 </center>
 
-# Goto Fail; 
+### Goto Fail; 
 
-TODO: this is the wrong reference (or at least wrong title)
-
-> [*The CRIME Attack*](https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/) by Amit Sethi (2014)
+> [*Understanding Apple 'goto fail' Vulnerability*](https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/) by Amit Sethi (2014)
 
 In February 2014, Apple released a security update on many versions of its operating system that included the following vulnerability in the function SSLVerifySignedServerKeyExchange. 
 <div style="padding-left: 100px">
-<code>if ((err = SSLHashSHA1.update(&hashCtx, &signedParams)) != 0)
+<pre>if ((err = SSLHashSHA1.update(&hashCtx, &signedParams)) != 0)
     goto fail;
     goto fail;
   ... other checks ...
   fail:
     ... buffer frees (cleanups) ...
     return err;
-</code>
+</pre>
 </div>
 <center>
 <span class="caption"><em>Source: </em><a href="https://www.dwheeler.com/essays/apple-goto-fail.html">David A. Wheeler</a></span>
@@ -83,7 +81,9 @@ Chen and Su’s mucert builds on the frankencert method.  Mucerts are randomly f
 
 # Verification
 
-> [*Verifying s2n HMAC with SAW*](https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/) by Joey Dodds (2016)
+> [*Verifying s2n HMAC with SAW*](https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/) by Joey Dodds (2016) <br>
+> [*Implementing TLS with Verified Cryptographic Security*](https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/) by Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti,and Pierre-Yves Strub (2013) <br>
+> [*Software Foundations*](http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2) by Benjamin C. Pierce, et al. (2017)
 
 Software testing can only assert properties about program behaviors covered in the test suite. There will always be missed edge cases and odd bugs that will show up in code. This is where we turn to formal specifications to ‘prove’ the correctness of our code. 
 
@@ -100,7 +100,7 @@ challenges faced when attempting to show type safety for typical C
 code:
 
 <center>
-<img src="/images/verification/type-safe.png" alt="Type Safety of Code" width="75%"><Br>
+<img src="/images/verification/type-safe.png" alt="Type Safety of Code" width="60%"><Br>
 </center>
 
 There are a variety of formal concepts that are used in program verification including model checking, deductive verification, equivalence checking, theorem proving, and correctness by construction. The problem that arises, though, is that some of these rely on concepts that simply are not feasible in commercial-level programs. For example, model checking exhaustively checks whether a model of the program meets a given specification, but every behavior in the program must have proper transitions and states resulting in the state explosion problem. Put simply, as more behaviors are added to simple programs, the number of states in the model exponentially grows. Due to this, it is challenging to scale model checking to large systems, although extensive work has been done toward this goal and often complex programs can be abstracted in ways that enable useful model checking.
@@ -109,12 +109,33 @@ One popular approach to verification is to use expressive type systems. Using th
 
 There’s a lot that can be done with formal verification and TLS is a great possible use for fixing errors created during implementation. There are actually a number of projects for verifying parts of TLS out there that are attempting to combine together to formally verify TLS as a whole. This joint project is known as [Project Everest](https://project-everest.github.io/). Everest is a pretty lofty goal considering the difficulty of formally verifying even small-level programs and scripts, but has made considerable progress towards building a fully verified TLS implementation. The eventual goal of Everest is that when all the projects are combined together, they will generate a C library that not only implements TLS 1.3 but is also proven secure, essentially circumventing any possible flaws in the TLS protocol. 
 
-TODO: include reference to the paper 
+### Coq
 
-TODO: the Coq demo in class was really useful, and should be included in the blog post
+Team Cinnamon displayed a formal verification software called Coq during class. Coq is an assistive tool for the verification of code. The software implements a variety of mathematical and computational strategies to work, in combination with the user, to formally verify code, functions, and theorems. In class we ran through a couple of sample proofs to display the functionality and potential of Coq as a verification software and to give an example of how a formal verification software works.
+
+A download for Coq is available at [_https://coq.inria.fr/_](https://coq.inria.fr/) which offers different versions for different architectures. We used the CoqIDE which allows for editing Coq files with helpful syntax highlighting and is useful when trying to first learn Coq. For a good introduction to Coq, as well as number of exercises for what to do, a group at UPenn has a [great lab focused on Coq](http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2). 
+
+<center>
+<img src="/images/verification/coq.png" alt="Sample Coq Code"><Br>
+<span class="caption"><em>Source: </em><a href="https://coq.inria.fr/refman/Reference-Manual018.html">The Coq Proof Assistant</a></span>
+</center>
+
+Coq is extremely powerful software to help formally verify computer
+programs, but it can be difficult to learn, requiring a change in
+mentality for most programmers. For any problems or difficulties found
+when using Coq, there is plenty of documentation available within
+Coq’s [Reference Manual](https://coq.inria.fr/distrib/current/refman/toc.html).
 
 # Conclusion
 
-TODO: not sure the conclusion adds anything - if not, no need for it; if it does, rewrite to make more useful, not just a list of questions
+Implementing cryptographic protocols correctly remains a huge
+challenge.  There are tools available now that can prove interesting
+properties about software, including even the absence of certain types
+of side channels.  It is important to remember, though, that anything
+we prove about a program is a proof about a property based on a model
+of the execution environment, and assumptions about adversary
+capabilities.  As verification and testing tools get more
+sophisticated, those models can come increasingly close to the actual
+environment and capabilities of real adversaries, but today, there
+remains a large gap.
 
-In this week’s blog post, we explored some implementation bugs (e.g. Heartbleed, goto fail;) as a means to arrive at the proper approach to ensure that a program works in the way that we want. This brings up the distinction between validation and verification. Should we try out as many test cases as possible and make sure that our program or project is able to pass all of them? Or should we model our program as a state machine and attempt to show a preserved invariant that helps formally prove that our program works the way it was intended? When it comes to validating our code through tests, how many tests do we run? How many tests are reasonable or necessary, given that there are an infinite number of possible tests? We must accept some potential for statistical error as we can’t test the full population of possible inputs. When it comes to checking our code formally, how are we to know if our formal verifier is correct. Do we just absent-mindedly trust that the verifier works the way it was intended? Can we run the verifier on itself? There are valid arguments that support either testing or verifying, and it is difficult to say which is best. So, what is the right approach to verifying TLS works to specification and without any flaws? Clearly, the testing approach has failed as we’ve had implementation bugs. Formal verification is a difficult process because TLS is a large system and even formally verifying the smallest programs is difficult. Currently, TLS is being formally verified by Project Everest, who are making slow, but steady progress. Perhaps they will be the ones to get TLS right and see it implemented according to their proven model without flaws (as well as show that formal verification is the better approach moving forward).

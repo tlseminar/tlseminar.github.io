@@ -6,8 +6,462 @@
     <description>Recent content in Post-rsses on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 01 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 22 Mar 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Usable Security in TLS</title>
+      <link>https://tlseminar.github.io/usable-security/</link>
+      <pubDate>Wed, 22 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/usable-security/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;In 1999, Alma Whitten and Doug Tygar performed a usability analysis of PGP 5.0 called &lt;a href=&#34;https://people.eecs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/USENIX.pdf&#34;&gt;&lt;em&gt;Why Johnny Can’t Encrypt&lt;/em&gt;&lt;/a&gt;. PGP Corp claimed its product “makes complex mathematical cryptography accessible for novice computer users”.&lt;/p&gt;
+
+&lt;p&gt;However, Whitten and Tygar’s evaluation, based on experiments with
+users, argued that PGP’s user interface design made computer security
+usable only for people who are “already knowledgeable in that area”.
+This does not seem to be a fair expectation for users. Today, around
+40% of the &lt;a href=&#34;http://www.internetlivestats.com/internet-users/&#34;&gt;entire world population use the
+internet&lt;/a&gt;. When the
+paper was published, that &lt;a href=&#34;http://www.internetworldstats.com/emarketing.htm&#34;&gt;percentage was
+4.1%&lt;/a&gt;. Thus, as the
+number of internet users has skyrocketed, the security community has
+become increasingly aware of how important it is to make security understandable and accessible to typical users.&lt;/p&gt;
+
+&lt;p&gt;Usability is, of course, important for any service that is a vital part of the lives of billions. However, for security in particular, there are higher stakes&amp;mdash; confusing user interfaces can lead to sensitive data being exposed, from financial transactions to identification information. HTTPS users are vulnerable to significant, real-life risks when technical language abounds and browsers inundate them with too many warnings (many of which are false positives).&lt;/p&gt;
+
+&lt;p&gt;Humans are arguably the weakest link, so usability and communication must be taken into account in any model that expects the user to act safely. When a user interface fails to effectively communicate security consequences, it is unreasonable to blame an improperly informed user for exposing themselves to those dangers.&lt;/p&gt;
+
+&lt;h3 id=&#34;users-are-not-the-enemy&#34;&gt;Users Are Not The Enemy&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/usersnotenemy.pdf&#34;&gt;&lt;em&gt;Users Are Not The Enemy&lt;/em&gt;&lt;/a&gt;, Anne Adams and Martina Angela Sasse. Communications of the ACM. December 1999.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Even perfectly written software can become vulnerable to attacks when the user does not understand its behavior. In &lt;em&gt;Users Are Not the Enemy&lt;/em&gt;, Adams and Sasse discuss how users can both knowingly and unknowingly compromise computer security mechanisms such as password authentication. In authentication, few users knew how to or even understood the need to constitute a secure password. As a result, most of the passwords revolved around familiar and related phrases, words, or character patterns. Because the average person finds it difficult to remember passwords, most users rarely change the passwords and some prefer to record them in plaintext.&lt;/p&gt;
+
+&lt;p&gt;Users are the reason, however, not the &lt;em&gt;true&lt;/em&gt; enemy. Without sufficient knowledge of hacking techniques, typical users understandably default to their own models of security threats and priorities. Meanwhile, security experts and developers do not always understand the users’ perceptions, tasks, or needs. Before quickly dismissing users as unknowing collaborators in cyberspace crime, we should educate them in why we are protecting their account. Consequently, they would be more motivated to practice security-conscious behaviors when they perceive a threat.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-source-awakens&#34;&gt;The Source Awakens&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith&#34;&gt;&lt;em&gt;The Source Awakens&lt;/em&gt;&lt;/a&gt;. Presentation at USENIX Enigma 2016 by Matthew Smith.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We often see breaking news articles detailing the most recent hacking or the most recent password leak. These aren’t attacks focusing on specific users typically uneducated in cybersecurity principles but rather on firms’ products, that have been developed by computer scientists and engineers who are supposed to be experts in their fields. Now, if these developers are making mistakes, is it their lack of developing ability or is it their lack of understanding of the security issues? Considering the two, it’s best to assume the latter, as it is more likely. Therefore, developers are themselves making mistakes when they are not aware of the security issues latent in their system.&lt;/p&gt;
+
+&lt;p&gt;A story, which probably hits home for many software developers, is trying to Google an approach or solution to their problem or feature that they want to implement. The developer clicks on the first StackOverflow link and gets a solution, implements it, and keeps it as long as it apparently works. The developer now continues and goes about completing the task with no question to the validity of the code just implemented. What the developer doesn’t realize is that the code found and used may have serious security, such as this this code for self-signed certificate validation:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/certvalidation.png&#34; alt=&#34;validation&#34; width=&#34;90%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith&#34;&gt;The Source Awakens&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The code seems to work. But, upon closer inspection, it clearly
+doesn’t do anything to check certificates. When this program sees any
+and all certificates, it simply approves every single one, regardless
+of what is contained within. So, of course the code &amp;ldquo;works&amp;rdquo; when the
+developer incorporates into their program (at least it gives no
+apparent errors), but it presents a major security vulnerability.
+Similarly, developers may use some dummy certificate validator or
+self-signed certificates for testing, but then forget to remove them
+in the release.&lt;/p&gt;
+
+&lt;p&gt;Thus, usability is a security issue for developers using APIs and
+libraries, not just for end users using graphical interfaces.&lt;/p&gt;
+
+&lt;h4 id=&#34;malware-analysis-tools&#34;&gt;Malware Analysis Tools&lt;/h4&gt;
+
+&lt;p&gt;There are several decompilers that take binary code and output the
+decompiled code, such as HexRays (shown below). But, the generated
+code isn’t very readable to the average programmer, such as this example from the Simda malware domain generation code:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/hexrays.jpg&#34; alt=&#34;hexrays&#34; width=&#34;90%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith&#34;&gt;The Source Awakens&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Smith discusses how his team created a new system called DREAM++ that
+can outputs more readable decompiled code, so we may get something like:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/dream++.jpg&#34; alt=&#34;dream++&#34; width=&#34;60%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith&#34;&gt;The Source Awakens&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;By producing more readable decompiled code, both security experts as
+well as typical programmers were able to much more easily and quickly
+understand the decompiled programs.&lt;/p&gt;
+
+&lt;h3 id=&#34;browser-warnings&#34;&gt;Browser Warnings&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://adrifelt.github.io/sslinterstitial-chi.pdf&#34;&gt;&lt;em&gt;Improving SSL Warnings: Comprehension and Adherence&lt;/em&gt;&lt;/a&gt; by &lt;a href=&#34;http://www.adrienneporterfelt.com/&#34;&gt;Adrienne Porter Felt&lt;/a&gt;, Alex Ainslie, Robert Reeder, et Al. ACM Conference on Human Factors in Computing (CHI), 2015.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Security experts and programmers will always attempt to do what is best for their end-users, but the problem is that (very) often the end-user will circumvent any attempt at stopping whatever they intend to do. Looking at HTTPS specifically, the inherent security boils down to the end user’s choice of whether or not to proceed to a possibly unsafe webpage.&lt;/p&gt;
+
+&lt;p&gt;Therefore, it is the web browser&amp;rsquo;s responsibility to provide adequate notice to a user when their connection is not secure. Research conducted in 2015 by Google and the University of Pennsylvania found that reducing technical jargon in Chrome browser SSL warning and focusing on brevity and simplicity, resulted in an increase in comprehension of SSL warnings. Still, only 49% of the respondent&amp;rsquo;s could answer the following question correctly:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;What might happen if you ignored this error while checking your email?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Your computer might get malware&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A hacker might read your email&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(Technically both are true, but realistically the user is supposed to understand that invalid HTTPS results in hackers being able to read your communications in plaintext)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The researchers also found that the improved design of browser warnings could influence up to 30% more users to go &amp;ldquo;Back to Safety&amp;rdquo; rather than &amp;ldquo;Proceed to Unsafe&amp;rdquo;. The new design is shown below:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/chrome37.png&#34; alt=&#34;chrome37&#34; width=&#34;50%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://adrifelt.github.io/sslinterstitial-chi.pdf&#34;&gt;Improving SSL Warnings: Comprehension and Adherence&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;If this seems familiar, it is because it was introduced in Chrome 37.
+This new design requires an extra click from a user to proceed to the
+potentially unsafe site. Notice that the unsafe option is a dark gray
+text link contrasted with a safe blue button.&lt;/p&gt;
+
+&lt;p&gt;Below, a blast from the past: SSL warnings from pre-2015 Chrome versions.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/sslwarning.png&#34; width=&#34;70%&#34; alt=&#34;sslwarning&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;http://blog.getpostman.com/2014/01/28/using-self-signed-certificates-with-postman/&#34;&gt;Self Signed Certificates with Postman&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Noticeably, this has ‘too much’ technical jargon and is neither short nor simple. Similarly the user can easily proceed to the site straight from the warning. Google’s research was meant to improve the user experience when seeing these warning to minimize the security risks taken by the end-user.&lt;/p&gt;
+
+&lt;h3 id=&#34;tls-errors-on-the-web&#34;&gt;TLS Errors on the Web&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://devd.me/papers/trustmemaybe.pdf&#34;&gt;&lt;em&gt;Here’s My Cert, So Trust Me, Maybe? Understanding TLS Errors on the Web&lt;/em&gt;&lt;/a&gt; by Devdatta Akhawe, Bernhard Amann, Matthias Vallentin, &amp;amp; Robin Sommer. International World Wide Web Conference (WWW) 2013.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The end-user isn’t the only source of security issues when it comes to
+browser usability in TLS. The behavior of web browsers may not be
+studied as much as vulnerabilities in TLS, but it is almost just as
+dangerous in measure. Usually when browsers report TLS errors, they
+don’t offer distinguishing features between real attacks and benign
+errors; hence leaving the decision to the end-user of whether
+continuing is itself a security issue. On most occasions, errors will
+turn out to be “false positives”, which can include errors due to
+server misconfiguration, self-signed certificates (as mentioned
+previously), and name validation errors. As a result, end-users
+quickly train themselves to click through these warnings, regardless
+of the content, making it unlikely that they will pay enough attention
+when a real attack comes along.&lt;/p&gt;
+
+&lt;p&gt;This paper reports on a large-scale measurement study of common TLS
+warnings. A total of 11.5 billion SSL connections on all ports were
+captured over a nine-month period in their experiment. The warnings
+and errors produced were then categorized based on where they occurred
+during the verification: chain building errors, chain validation
+errors, and name validation errors. These correspond to the three
+separate steps of certificate validation of the Network Security
+Services (NSS) library, used by Firefox (and Chrome on Linux). The
+following is an algorithm that can translate the NSS responses into
+their categorization:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/nssalgorithm.jpg&#34; alt=&#34;nssalgorithm&#34; width=&#34;60%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;http://devd.me/papers/trustmemaybe.pdf&#34;&gt;Here’s My Cert, So Trust Me, Maybe?&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The results of this experiment indicate a clear opportunity, and need,
+for reducing false warnings.  A 1.54% false warning rate is
+unacceptable if we understand that benign scenarios are orders of
+magnitude more common than actual attacks.&lt;/p&gt;
+
+&lt;p&gt;Based on this analysis, a number of concrete recommendations are
+proposed to help browser vendors lower the risk of such unwanted
+habituation. For example, advocating the use of free TLS certificates
+via authorities like StartCom, using a more relaxed name validation
+algorithm that accepts multiple levels for an asterisk, or enabling
+AIA support or preload all known intermediate authorities in the
+browser cache. By implementing these changes, the complete usability
+of browsers for end-users will be significantly improved, therefore
+leading to a drastic decrease in attacks and security issues caused by
+users.&lt;/p&gt;
+
+&lt;h3 id=&#34;rethinking-connection-security-indicators&#34;&gt;Rethinking Connection Security Indicators&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf&#34;&gt;&lt;em&gt;Rethinking Connection Security Indicators&lt;/em&gt;&lt;/a&gt; by Adrienne Porter Felt, Robert Reeder, Alex Ainslie, Helen Harris, Max Walker, Christopher Thompson, Mustafa Emre Acer, Elisabeth Morant, and Sunny Consolvo.
+Twelfth Symposium on Usable Privacy and Security (SOUPS), July 2016.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;By seriously considering the ramifications of the symbology we use to
+send messages to the users, we can work to develop more useful and
+informative messages. This section focused on the findings of a study
+conducted to figure out how users react to various symbols appearing
+in their browsers (most often in the URL field). The study found that
+a surprising number of users could identify one or more of the
+significant features in a good connection, but the majority of users
+could not identify issues with a bad connection or one not using
+HTTPS.&lt;/p&gt;
+
+&lt;p&gt;Only about 40% of the people in the study were able to identify an
+HTTP connection as insecure or what protocol was being used; many of
+the participants believed the symbol had to do with the favicon of the
+page or that the symbol included general information about the page
+such as permissions. A summary of the results of this research can be
+seen in the table below.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/icons.png&#34; alt=&#34;icons&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf&#34;&gt;Rethinking Connection Security Indicators&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The researchers attempted to identify the three symbols that would be the most effective for conveying information to the user. They then conducted more research regarding how users would interpret these symbols.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/urls.png&#34; width=&#34;40%&#34; alt=&#34;urls&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf&#34;&gt;Rethinking Connection Security Indicators&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/usable-security/results.png&#34; alt=&#34;results&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf&#34;&gt;Rethinking Connection Security Indicators&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The researchers were able to confidently determine that any sign of an
+error is interpreted to be essentially the same, regardless of color
+or shape. Secondly, they determined that even if users were shown to
+be on https or ‘secure’ sites, they still had a ‘healthy level of
+paranoia’ in only being ‘somewhat’ confident in the security of the
+site that they were currently accessing.&lt;/p&gt;
+
+&lt;p&gt;Based on these results, browsers need to start asking what dangers on
+the internet are. Is it worse to have a fault in one’s implementation
+of their certificates or to not have HTTPS connection at all? Browsers
+can also consider blacklists of sites that are known for putting
+user’s information or connections at risk. Browsers could also do more
+to put security in a more central or significant location, such as
+having a pop-up before every page with information on the connection
+type and associated risks. We need to become more aware of what
+messages we’re sending to the users via the particular symbols that we
+choose for varying types of connections.&lt;/p&gt;
+
+&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;We’ve covered several studies showing progress, and the need for more
+research, in the area of usable security.  Despite the work done to
+bridge the gap between experts and users, there is a still a gulf
+between each group’s understanding of the other. In some cases,
+browser designers assume that users know what a certificate is, while
+users assume that the green lock in their URL bar indicates a website
+is free of malware.&lt;/p&gt;
+
+&lt;p&gt;The philosophical debate between informing users more effectively and
+simply manipulating them to make &amp;ldquo;correct&amp;rdquo; decisions is also
+unresolved. The major browsers have adopted a hybrid approach with TLS
+error warnings that both provide basic information on the error and
+require significant user effort to circumvent.&lt;/p&gt;
+
+&lt;p&gt;Such error warnings are commonplace, which raises another issue. Users
+tend to become accustomed to error messages (habituation), assuming
+them to be false positives for genuine threats, because they actually
+are false positives in the vast majority of cases.  Benign server
+administration errors account for essentially all TLS warnings that
+users see. Browser manufacturers are engaged in efforts to reduce the
+amount of noise users experience while sifting through warnings of
+potential hazards.&lt;/p&gt;
+
+&lt;p&gt;Work at the intersection of security and human-computer interaction
+continues to progress, but more needs to be done to ensure the
+security of future internet users. We can’t eliminate people, the
+weakest links in the chain, so we must remember design systems around
+their fallibility. While security is always at the forefront of most
+security researchers brains, we must also begin to consider the users
+who will be interacting with these features as a part of the system
+itself.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>TLS Interception and SSL Inspection</title>
+      <link>https://tlseminar.github.io/tls-interception/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/tls-interception/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;The fact that &amp;ldquo;SSL inspection&amp;rdquo; is a phrase that exists, should be a blazing red flag that what you think SSL is doing for you is fundamentally broken. &lt;strong&gt;Compounding the problem are the mistakes that SSL inspection software authors are making&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash; &lt;em&gt;&lt;a href=&#34;https://insights.sei.cmu.edu/cert/2015/03/the-risks-of-ssl-inspection.html&#34; title=&#34;The Risks of SSL Inspection&#34;&gt;Will Dormann&lt;/a&gt; (2015), Carnegie Melon Software Engineering Institute CERT/CC Blog&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;recent-history&#34;&gt;Recent History&lt;/h3&gt;
+
+&lt;p&gt;TLS Interception, also referred to as SSL Inspection, is a topic that has been in the news in recent years and months. Back in 2014, researchers from Brigham Young University published a paper titled &lt;a href=&#34;https://arxiv.org/pdf/1407.7146.pdf&#34; title=&#34;TLS Proxies: Friend or Foe?&#34;&gt;TLS Proxies: Friend or Foe?&lt;/a&gt; where they deployed a Flash application via Google Adwords campaign to identify client-server certificate mismatches across the web. They discovered a wide prevalence of adware, malware and TLS proxy products presenting certificates trusted by the client but not issued by the server &amp;ndash; and in most instances acting in a negligent manner by introducing security vulnerabilities. One parental filter they tested replaced untrusted certificates with trusted ones, bypassing browser warning screens. &lt;em&gt;This is exactly the type of passive attack HTTPS aims to prevent&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Vulnerabilities involving two advertising injectors, one of which was preinstalled on &lt;a href=&#34;https://nakedsecurity.sophos.com/2015/02/20/the-lenovo-superfish-controversy-what-you-need-to-know&#34;&gt;Lenovo PCs&lt;/a&gt;, were found to severely compromise the security of end users in February of 2015. Later that same year, German journalist &lt;a href=&#34;https://blog.hboeck.de/archives/869-How-Kaspersky-makes-you-vulnerable-to-the-FREAK-attack-and-other-ways-Antivirus-software-lowers-your-HTTPS-security.html&#34;&gt;Hanno Böck&lt;/a&gt; looked at three popular antivirus suites and found that all lowered security by either exposing end users to vulnerabilities like FREAK and CRIME or supporting less secure encrpytion algorithms.&lt;/p&gt;
+
+&lt;p&gt;In early 2017 researchers teamed up with Google, Mozilla, and Cloudflare for an internet-wide survey - &lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;&lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;&lt;/a&gt; (
+Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson; in NDSS 2017). TLS interception software was assessed based on how the TLS connection observed from the client differed from the TLS parameters advertised by the client. In all but two of the tested products, security was reduced, and in some cases serious vulnerabilities were introduced. Most recently in February of 2017, a Chrome 56 update took down almost a third of Montgomery County Public School&amp;rsquo;s 50,000 fleet of Chromebooks offline, because the school systems web filter, BlueCoat Proxy, &lt;a href=&#34;https://bugs.chromium.org/p/chromium/issues/detail?id=694593&#34;&gt;did not properly handle TLS 1.3&lt;/a&gt;. When Chrome attempted to connect via TLS 1.3, the Bluecoat software abruptly terminated the connection, rather than negotiating for TLS 1.2.&lt;/p&gt;
+
+&lt;h3 id=&#34;how-ssl-tls-interception-works&#34;&gt;How SSL/TLS interception works&lt;/h3&gt;
+
+&lt;p&gt;SSL/TLS interception is performed by software on &amp;ldquo;middleboxes&amp;rdquo; located in between the client and HTTPS website or on the client’s machine, in the case of malware, anti-virus software, and ad injectors.  Middlebox software has both legitimate and illegitimate use cases including proxies or content filters, antivirus suites, content cachers, advertising injectors, and malware.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/tls-interception/middlebox_proxy_setup.png&#34; alt=&#34;Middlebox framework&#34; width=650&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://zakird.com/papers/https_interception.pdf&#34;&gt;The Security Impact of HTTPS Interception (2017)&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Middlebox proxy software relies on the client having previously installed a root certificate onto their operating system. Any outgoing SSL/TLS connections from the client are terminated and re-established by the proxy to the server, which acts as an in-the-middle attacker. In an ideal deployment, the proxy&amp;rsquo;s ClientHello mirrors the TLS parameters expressed in client&amp;rsquo;s ClientHello, to provide the same expected parameters to the client. The proxy can then inspect plaintext and establish a TLS connection back to the client using the installed certificate to circumvent browser warnings and silently intercept the connection between client and server.&lt;/p&gt;
+
+&lt;h4 id=&#34;superfish&#34;&gt;Superfish&lt;/h4&gt;
+
+&lt;p&gt;In 2015, there was in an incident involving Lenovo PC&amp;rsquo;s shipped with a preinstalled image advertisement optimizer developed by Superfish. Superfish used Komodia&amp;rsquo;s tool &amp;ldquo;SSL hijacker&amp;rdquo; to intercept HTTPS connections in order to gather image data for its ad optimization engine. Komodia&amp;rsquo;s tool is similar to to all SSL inspectors &amp;mdash; it first installs root certificates on the client machine and then MITMs all TLS connections to HTTPs websites, issuing the  preinstalled Komodia certificate to the client instead of the target HTTPS server&amp;rsquo;s certificate to bypass browser warnings.&lt;/p&gt;
+
+&lt;p&gt;To enable it to generate trusted (by the browser based on the new root
+CA key installed) certificates for any website the user connects to,
+it needed to generate new certificated on-the-fly, so the private
+signing key for the root CA needed to be stored on the user&amp;rsquo;s
+device. This means that the private key for the certificate was
+visible in the software and could be trivially extracted by the
+end user. In addition, Komodia used the same private key for every
+machine running Superfish. It didn&amp;rsquo;t take long for security researcher
+&lt;a href=&#34;http://blog.erratasec.com/2015/02/extracting-superfish-certificate.html&#34;&gt;Robert
+Grahm&lt;/a&gt;
+to crack the password for the private key (hint: it was &amp;lsquo;komodia&amp;rsquo;). With
+this key, an adversary could MITM any client running Superfish on
+their laptop by using using a copy of this hardcoded certificate. To
+compound this, users were not alerted to the presence of Superfish
+software on their new Lenovo laptops.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.komodia.com/security-notice&#34;&gt;Komodia released a security notice&lt;/a&gt; saying they fixed the issue by updating the software to create &lt;strong&gt;unique&lt;/strong&gt; certificates per installation and &lt;strong&gt;randomly&lt;/strong&gt; generated passwords. They also addressed other potential vulnerabilities such as updating their list of supported cipher suites and verifying certificate revocation statuses (they support OCSP). The countermeasures outlined in their security notice serve as a starting point for all HTTPS interception software developers.&lt;/p&gt;
+
+&lt;h4 id=&#34;privdog&#34;&gt;PrivDog&lt;/h4&gt;
+
+&lt;p&gt;Shortly after the Superfish incident, another piece of TLS interception software named PrivDog made by Adtrustmedia was also &lt;a href=&#34;https://www.kb.cert.org/vuls/id/366544&#34;&gt;found to be vulnerable&lt;/a&gt;. PrivDog is an advertising program which intercepts HTTPS connections and replaces &amp;ldquo;bad&amp;rdquo; advertisements with advertisements approved by Adtrustmedia.&lt;/p&gt;
+
+&lt;p&gt;Privdog, like the aforementioned Superfish, simply replaced certificates for a HTTPS server with new certificates signed by the root certificate they installed on the affected machine. However, the Privdog software performed no validation of the original certificate presented by the target server. Not only did it make untrusted certificates seem trusted, but legitimite websites with &lt;a href=&#34;https://en.wikipedia.org/wiki/Extended_Validation_Certificate&#34;&gt;EV Certificates&lt;/a&gt; were replaced with PrivDog&amp;rsquo;s self signed certificate removing the green browser indication. Any website an affected user visited with an invalid certificate would appear valid, without browser warnings. An adversary could easily MITM a client running PrivDog by simply advertising a self-signed certificate!&lt;/p&gt;
+
+&lt;h3 id=&#34;the-security-impact-of-https-interception&#34;&gt;The Security Impact of HTTPS Interception&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;&lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;&lt;/a&gt;. Zakir Durumeric, Zane Ma, Drew Springall, Richard Barnes, Nick Sullivan, Elie Bursztein, Michael Bailey, J. Alex Halderman, Vern Paxson. &lt;a href=&#34;http://www.internetsociety.org/events/ndss-symposium/ndss-symposium-2017&#34;&gt;Network and Distributed Systems Security Symposium&lt;/a&gt; (NDSS) 2017.&lt;/p&gt;
+
+&lt;p&gt;In early 2017, researchers teamed up with Google, Mozilla and Cloudflare in efforts to measure TLS interception in an internet wide &lt;a href=&#34;https://zakird.com/papers/https_interception.pdf&#34;&gt;study&lt;/a&gt;. They noted that TLS interception software can be detected from the server&amp;rsquo;s point of view by identifying a mismatch between popular browsers TLS handshakes and the observed handshake. Going one step further, by observing the TLS handshakes of popular interception software they were able to construct fingerprints for some of the most widely used interception products.&lt;/p&gt;
+
+&lt;p&gt;The study measured interception from the vantage point of the Cloudflare CDN, Firefox Update servers, and popular e-commerce sites. Important results from the study found that about 5-10% of measured HTTPS connections were intercepted, and much of the software reduced the security of the end user in one way or another, with 97%, 54%, and 32% of connections to Firefox, Cloudflare, and e-commerce sites becoming less secure respectively. Interestingly, the only middlebox software to earn a grade of ‘A’ was BlueCoat Proxy.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img width=&#34;85%&#34; alt=&#34;Grades for middlebox interception&#34; src=&#34;https://tlseminar.github.io/images/tls-interception/middlebox_interception.png&#34;&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://jhalderm.com/pub/papers/interception-ndss17.pdf&#34;&gt;&lt;em&gt;The Security Impact of HTTPS Interception&lt;/em&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;chrome-56-update-breaks-bluecoat-proxy-v6-5&#34;&gt;Chrome 56 update breaks Bluecoat Proxy v6.5&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note these issues are always bugs in the middlebox products.&lt;/strong&gt; TLS version negotiation is backwards compatible, so a correctly-implemented TLS-terminating proxy should not require changes to work in a TLS-1.3-capable ecosystem [&amp;hellip;] That these products broke is an indication of defects in their TLS implementations&lt;br /&gt;
+&amp;ndash; &lt;em&gt;&lt;a href=&#34;https://bugs.chromium.org/p/chromium/issues/detail?id=694593#c26&#34;&gt;David Benjamin&lt;/a&gt;, Chromium Bug Tracker (2017)&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;On 21 February 2017, shortly after the above paper was published, mishandling of TLS 1.3 connections by BlueCoat Proxy left thousands of clients without internet connection after an automatic Chrome 56 update. The problem wasn’t that BlueCoat Proxy didn’t implement TLS 1.3, but that it didn’t gracefully renegotiate down to TLS 1.2 which it does support. Instead, the software simply terminated the incoming connection. This left tens of thousands of Chromebooks used by Montgomery County Public Schools students temporarily unable to connect to the internet. The temporary solution was for individual users to alter Chrome&amp;rsquo;s internal settings to disable TLS 1.3 &lt;a href=&#34;chrome://flags/#ssl-version-max&#34;&gt;chrome://flags/#ssl-version-max&lt;/a&gt; until a more general solution was delivered by &lt;a href=&#34;https://bugs.chromium.org/p/chromium/issues/detail?id=694593#c12&#34;&gt;the following day&lt;/a&gt; by Chromium, which rolled-back TLS 1.3 support by default.&lt;/p&gt;
+
+&lt;h2 id=&#34;going-forward&#34;&gt;Going Forward&lt;/h2&gt;
+
+&lt;p&gt;Whether it be at the cost of availability or end user security, these incidents expose the fragility of TLS interception software. Google has reached out to middlebox vendors in efforts to help them resolve the issues, but system administrators should consider the risks of TLS interception seriously.  There are, however, situations where it is necessary such as when companies are legally required to monitor traffic of their employees to comply with regulations (such as in the financial industry).  Vendors should independently strive to fix their products for the security of their users at the same time. Organizations who deploy TLS interception software should choose products in an informed manner and carefully consider the risks imposed by interception software.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img alt=&#34;Grades for various clientside interception&#34; src=&#34;https://tlseminar.github.io/images/tls-interception/clientside_interception.png&#34; width=90%&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://zakird.com/papers/https_interception.pdf&#34;&gt;The Security Impact of HTTPS Interception (2017)&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Survey and Revised Schedule</title>
+      <link>https://tlseminar.github.io/update/</link>
+      <pubDate>Wed, 08 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/update/</guid>
+      <description>&lt;p&gt;I hope everyone is enjoying Spring Break!&lt;/p&gt;
+
+&lt;p&gt;You can see the results of the survey here: &lt;a href=&#34;https://tlseminar.github.io/docs/mid-course-survey.pdf&#34;&gt;Mid-Course Survey
+Results&lt;/a&gt; (I edited one response that
+mentioned another student since that wasn&amp;rsquo;t intended to be public, but
+otherwise it is everything that was submitted.)&lt;/p&gt;
+
+&lt;p&gt;Based on the survey responses, and the depletion of Team Poppyseed, I
+have made some adjustments to the teams and schedule.  Team Sesame,
+Team Cinnamon, and Team Poppyseed have been turned into a Smoked
+Salmon Shmear, and reformed as Team Pineapple (which is Team Sesame
+and some additions from Poppyseed) and Team Mango.  Teams should
+wrap-up their remaining blogging responsibilities as they were (that
+is, Team Poppyseed is still responsible for completing the blog for
+Class 7, which hopefully is well underway already).&lt;/p&gt;
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#FFC&#34;&gt;&lt;td style=&#34;text-align:center&#34;&gt;&lt;b&gt;Team Pineapple&lt;/b&gt;&lt;/td&gt;&lt;td bgcolor=&#34;#CFF&#34; style=&#34;text-align:center&#34;&gt;&lt;b&gt;Team Mango&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+Adam Imeson (aei5uj)&lt;Br&gt;
+Bethlehem Naylor (bn9eb)&lt;br&gt;
+Bhuvanesh Murali (bm4cr)&lt;br&gt;
+Collin Berman (cmb5nh)&lt;br&gt;
+Daniel Saha (drs5ma)&lt;br&gt;
+Haina Li (hl3wb)&lt;br&gt;
+Joshua Holtzman (jmh2ba)&lt;br&gt;
+Reid Bixler (rmb3yz)&lt;br&gt;
+Tianyi Jin (tj2cw)&lt;br&gt;
+&lt;/td&gt;
+&lt;td&gt;
+Anant Kharkar (agk7uc)&lt;br&gt;
+Bargav Jayaraman (bj4nq)&lt;br&gt;
+Benjamin Lowman (brl2xx)&lt;br&gt;
+Bill Young (wty5dn)&lt;br&gt;
+Cyrus Malekpour (cm7bv)&lt;br&gt;
+Darion Cassel (dfc9ed)&lt;br&gt;
+Sam Havron (sgh7cc)&lt;br&gt;
+Yuchi Tian (yt8mn)&lt;br&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;I don&amp;rsquo;t want to increase the presentation and blogging workload for
+the rest of the semester, though, especially since I want to ensure
+everyone has time to work on your project.  So, each team will still
+be leading every third week, and blogging every third week, and we
+will do something else in the other classes.&lt;/p&gt;
+
+&lt;p&gt;Team Mango is scheduled to lead the next class on March 17 (this is
+what was assigned to Team Cinnamon, so not a new responsibility for
+most of the team, and the new recruits from Team Poppyseed should have
+limited roles expected for this first presentation since they just
+joined the reformulated team).  Team Pineapple is responsible for
+Blogging and Food for the class.  Note that according to the survey
+results, 73.4% of the class is sick of bagels.  So, Team Pineapple is
+challenged to come up with something more interesting for breakfast.&lt;/p&gt;
+
+&lt;p&gt;The full revised schedule is below.  Note that the team that is not
+leading the class is responsible for both Blogging and Food.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#CCC&#34;&gt;&lt;td width=&#34;22%&#34; style=&#34;text-align:center&#34;&gt;&lt;b&gt;Date&lt;/b&gt;&lt;/td&gt;&lt;td style=&#34;text-align:center&#34;&gt;&lt;b&gt;Topic&lt;/b&gt;&lt;/td&gt;&lt;td style=&#34;text-align:center&#34; width=20%&gt;&lt;b&gt;Team Mango&lt;/b&gt;&lt;/td&gt;&lt;td style=&#34;text-align:center&#34; width=20%&gt;&lt;b&gt;Team Pineapple&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+
+&lt;tr&gt;&lt;td&gt;Class 8 (17 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog, Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 9 (24 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog, Food&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 10 (31 Mar)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td colspan=2 bgcolor=&#34;#888888&#34;&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 11 (7 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog, Food&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 12 (14 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#44AAEE&#34;&gt;Blog, Food&lt;/td&gt;&lt;td bgcolor=&#34;#CCDD55&#34;&gt;Lead&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 13 (21 Apr)&lt;/td&gt;&lt;td&gt;TBD&lt;/td&gt;&lt;td bgcolor=&#34;#888888&#34; colspan=2&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Class 14 (28 Apr)&lt;/td&gt;&lt;td&gt;Mini-Conference&lt;/td&gt;&lt;td bgcolor=&#34;#888888&#34; colspan=2&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+</description>
+    </item>
     
     <item>
       <title>Timing Attacks</title>
@@ -387,6 +841,159 @@ on security-critical software.&lt;/p&gt;
 
 &lt;p&gt;Full technical details of the attack are outlined in the released paper:
 Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov. &lt;a href=&#34;https://shattered.it/static/shattered.pdf&#34;&gt;&lt;em&gt;The first collision for full SHA-1&lt;/em&gt;&lt;/a&gt;.  (Released 23 February, 2017)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Testing and Verification of TLS</title>
+      <link>https://tlseminar.github.io/verification/</link>
+      <pubDate>Fri, 24 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/verification/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;TLS/SSL is the most widely adopted protocol for securing online communication. However, as we have seen in the past few weeks, creative attackers have found it riddled with &lt;a href=&#34;https://tlseminar.github.io/padding-oracle&#34;&gt;exploitable&lt;/a&gt; &lt;a href=&#34;https://tlseminar.github.io/downgrade-attacks&#34;&gt;weaknesses&lt;/a&gt;. Rather than just reacting to attacks as they are discovered, many projects instead proactively seek out potential security flaws to implement remedies before vulnerabilities are exploited. This is done primarily by testing and verification, the topic of this week&amp;rsquo;s blog post.&lt;/p&gt;
+
+&lt;p&gt;First, we will examine some motivating attacks on TLS implementations, including the Heartbleed attack, CRIME attack, and the infamous “goto fail”, as well as their solutions. Next, we will discuss differential testing, a technique that creates well-formed but forged certificates, called &amp;ldquo;frankencerts&amp;rdquo;, and uses them to compare the responses of many popular implementations such as OpenSSL - and how they strengthened their defenses afterward (or didn’t). Finally, we introduce verification, which takes advantage of the relationship between computer systems and mathematics to rigorously prove properties about programs, either by type-checking existing programs or building a program from scratch starting with abstract refinement types.&lt;/p&gt;
+
+&lt;h3 id=&#34;heartbleed&#34;&gt;Heartbleed&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://heartbleed.com/&#34;&gt;&lt;em&gt;Heartbleed&lt;/em&gt;&lt;/a&gt; by Codenomicon (2014)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;OpenSSL’s heartbleed bug exploits heartbeat requests between a client and a server. In the OpenSSL implementation, the client does not check the actual lengths of the message but trusts the length field in the request message. If the real message is shorter than the length specified in the length field, then the payload returned in the response heartbleed can also contain what happened to be in the allocated memory buffer. In this manner, secret keys, login credentials, sensitive data, and miscellaneous memory are all at risk of exposure.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/heartbleed.png&#34; alt=&#34;Heartbleed&#34; width=&#34;75%&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Heartbleed#/media/File:Simplified_Heartbleed_explanation.svg&#34;&gt;Wikipedia&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;compression-ratio-info-leak-mass-exploitation-crime&#34;&gt;Compression Ratio Info-Leak Mass Exploitation (CRIME)&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/11eBmGiHbYcHR9gL5nDyZChu_-lCa2GizeuOfaLU2HOU/edit#slide=id.g1e3070b2_0_10&#34;&gt;&lt;em&gt;The CRIME Attack&lt;/em&gt;&lt;/a&gt; by Juliano Rizzo and Thai Duong (2013)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;CRIME attacks were developed by Juliano Rizzo and Thai Duong in 2012 and exploited TLS Compression by injecting plaintext into victim’s web requests and observing the outcome length. Tampering with web requests is made possible by injecting malicious JavaScript code through a network attack. Through many trials, the attacker can steal user cookies and hijack the session.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/crime.png&#34; alt=&#34;CRIME&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;http://2we26u4fam7n16rz3a44uhbe1bq2.wpengine.netdna-cdn.com/wp-content/uploads/101413_1347_BEASTvsCRIM4.png&#34;&gt;Infosec Institute&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;goto-fail&#34;&gt;Goto Fail;&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cigital.com/blog/understanding-apple-goto-fail-vulnerability-2/&#34;&gt;&lt;em&gt;Understanding Apple &amp;lsquo;goto fail&amp;rsquo; Vulnerability&lt;/em&gt;&lt;/a&gt; by Amit Sethi (2014)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In February 2014, Apple released a security update on many versions of its operating system that included the following vulnerability in the function SSLVerifySignedServerKeyExchange.
+&lt;div style=&#34;padding-left: 100px&#34;&gt;
+&lt;pre&gt;if ((err = SSLHashSHA1.update(&amp;amp;hashCtx, &amp;amp;signedParams)) != 0)
+    goto fail;
+    goto fail;
+  &amp;hellip; other checks &amp;hellip;
+  fail:
+    &amp;hellip; buffer frees (cleanups) &amp;hellip;
+    return err;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;center&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://www.dwheeler.com/essays/apple-goto-fail.html&#34;&gt;David A. Wheeler&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The indentation on the second &lt;code&gt;goto fail;&lt;/code&gt; is misleading. The lack of curly brackets meant that the second &lt;code&gt;goto fail;&lt;/code&gt; will always be executed, skipping vital signature checking and accepting both good and bad signatures.&lt;/p&gt;
+
+&lt;h1 id=&#34;differential-testing&#34;&gt;Differential Testing&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677&#34;&gt;&lt;em&gt;Using Frankencerts for Automated Adversarial Testing of Certificate Validation&lt;/em&gt;&lt;/a&gt; by Chad Brubaker, Suman Jana, Baishakhi Ray, Sarfraz Khurshid, and Vitaly Shmatikov (2014)&lt;br /&gt;
+&lt;a href=&#34;http://dl.acm.org/citation.cfm?doid=2786805.2786834&#34;&gt;&lt;em&gt;An empirical study of goto in C code from GitHub repositories&lt;/em&gt;&lt;/a&gt; by Meiyappan Nagappan, Romain Robbes, Yasutaka Kamei, Éric Tanter, Shane McIntosh, Audris Mockus, and Ahmed E. Hassan (2015)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Differential testing is the process of searching for bugs in software by running multiple programs on the same inputs.  If there is a discrepancy between one program’s results on a given input and another’s, it’s likely that one of the implementations is bugged.  A differential testing system will flag such results for human review.&lt;/p&gt;
+
+&lt;p&gt;Brubaker et al. used this technique to test server authentication for many implementations of SSL/TLS as presented in their 2014 “Frankencerts” paper.  The researchers initially had to deal with the dual problems of generating test case certificates and successfully interpreting the results of acceptance and rejection.&lt;/p&gt;
+
+&lt;p&gt;Generating certificates proved to be a challenge due to the nature of an SSL certificate.  Simply randomly fuzzing valid certificates is unlikely to produce data parsable as a certificate.  Manually creating test cases would take too long and potentially miss edge cases that a more statistically comprehensive generation method would find.  The researchers decided on creating frankencerts by scanning 243,246 current certificates from the internet and randomly permuting their parts.  This process guaranteed that the 8,127,600 frankencerts would be parsable as certificates and resulted in a wide variety of unusual combinations of extensions, key usage constraints, odd CAs, and other possible variations within a cert.&lt;/p&gt;
+
+&lt;p&gt;The researchers then ran OpenSSL, NSS, GnuTLS, CyaSSL, PolarSSL, MatrixSSL, OpenJDK, and Bouncy Castle on the frankencerts, looking for discrepancies between results.  Because each of these libraries is intended to implement the same X.509 certificate validation logic, any discrepancy in certificate acceptance between them would indicate that SOMEONE was screwing up.  Thus the researchers dealt with the second issue, that of interpreting the results of their tests.&lt;/p&gt;
+
+&lt;p&gt;Running the differential test on all 8 million frankencerts and the quarter-million real certificates  produced 208 discrepancies that, when manually investigated, uncovered many serious flaws in the various implementations (error results are bolded):&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/diff-testing.png&#34; alt=&#34;Differential Testing Results&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.685.8677&#34;&gt;Chad Brubaker, Suman Jana, Baishakhi Ray, Sarfraz Khurshid, and Vitaly Shmatikov&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Any of the invalid acceptances would allow for an in-the-middle attack to be crafted against the implementation in question.  The researchers contacted the developers of the various SSL/TLS implementations affected and reported their results before publishing, allowing the developers time to fix their bugs.&lt;/p&gt;
+
+&lt;p&gt;Chen and Su’s mucert builds on the frankencert method.  Mucerts are randomly fuzzed test certificates generated from a seed set of certificates.  The fuzzing, or mutating, occurs in accordance with a number of guidelines that prevent mutations from generating unparseable certificates.  Chen and Su statistically evaluated mucerts and compared them to frankencerts, finding that mucerts attained drastically higher levels of corner case coverage.&lt;/p&gt;
+
+&lt;h1 id=&#34;verification&#34;&gt;Verification&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://galois.com/blog/2016/09/verifying-s2n-hmac-with-saw/&#34;&gt;&lt;em&gt;Verifying s2n HMAC with SAW&lt;/em&gt;&lt;/a&gt; by Joey Dodds (2016) &lt;br&gt;
+&lt;a href=&#34;https://www.microsoft.com/en-us/research/publication/implementing-tls-with-verified-cryptographic-security/&#34;&gt;&lt;em&gt;Implementing TLS with Verified Cryptographic Security&lt;/em&gt;&lt;/a&gt; by Karthikeyan Bhargavan, Cédric Fournet, Markulf Kohlweiss, Alfredo Pironti,and Pierre-Yves Strub (2013) &lt;br&gt;
+&lt;a href=&#34;http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2&#34;&gt;&lt;em&gt;Software Foundations&lt;/em&gt;&lt;/a&gt; by Benjamin C. Pierce, et al. (2017)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Software testing can only assert properties about program behaviors covered in the test suite. There will always be missed edge cases and odd bugs that will show up in code. This is where we turn to formal specifications to ‘prove’ the correctness of our code.&lt;/p&gt;
+
+&lt;p&gt;But how do we go about ‘proving’ this correctness? Let’s look at what we’re trying to solve in the first case:&lt;/p&gt;
+
+&lt;p&gt;For each behavior X in code, formally prove that X does what it should and nothing else. For those that are familiar with proofs and mathematical abstractions, this is known as a non-existence proof. In formal verification, we must prove that a program satisfies a formal specification of its behavior. By using the methods of mathematics, we can make strong statements regarding the correctness of our cryptographic implementations, for example, TLS.&lt;/p&gt;
+
+&lt;p&gt;To get down to formal verification, we must first define the difference between &lt;em&gt;verification&lt;/em&gt; and &lt;em&gt;validation&lt;/em&gt;. Validation asks questions like &lt;em&gt;Does it meet the requirements?&lt;/em&gt;, &lt;em&gt;Is it the right product?&lt;/em&gt;, and &lt;em&gt;Does it function according to design?&lt;/em&gt;.  Whereas, verification asks the question &lt;em&gt;does this software meet a given specification under given assumptions?&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;One requirement for nearly any stronger property is to first show the code satisfied type safety. A program is considered type safe if and only if the only operations that can be performed on data are those sanctioned by the type of data. For example, we can look at the following program where integers, floats, and doubles are being implicitly cast amongst one another. In a type safe program, an integer could never be treated as a float (more importantly, a pointer type would never be treated as a non-pointer, and vice versa).&lt;/p&gt;
+
+&lt;p&gt;While the below program is well-typed, it illustrates some of the
+challenges faced when attempting to show type safety for typical C
+code:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/type-safe.png&#34; alt=&#34;Type Safety of Code&#34; width=&#34;60%&#34;&gt;&lt;Br&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;There are a variety of formal concepts that are used in program verification including model checking, deductive verification, equivalence checking, theorem proving, and correctness by construction. The problem that arises, though, is that some of these rely on concepts that simply are not feasible in commercial-level programs. For example, model checking exhaustively checks whether a model of the program meets a given specification, but every behavior in the program must have proper transitions and states resulting in the state explosion problem. Put simply, as more behaviors are added to simple programs, the number of states in the model exponentially grows. Due to this, it is challenging to scale model checking to large systems, although extensive work has been done toward this goal and often complex programs can be abstracted in ways that enable useful model checking.&lt;/p&gt;
+
+&lt;p&gt;One popular approach to verification is to use expressive type systems. Using the Curry-Howard isomorphism, we are able to directly relate programs with mathematical proofs and therefore have the ability to create refinement types which are types endowed with a predicate which is assumed to hold for any element of the refined type. What this means is that we can define our program using refinement types to encode the safety properties of the system which can be type-checked and proven to hold that safety property true.&lt;/p&gt;
+
+&lt;p&gt;There’s a lot that can be done with formal verification and TLS is a great possible use for fixing errors created during implementation. There are actually a number of projects for verifying parts of TLS out there that are attempting to combine together to formally verify TLS as a whole. This joint project is known as &lt;a href=&#34;https://project-everest.github.io/&#34;&gt;Project Everest&lt;/a&gt;. Everest is a pretty lofty goal considering the difficulty of formally verifying even small-level programs and scripts, but has made considerable progress towards building a fully verified TLS implementation. The eventual goal of Everest is that when all the projects are combined together, they will generate a C library that not only implements TLS 1.3 but is also proven secure, essentially circumventing any possible flaws in the TLS protocol.&lt;/p&gt;
+
+&lt;h3 id=&#34;coq&#34;&gt;Coq&lt;/h3&gt;
+
+&lt;p&gt;Team Cinnamon displayed a formal verification software called Coq during class. Coq is an assistive tool for the verification of code. The software implements a variety of mathematical and computational strategies to work, in combination with the user, to formally verify code, functions, and theorems. In class we ran through a couple of sample proofs to display the functionality and potential of Coq as a verification software and to give an example of how a formal verification software works.&lt;/p&gt;
+
+&lt;p&gt;A download for Coq is available at &lt;a href=&#34;https://coq.inria.fr/&#34;&gt;&lt;em&gt;https://coq.inria.fr/&lt;/em&gt;&lt;/a&gt; which offers different versions for different architectures. We used the CoqIDE which allows for editing Coq files with helpful syntax highlighting and is useful when trying to first learn Coq. For a good introduction to Coq, as well as number of exercises for what to do, a group at UPenn has a &lt;a href=&#34;http://www.cis.upenn.edu/~bcpierce/sf/current/Preface.html#lab2&#34;&gt;great lab focused on Coq&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/verification/coq.png&#34; alt=&#34;Sample Coq Code&#34;&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;&lt;em&gt;Source: &lt;/em&gt;&lt;a href=&#34;https://coq.inria.fr/refman/Reference-Manual018.html&#34;&gt;The Coq Proof Assistant&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Coq is extremely powerful software to help formally verify computer
+programs, but it can be difficult to learn, requiring a change in
+mentality for most programmers. For any problems or difficulties found
+when using Coq, there is plenty of documentation available within
+Coq’s &lt;a href=&#34;https://coq.inria.fr/distrib/current/refman/toc.html&#34;&gt;Reference Manual&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;Implementing cryptographic protocols correctly remains a huge
+challenge.  There are tools available now that can prove interesting
+properties about software, including even the absence of certain types
+of side channels.  It is important to remember, though, that anything
+we prove about a program is a proof about a property based on a model
+of the execution environment, and assumptions about adversary
+capabilities.  As verification and testing tools get more
+sophisticated, those models can come increasingly close to the actual
+environment and capabilities of real adversaries, but today, there
+remains a large gap.&lt;/p&gt;
 </description>
     </item>
     

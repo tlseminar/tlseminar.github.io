@@ -1,13 +1,41 @@
 # Teams
 
-(Note: team names are temporary, and will map to teams on schedule.)
+<table>
+<tr bgcolor="#FFC"><td style="text-align:center"><b>Team Pineapple</b></td><td bgcolor="#CFF" style="text-align:center"><b>Team Mango</b></td></tr>
+<tr>
+<td>
+Adam Imeson (aei5uj)<Br>
+Bethlehem Naylor (bn9eb)<br>
+Bhuvanesh Murali (bm4cr)<br>
+Collin Berman (cmb5nh)<br>
+Daniel Saha (drs5ma)<br>
+Haina Li (hl3wb)<br>
+Joshua Holtzman	(jmh2ba)<br>
+Reid Bixler (rmb3yz)<br>
+Tianyi Jin (tj2cw)<br>
+</td>
+<td>
+Anant Kharkar (agk7uc)<br>
+Bargav Jayaraman (bj4nq)<br>
+Benjamin Lowman	(brl2xx)<br>
+Bill Young (wty5dn)<br>
+Cyrus Malekpour	(cm7bv)<br>
+Darion Cassel (dfc9ed)<br>
+Sam Havron (sgh7cc)<br>
+Yuchi Tian (yt8mn)<br>
+</td>
+</tr>
+</table>
+
+</table>
+
+**Teams until March 8 (through Spring Break)**
 
 <table>
 <tr bgcolor="#CCC"><td><b>Team Sesame</b></td><td><b>Team Cinnamon</b></td><td><b>Team Poppyseed</b></td></tr>
 <tr>
 <td>
 Adam Imeson (aei5uj)<Br>
-Benyi Gong (bg3va)<br>
 Bethlehem Naylor (bn9eb)<br>
 Bhuvanesh Murali (bm4cr)<br>
 Haina Li (hl3wb)<br>
@@ -26,15 +54,15 @@ Yuchi Tian (yt8mn)<br>
 <td>
 Collin Berman (cmb5nh)<br>
 Cyrus Malekpour	(cm7bv)<br>
-Haoran Liu (hl4fb)<br>
 Daniel Saha (drs5ma)<br>
-Minghua Jiang (mj2eu)<br>
 Tianyi Jin (tj2cw)<br>
 </td>
 </tr>
 </table>
 
 </table>
+
+See [Schedule](/schedule) for the schedule of class topics and team responsibilities.
 
 # Responsibilities
 
@@ -68,25 +96,3 @@ food.
 - Save the receipts to get reimbursed, and take care of the
   reimbursement. (This is easiest if the reimbursee is someone already
   set up in the CS department's financial system.)
-
-<table>
-<tr bgcolor="#CCC"><td><b>Date</b></td><td><b>Topic</b></td><td width=12%><b>Team T (Cinnamon)</b></td><td width=12%><b>Team L (Poppyseed)</b></td><td width=12%><b>Team S (Sesame)</b></td></tr>
-
-<tr><td><a href="/class 1">Class 1</a> (20 Jan)</td><td>Intro</td><td>Plan</td><td bgcolor="#44AAEE">Blog</td><td>Plan</td></tr>
-
-<tr><td><a href="/padding-oracle">Class 2</a> (27 Jan)</td><td>Padding Oracle Attacks</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td><a href="/downgrade-attacks">Class 3</a> (3 Feb)</td><td>Logjam/DROWN</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td><a href="/certificates">Class 4</a> (10 Feb)</td><td>Certificates</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 5 (17 Feb)</td><td>Verification and Testing</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 6 (24 Feb)</td><td>Side Channels</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 7 (3 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td bgcolor="#66EEAA" style="text-align:center" colspan=5>Spring Break</td></tr>
-<tr><td>Class 8 (17 Mar)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 9 (24 Mar)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 10 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 11 (7 Apr)</td><td>TBD</td><td bgcolor="#CCDD55">Lead</td><td>Food</td><td bgcolor="#44AAEE">Blog</td></tr>
-<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td><td>Food</td></tr>
-<tr><td>Class 13 (31 Mar)</td><td>TBD</td><td>Food</td><td bgcolor="#44AAEE">Blog</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td>-</td><td>-</td><td>-</td></tr>
-</table>
-
