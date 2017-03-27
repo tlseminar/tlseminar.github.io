@@ -34,3 +34,16 @@ POODLE exploits vulnerability in SSL 3.0 but is applicable to TLS 1.2 after the 
 
 <center><img src="/images/timing-attacks/montgomery.png" alt="Montgomery ladder" style="width:300px;"/><br>
 <sup>Montgomery's Ladder</sup><br><sup>Source: https://cr.yp.to/bib/2003/joye-ladder.pdf</sup></center>
+
+## Removed
+[An overview of TLS 1.3 and Q&A](https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/)  
+In 1.3, everything was scrutinized for being really necessary and secure, and scrapped otherwise. The following things are removed:
+
+* [static RSA handshake](https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/)  
+* the [CBC MAC-then-Encrypt](https://blog.cloudflare.com/padding-oracles-and-the-decline-of-cbc-mode-ciphersuites/) modes, which were responsible for Vaudenay, Lucky13, POODLE, LuckyMinus20  
+* weak primitives like RC4, SHA1, MD5  
+* compression  
+* renegotiation  
+* custom FFDHE groups  
+* RSA PKCS#1v1.5  
+* explicit nonces  
