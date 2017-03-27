@@ -8,8 +8,8 @@ slug = "tls-13"
 
 ## Faster Handshake
 
-TLS 1.3 introduces a significantly slimmer Handshake Protocol than previous versions. In order to understand the implications of these changes, we first review the Handshake Protocol used in TLS 1.2. 
-In TLS 1.2, the client begins the handshake with a Client Hello, followed by a Server Hello response from the server. The Client then proceeds with a Client Key Exchange and Client Finished; the server responds with its own versions. 
+TLS 1.3 introduces a significantly slimmer Handshake Protocol than previous versions. In order to understand the implications of these changes, we first review the Handshake Protocol used in TLS 1.2.
+In TLS 1.2, the client begins the handshake with a Client Hello, followed by a Server Hello response from the server. The Client then proceeds with a Client Key Exchange and Client Finished; the server responds with its own versions.
 In contrast, TLS 1.3 incorporates the key share messages with the Client/Server Hello, meaning that each side of the connection has to send one less message (and only send one message total to initiate the connection).
 
 <center><img src="/images/tls-13/handshake1.2.png" alt="TLS 1.2 Handshake" style="width:300px;"/><br>
@@ -22,6 +22,16 @@ In contrast, TLS 1.3 incorporates the key share messages with the Client/Server 
 
 AuthLoop is a TLS-style authentication protocol specifically designed to telephony networks. In this domain, the system must connect three different types of telephony networks: cellular, VoIP, and PSTN. However, the TLS Handshake transmission speeds for such a system were extremely slow - averaging 98 seconds per handshake - which is completely infeasible for most phone calls. AuthLoop keeps the authentication and shared secret elements of TLS and a freshness/liveness component analogous to the Heartbeat Protocol. On the other hand, AuthLoop removes RSA and the cipher agreement messages. Furthermore, AuthLoop does not encrypt messages and therefore has no Record Protocol. After slimming down, the average transmission time reduced drastically to 4.8 seconds.
 
+## 0-RTT Resumption
+
+A major new feature in the TLS 1.3 draft is support for 0-RTT session resumption. In TLS 1.2, establishing a connection to a new server required at least 4 trips between the server and client to make an HTTP request and receive a response. With a session-ID or session ticket, that could be reduced to 3 trips per connection. TLS 1.3 by default reduces the number for new connections to only 3 trips per connection, but also adds support for a new mode termed *0-RTT*. In this mode, resumed HTTPS connections require only 2 trips, which is the bare minimum required for a full HTTP query and response. In this mode, TLS 1.3 adds no additional latency cost to the regular HTTP request!
+
+![TLS 1.3 0-RTT](/images/tls-13/tls1_3_0rtt.png)
+###### TLS 1.3 0-RTT (Source: https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/)
+
+However, the addition of 0-RTT resumption to the protocol has an important implication for the security features provided by the protocol. Because TLS 1.3 session tickets, which enable 0-RTT resumption, are stateless on the server, such requests from the client are trivially vulnerable to **replay attacks**, which enable an attacker who can intercept an encrypted client message and re-send it to the server, without the server being able to differentiate the replayed blob.
+
+To remedy this, the protocol authors recommend that initial requests from the client be *idempotent*, or non-state-changing. Servers should not allow the first request to be idempotent in 0-RTT mode. This has been arguably the most controversial part of the new standard, as it puts the onus on some higher level protocol to solve a problem that TLS has historically been responsible for. Even worse, it is not solved directly by HTTP but rather must be specifically kept in mind by web developers.
 
 ## Anti-Downgrade Prevention and Detection
 
@@ -59,7 +69,7 @@ Draft 11 of TLS 1.3 implements the following downgrade protection mechanism.
 <sup>TLS 1.3 Draft 11 Update on Downgrade Resilience in Key-Exchange Protocols</sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
 TLS 1.3 draft 11 counters all the attacks discussed by [Karthikeyan et al.](https://eprint.iacr.org/2016/072.pdf) by incorporating two countermeasures.
-First, TLS 1.3 protocol continues the handshake hashes over retries. 
+First, TLS 1.3 protocol continues the handshake hashes over retries.
 Second, TLS 1.3 servers always include their highest supported version number in the server nonce, even when they choose a lower version such as TLS 1.0.
 The TLS 1.3 server will send [ServerHello](https://tools.ietf.org/html/draft-ietf-tls-tls13-18#section-4.1.3) message in response to a ClientHello message when it is able to find an acceptable set of algorithms and the client's "key_share" extension is acceptable.  If it is not able to find an acceptable set of parameters, the server will respond with a "handshake_failure" fatal alert. The ServerHello message contains server's random value which incorporates downgrade protection mechanism. If a ClientHello indicates only support for TLS 1.2 or below, then the last eight bytes of server's random value MUST be set to: `44 4F 57 4E 47 52 44 01`.
 If a ClientHello indicates only support for TLS 1.1 or below, then the last eight bytes of server's random value SHOULD be set to: `44 4F 57 4E 47 52 44 00`.
@@ -69,14 +79,14 @@ Likewise, the TLS 1.3 clients are required to check the above values in the serv
 
 
 ## Removed
-[An overview of TLS 1.3 and Q&A](https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/)  
+[An overview of TLS 1.3 and Q&A](https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/)
 In 1.3, everything was scrutinized for being really necessary and secure, and scrapped otherwise. The following things are removed:
 
-* [static RSA handshake](https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/)  
-* the [CBC MAC-then-Encrypt](https://blog.cloudflare.com/padding-oracles-and-the-decline-of-cbc-mode-ciphersuites/) modes, which were responsible for Vaudenay, Lucky13, POODLE, LuckyMinus20  
-* weak primitives like RC4, SHA1, MD5  
-* compression  
-* renegotiation  
-* custom FFDHE groups  
-* RSA PKCS#1v1.5  
-* explicit nonces  
+* [static RSA handshake](https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/)
+* the [CBC MAC-then-Encrypt](https://blog.cloudflare.com/padding-oracles-and-the-decline-of-cbc-mode-ciphersuites/) modes, which were responsible for Vaudenay, Lucky13, POODLE, LuckyMinus20
+* weak primitives like RC4, SHA1, MD5
+* compression
+* renegotiation
+* custom FFDHE groups
+* RSA PKCS#1v1.5
+* explicit nonces
