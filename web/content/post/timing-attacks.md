@@ -39,8 +39,8 @@ Thus, we see from this simple example that verifying constant-time implementatio
 
 # Remote Timing Attacks are Practical
 
-TODO: add full reference for paper
-[Paper link](/docs/ssl-timing.pdf)
+
+[Remote timing attacks are practical](/docs/ssl-timing.pdf). David Brumley and Dan Boneh (2005).Computer Networks, 48(5), 701-716.]
 
 At the heart of RSA decription is a modular exponentiation \\( m = c^d mod~N\\) where \\(N = pq\\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \\( m = c^d mod~N\\) is computed in two steps:
 
