@@ -6,6 +6,27 @@ title = "TLS 1.3"
 slug = "tls-13"
 +++
 
+## TLS Evolves: Version 1.3
+
+TLS v1.3 is a solid improvement. In order to get a good understanding of TLS v1.3 and where it is heading in the future, we will first look at where TLS has been:
+
+### Looking Backward: Retro TLS
+
+SSL/TLS has a storied past; SSL v1.0 was never released. Netscape, the company that originally developed SSL, circulated it internally but decided not to release it to the public because it had several flaws including a lack of data integrity protection.
+
+After that non-starter, the timeline looks like this:
+- 1994: Netscape develops SSL v2.0 which is shipped with the Netscape Navigator 1.1
+- 1995: SSL v2.0 has serious security issues; Netscape releases SSL v3.
+- 1999: TLS v1.0 released; standardizing and upgrading SSL v3.0 
+- 2006: TLS v1.1 released; address the BEAST attack, which will come in 5 years
+- 2008: TLS v1.2 released with Authenticated Encryption
+- 2011: Google deploys public key pinning and forward secrecy
+- 2013: Work on TLS v1.3 begins
+
+A more thorough timeline can be found [here](https://www.feistyduck.com/ssl-tls-and-pki-history/).
+
+So what does TLS v1.3 bring to the table? Let's take a look...
+
 ## Faster Handshake
 
 TLS 1.3 introduces a significantly slimmer Handshake Protocol than previous versions. In order to understand the implications of these changes, we first review the Handshake Protocol used in TLS 1.2.
