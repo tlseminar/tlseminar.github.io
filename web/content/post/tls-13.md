@@ -90,3 +90,52 @@ In 1.3, everything was scrutinized for being really necessary and secure, and sc
 * custom FFDHE groups
 * RSA PKCS#1v1.5
 * explicit nonces
+
+## Formal Verification
+
+TLS 1.3 is the first revision of the TLS protocol to incorporate formal verification during development. While several papers have been published on the subject, Cremers et al., in their [_Automated Analysis of TLS 1.3: 0-RTT, Resumption and Delayed Authentication_](https://tls13tamarin.github.io/TLS13Tamarin/docs/tls13tamarin.pdf), provide a particularly current (2016) description of the challenges and results of such an analysis. In the [blog post](https://tls13tamarin.github.io/TLS13Tamarin/#introduction) associated with their work, the authors contextualize their verification efforts:
+
+> _The various flaws identified in TLS 1.2 and below, be they implementation- or specification-based, have prompted the TLS Working Group to adopt an "analysis-before-deployment" design paradigm in drafting the next version of the protocol. After a development process of many months, the [TLS 1.3 specification](https://github.com/tlswg/tls13-spec) is nearly complete. In the spirit of contributing towards this new design philosophy, we model the TLS 1.3 specification using the Tamarin prover, a tool for the automated analysis of security protocols._
+
+The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision] of the protocol is slated to include a fix for this attack.
+
+### Protocol Model
+
+The authors used the [Tamarin](https://github.com/tamarin-prover/tamarin-prover) prover for their analysis. Tamarin is an interactive theorem proving environment (similar to [Coq](https://coq.inria.fr/about-co)) specially designed for the verification of protocols such as TLS. As TLS is already an abstract specification, encoding TLS 1.3 into the Tamarin specification language was relatively straightforward. "Rules" (functions) over this specification captured honest-party and adversary actions alike. The following state diagram depicts the client TLS state (as defined in Tamarin) and transitions between the states (Tamarin rules) for an entire session.
+
+<center><img src="/images/tls-13/client-sm.png" alt="Partial client state machines for TLS 1.3 revision 10" style="width:800px;"/></center><br>
+
+### Proved Security Properties
+
+The next step in the analysis involved encoding the desired security properties of TLS 1.3 as Tamarin lemmas. The authors encoded the following properties:
+
+* unilateral authentication of the server (mandatory)
+* mutual authentication (optional)
+* confidentiality and perfect forward secrecy of session keys 
+* integrity of handshake messages
+
+Each lemma must hold over its respective domain of states (a subset of the nodes in the client state machine above, for example). While proof assistants like Tamarin are capable of constructing simple proofs, a significant amount of manual effort was required to prove the enumerated lemmas. As such, a notable contribution of this work is the actual Tamarin proof artifact itself, not just what was and wasn't proven. The authors claim their Tamarin abstractions and proofs were constructed with extensibility to future TLS development in mind.
+
+### Discovered Attack
+
+While verifying the [delayed authentication mechanism](https://www.ietf.org/proceedings/93/slides/slides-93-tls-2.pdf) portion of the protocol, an attack was discovered which violated client authentication; an adversary is able to impersonate a client while communicating with the server. 
+
+#### Step 1
+
+The victim client, Alice, establishes a connection with the man-in-the-middle attacker, Charlie. Charlie establishes a connection with Bob, the server which which Alice wishes to connect. A PSK is established for both connections, `PSK_1` and `PSK_2`, respectively.
+
+<center><img src="/images/tls-13/att1.png" alt="Client Authentication Attack: Step 1" style="width:800px;"/></center><br>
+
+#### Step 2
+
+Alice sends a random nonce, `nc`, to Charlie using `PSK_1`. Charlie reuses this nonce to initiate a PSK-resumption handshake with Bob. Bob responds with random nonce `ns` and the server `Finished` message using `PSK_2`. Charlie reuses `ns` and recomputes the `Finished` message for Alice using `PSK_1`.  Alice Returns her `Finished` message to Charlie. Charlie then recomputes this `Finished` message for Bob using `PSK_2`.
+
+<center><img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/></center><br>
+
+#### Step 3
+
+Charlie makes a request to Bob that requires client authentication. Charlie is thus prompted for his certificate and verification. This request is re-encrypted and forwarded to Alice. To compute the verification signature of this forwarded request, Alice uses the `session_hash` value, which is the hash of all handshake messages excluding the `Finished` messages. This `session_hash` value will match that of Charlie and Bob's, and thus Charlie can re-encrypt Alice's signature for Bob. Bob accepts Alice's certificate and verification as valid authentication for Charlie.
+
+<center><img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/></center><br>
+
+The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group. The fix, which forces the `session_hash` value to include `Finished` messages was even suggested in an official [pull request](https://github.com/tlswg/tls13-spec/pull/316), but was rejected. The authors make a strong case that formal verification has been an extremely valuable part of the design process of TLS 1.3. The speed at which the fix was incorporated into subsequent protocol revisions suggests that the TLS Working Group shares this sentiment.
