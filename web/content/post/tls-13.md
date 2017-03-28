@@ -118,7 +118,7 @@ TLS 1.3 is the first revision of the TLS protocol to incorporate formal verifica
 
 > _The various flaws identified in TLS 1.2 and below, be they implementation- or specification-based, have prompted the TLS Working Group to adopt an "analysis-before-deployment" design paradigm in drafting the next version of the protocol. After a development process of many months, the [TLS 1.3 specification](https://github.com/tlswg/tls13-spec) is nearly complete. In the spirit of contributing towards this new design philosophy, we model the TLS 1.3 specification using the Tamarin prover, a tool for the automated analysis of security protocols._
 
-The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision] of the protocol is slated to include a fix for this attack.
+The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision](https://tools.ietf.org/html/draft-ietf-tls-tls13-11) of the protocol is slated to include a fix for this attack.
 
 ### Protocol Model
 
@@ -159,4 +159,4 @@ Charlie makes a request to Bob that requires client authentication. Charlie is t
 
 <center><img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/></center><br>
 
-The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group. The fix, which forces the `session_hash` value to include `Finished` messages was even suggested in an official [pull request](https://github.com/tlswg/tls13-spec/pull/316), but was rejected. The authors make a strong case that formal verification has been an extremely valuable part of the design process of TLS 1.3. The speed at which the fix was incorporated into subsequent protocol revisions suggests that the TLS Working Group shares this sentiment.
+The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group. The fix, which forces the `session_hash` value to include `Finished` messages was even suggested in an official [pull request](https://github.com/tlswg/tls13-spec/pull/316), but was rejected. The authors make a strong case that formal verification has been an extremely valuable part of the design process of TLS 1.3. The speed with which the fix was incorporated into subsequent protocol revisions suggests that the TLS Working Group shares this sentiment.
