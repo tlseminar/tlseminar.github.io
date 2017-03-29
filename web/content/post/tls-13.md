@@ -17,7 +17,7 @@ SSL/TLS has a storied past; SSL v1.0 was never released. Netscape, the company t
 After that non-starter, the timeline looks like this:
 - 1994: Netscape develops SSL v2.0 which is shipped with the Netscape Navigator 1.1
 - 1995: SSL v2.0 has serious security issues; Netscape releases SSL v3.
-- 1999: TLS v1.0 released; standardizing and upgrading SSL v3.0 
+- 1999: TLS v1.0 released; standardizing and upgrading SSL v3.0
 - 2006: TLS v1.1 released; address the BEAST attack, which will come in 5 years
 - 2008: TLS v1.2 released with Authenticated Encryption
 - 2011: Google deploys public key pinning and forward secrecy
@@ -57,9 +57,9 @@ To remedy this, the protocol authors recommend that initial requests from the cl
 ## Deployment
 
 Deployment of TLS 1.3 remains loosely in the future as the protocol specification
-finishes its final draft. Current TLS 1.3 drafts include 0-RTT by requiring servers to set up 
+finishes its final draft. Current TLS 1.3 drafts include 0-RTT by requiring servers to set up
 a profile that defines its use. However, as with many other features in earlier
-TLS protocols, 0-RTT data is not compatible with older servers. 
+TLS protocols, 0-RTT data is not compatible with older servers.
 A server using TLS 1.3 has the option to limit what early data to use in a 0-RTT and what to buffer.
 
 [Data Center use of Static Diffie-Hellman in TLS
@@ -72,7 +72,7 @@ that must passively monitor intranet TLS connections made to endpoints under the
 enterprise's control. Such monitoring is ubiquitous and indispensable in some industries, and loss of
 this capability may slow adoption of TLS 1.3.
 
-Deployment of TLS 1.3 across the web faces several industry concerns, most notably regarding Static RSA (no forward secrecy), 
+Deployment of TLS 1.3 across the web faces several industry concerns, most notably regarding Static RSA (no forward secrecy),
 as posted from an email exchange
 between Andrew Kennedy, an employee at BITS (the technology policy division of the Financial
 Services Roundtable [http://www.fsroundtable.org/bits](http://www.fsroundtable.org/bits)), and Kenny Paterson:
@@ -84,11 +84,11 @@ Services Roundtable [http://www.fsroundtable.org/bits](http://www.fsroundtable.o
 > internet security this important working group has made in the last few years I
 > recently learned of a proposed change that would affect many of my
 > organization's member institutions:  the deprecation of RSA key exchange.
-> 
+>
 > Deprecation of the RSA key exchange in TLS 1.3 will cause significant problems
 > for financial institutions, almost all of whom are running TLS internally and
-> have significant, security-critical investments in out-of-band TLS decryption. 
-> 
+> have significant, security-critical investments in out-of-band TLS decryption.
+>
 > Like many enterprises, financial institutions depend upon the ability to
 > decrypt TLS traffic to implement data loss protection, intrusion detection and
 > prevention, malware detection, packet capture and analysis, and DDoS
@@ -98,22 +98,22 @@ Services Roundtable [http://www.fsroundtable.org/bits](http://www.fsroundtable.o
 
 > Hi Andrew,
 
-> My view concerning your request: no. 
-> 
+> My view concerning your request: no.
+>
 > Rationale: We're trying to build a more secure internet.
-> 
+>
 > Meta-level comment:
-> 
+>
 > You're a bit late to the party. We're metaphorically speaking at the stage of
-> emptying the ash trays and hunting for the not quite empty beer cans. 
-> 
+> emptying the ash trays and hunting for the not quite empty beer cans.
+>
 > More exactly, we are at draft 15 and RSA key transport disappeared from the spec
 > about a dozen drafts ago. I know the banking industry is usually a bit slow off
-> the mark, but this takes the biscuit. 
-> 
+> the mark, but this takes the biscuit.
+>
 > Cheers,
-> 
-> Kenny 
+>
+> Kenny
 [Message Source](https://www.ietf.org/mail-archive/web/tls/current/msg21278.html)
 
 #### TLS 1.3: The Great, the Good, and the Bad:
@@ -166,7 +166,33 @@ If a ClientHello indicates only support for TLS 1.1 or below, then the last eigh
 Likewise, the TLS 1.3 clients are required to check the above values in the server random.
 
 
+## Authenticated Encryption
 
+Let's talk about message authentication for a moment.  Up until now, we've mostly concerned ourselves with the "MAC-Encode-Encrypt" (MEE) packet construction method.  In a nutshell, MEE follows three steps:
+
+1. Calculate a MAC over the payload
+2. Append the MAC and an appropriate amount of padding to the payload
+3. Encrypt the modified payload to generate a ciphertext
+
+As we've discussed in previous classes, the CBC mode of operation has its downsides; adversaries can break encryption by utilizing padding oracle attacks, since padding can only exist in a handful of values and lengths.  Moreover, it's impossible to actually verify the integrity of the ciphertext <em>until the MAC has been revealed by decrypting the ciphertext</em>.  The duration required to decrypt the tampered ciphertext and validate the MAC leaks sensitive (and potentially useful) timing information to adversaries.
+
+#### Encrypt-then-MAC
+In general, we find that MEE is inferior to its cousin, "Encrypt-then-MAC"  (ETM).  In ETM, as opposed to MEE, the plaintext is encrypted <em>before</em> the MAC is calculated.  Intuitively, it makes sense that ETM is more secure&mdash;any tampering of the ciphertext is immediately evident when the MAC is calculated, therefore no decryption takes place (and no timing information is leaked).  Additionally, assuming the ciphertext appears random, the MAC also appears random and reveals no information about the underlying ciphertext.
+
+#### Galois/Counter Mode (GCM)
+Before we jump on the ETM bandwagon, however, let's take a look at yet another mode of operation, <em>Galois/Counter Mode</em> (GCM).  GCM is an authenticated encryption algorithm that provides confidentiality <em>and</em> integrity, and does so extremely efficiently.
+
+<center><img src="/images/tls-13/gcm.png" alt="GCM" width=500px/><br>
+<sup>Galois/Counter Mode (credit:  Wikipedia)</sup></center>
+
+<strong> GCM At-A-Glance </strong>
+
+1. Sequentially number blocks
+2. Encrypt block numbers with block cipher E
+3. XOR result of encryption with plaintext to produce ciphertext
+4. Combine ciphertext with authentication code to produce authentication tag
+
+The authentication tag can be used to verify the integrity of the data upon decryption, similar to an HMAC.  If this "counter mode" of authenticated encryption seems superior, that's because <em>it is</em>!  TLS 1.3 only provides support for GCM, CCM, and ChaCha20-Poly1305, another authenticated encryption mode of operation.  Say goodbye to MAC-then-encrypt.
 
 ## Removed
 [An overview of TLS 1.3 and Q&A](https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/)
@@ -201,14 +227,14 @@ The next step in the analysis involved encoding the desired security properties 
 
 * unilateral authentication of the server (mandatory)
 * mutual authentication (optional)
-* confidentiality and perfect forward secrecy of session keys 
+* confidentiality and perfect forward secrecy of session keys
 * integrity of handshake messages
 
 Each lemma must hold over its respective domain of states (a subset of the nodes in the client state machine above, for example). While proof assistants like Tamarin are capable of constructing simple proofs, a significant amount of manual effort was required to prove the enumerated lemmas. As such, a notable contribution of this work is the actual Tamarin proof artifact itself, not just what was and wasn't proven. The authors claim their Tamarin abstractions and proofs were constructed with extensibility to future TLS development in mind.
 
 ### Discovered Attack
 
-While verifying the [delayed authentication mechanism](https://www.ietf.org/proceedings/93/slides/slides-93-tls-2.pdf) portion of the protocol, an attack was discovered which violated client authentication; an adversary is able to impersonate a client while communicating with the server. 
+While verifying the [delayed authentication mechanism](https://www.ietf.org/proceedings/93/slides/slides-93-tls-2.pdf) portion of the protocol, an attack was discovered which violated client authentication; an adversary is able to impersonate a client while communicating with the server.
 
 #### Step 1
 
