@@ -503,8 +503,7 @@ the separate linked posts.)&lt;/p&gt;
 
 &lt;h1 id=&#34;remote-timing-attacks-are-practical&#34;&gt;Remote Timing Attacks are Practical&lt;/h1&gt;
 
-&lt;p&gt;TODO: add full reference for paper
-&lt;a href=&#34;https://tlseminar.github.io/docs/ssl-timing.pdf&#34;&gt;Paper link&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/ssl-timing.pdf&#34;&gt;Remote timing attacks are practical&lt;/a&gt;. David Brumley and Dan Boneh (2005).Computer Networks, 48(5), 701-716.]&lt;/p&gt;
 
 &lt;p&gt;At the heart of RSA decription is a modular exponentiation \( m = c^d mod~N\) where \(N = pq\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \( m = c^d mod~N\) is computed in two steps:&lt;/p&gt;
 
@@ -615,8 +614,7 @@ correlation with total decryption time.&lt;/p&gt;&lt;/li&gt;
 
 &lt;h1 id=&#34;remote-timing-attacks-are-still-practical&#34;&gt;Remote Timing Attacks are Still Practical&lt;/h1&gt;
 
-&lt;p&gt;TODO: add cite
-&lt;a href=&#34;https://tlseminar.github.io/docs/stillpractical.pdf&#34;&gt;Paper link&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;Billy Bob Brumley and Nicola Tuveri. &amp;ldquo;Remote timing attacks are still practical.&amp;rdquo; European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Timing attacks target cryptosystems and protocols that do not run in constant time. &lt;a href=&#34;https://en.wikipedia.org/wiki/Elliptic_curve_cryptography&#34;&gt;Elliptic curve&lt;/a&gt; based &lt;a href=&#34;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&#34;&gt;signature schemes&lt;/a&gt; aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via &lt;a href=&#34;https://cr.yp.to/bib/2003/joye-ladder.pdf&#34;&gt;Montgomery&amp;rsquo;s ladder&lt;/a&gt; which performs a sequence of independent field operations on elliptic curves. &lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;Brumley and Tuveri&lt;/a&gt; reveal a timing attack vulnerability in OpenSSL&amp;rsquo;s implementation of Montgomery&amp;rsquo;s ladder that consequently leaks the server&amp;rsquo;s private key.&lt;/p&gt;
 
@@ -655,6 +653,14 @@ As indicated in the third line of code, OpenSSL optimizes the number of ladder s
 &lt;sup&gt;Countermeasure to OpenSSL&amp;rsquo;s flaw&lt;/sup&gt;&lt;br&gt;
 &lt;sup&gt;Source: &lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;
 This ensures that the logarithm is constant and hence leaks no side-channel information. Moreover, the above modification does not cause extra computation overhead.&lt;/p&gt;
+
+&lt;h3 id=&#34;sources&#34;&gt;Sources&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://cr.yp.to/bib/2003/joye-ladder.pdf&#34;&gt;Marc Joye and Sung-Ming Yen. &amp;ldquo;The Montgomery powering ladder.&amp;rdquo; International Workshop on Cryptographic Hardware and Embedded Systems. Springer Berlin Heidelberg, 2002.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf&#34;&gt;Billy Bob Brumley and Nicola Tuveri. &amp;ldquo;Remote timing attacks are still practical.&amp;rdquo; European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.hpl.hp.com/techreports/1999/HPL-1999-90.pdf&#34;&gt;Howgrave-Graham, Nick A., and Nigel P. Smart. &amp;ldquo;Lattice attacks on digital signature schemes.&amp;rdquo; Designs, Codes and Cryptography 23.3 (2001): 283-290.&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&#34;cache-timing-attacks&#34;&gt;Cache Timing Attacks&lt;/h1&gt;
 

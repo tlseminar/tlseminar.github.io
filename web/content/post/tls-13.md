@@ -54,6 +54,75 @@ However, the addition of 0-RTT resumption to the protocol has an important impli
 
 To remedy this, the protocol authors recommend that initial requests from the client be *idempotent*, or non-state-changing. Servers should not allow the first request to be idempotent in 0-RTT mode. This has been arguably the most controversial part of the new standard, as it puts the onus on some higher level protocol to solve a problem that TLS has historically been responsible for. Even worse, it is not solved directly by HTTP but rather must be specifically kept in mind by web developers.
 
+## Deployment
+
+Deployment of TLS 1.3 remains loosely in the future as the protocol specification
+finishes its final draft. Current TLS 1.3 drafts include 0-RTT by requiring servers to set up 
+a profile that defines its use. However, as with many other features in earlier
+TLS protocols, 0-RTT data is not compatible with older servers. 
+A server using TLS 1.3 has the option to limit what early data to use in a 0-RTT and what to buffer.
+
+[Data Center use of Static Diffie-Hellman in TLS
+1.3](https://tools.ietf.org/html/draft-green-tls-static-dh-in-tls13-00):
+While ephemeral (EC) Diffie-Hellman is in nearly all ways an improvement over
+the TLS RSA handshake, it has a limitation in certain enterprise settings.
+Specifically, the use of ephemeral (PFS) ciphersuites is not compatible with
+enterprise network monitoring tools such as Intrusion Detection Systems (IDS)
+that must passively monitor intranet TLS connections made to endpoints under the
+enterprise's control. Such monitoring is ubiquitous and indispensable in some industries, and loss of
+this capability may slow adoption of TLS 1.3.
+
+Deployment of TLS 1.3 across the web faces several industry concerns, most notably regarding Static RSA (no forward secrecy), 
+as posted from an email exchange
+between Andrew Kennedy, an employee at BITS (the technology policy division of the Financial
+Services Roundtable [http://www.fsroundtable.org/bits](http://www.fsroundtable.org/bits)), and Kenny Paterson:
+
+**from Kennedy:**
+
+> ...
+> While I am aware and on the whole supportive of the significant contributions to
+> internet security this important working group has made in the last few years I
+> recently learned of a proposed change that would affect many of my
+> organization's member institutions:  the deprecation of RSA key exchange.
+> 
+> Deprecation of the RSA key exchange in TLS 1.3 will cause significant problems
+> for financial institutions, almost all of whom are running TLS internally and
+> have significant, security-critical investments in out-of-band TLS decryption. 
+> 
+> Like many enterprises, financial institutions depend upon the ability to
+> decrypt TLS traffic to implement data loss protection, intrusion detection and
+> prevention, malware detection, packet capture and analysis, and DDoS
+> mitigation.
+
+**with Kenny's response:**
+
+> Hi Andrew,
+
+> My view concerning your request: no. 
+> 
+> Rationale: We're trying to build a more secure internet.
+> 
+> Meta-level comment:
+> 
+> You're a bit late to the party. We're metaphorically speaking at the stage of
+> emptying the ash trays and hunting for the not quite empty beer cans. 
+> 
+> More exactly, we are at draft 15 and RSA key transport disappeared from the spec
+> about a dozen drafts ago. I know the banking industry is usually a bit slow off
+> the mark, but this takes the biscuit. 
+> 
+> Cheers,
+> 
+> Kenny 
+[Message Source](https://www.ietf.org/mail-archive/web/tls/current/msg21278.html)
+
+#### TLS 1.3: The Great, the Good, and the Bad:
+[Video
+Source](https://media.ccc.de/v/33c3-8348-deploying_tls_1_3_the_great_the_good_and_the_bad)
+<iframe width="1024" height="576"
+src="https://media.ccc.de/v/33c3-8348-deploying_tls_1_3_the_great_the_good_and_the_bad/oembed"
+frameborder="0" allowfullscreen></iframe>
+
 ## Anti-Downgrade Prevention and Detection
 
 [Downgrade resilience in key-exchange protocols](https://eprint.iacr.org/2016/072.pdf) by Karthikeyan Bhargavan et al. in IEEE Symposium on Security and Privacy (SP), 2016.

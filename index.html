@@ -603,8 +603,7 @@ the separate linked posts.)</p>
 
 <h1 id="remote-timing-attacks-are-practical">Remote Timing Attacks are Practical</h1>
 
-<p>TODO: add full reference for paper
-<a href="/docs/ssl-timing.pdf">Paper link</a></p>
+<p><a href="/docs/ssl-timing.pdf">Remote timing attacks are practical</a>. David Brumley and Dan Boneh (2005).Computer Networks, 48(5), 701-716.]</p>
 
 <p>At the heart of RSA decription is a modular exponentiation \( m = c^d mod~N\) where \(N = pq\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \( m = c^d mod~N\) is computed in two steps:</p>
 
@@ -715,8 +714,7 @@ correlation with total decryption time.</p></li>
 
 <h1 id="remote-timing-attacks-are-still-practical">Remote Timing Attacks are Still Practical</h1>
 
-<p>TODO: add cite
-<a href="/docs/stillpractical.pdf">Paper link</a></p>
+<p><a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Billy Bob Brumley and Nicola Tuveri. &ldquo;Remote timing attacks are still practical.&rdquo; European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.</a></p>
 
 <p>Timing attacks target cryptosystems and protocols that do not run in constant time. <a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic curve</a> based <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">signature schemes</a> aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via <a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">Montgomery&rsquo;s ladder</a> which performs a sequence of independent field operations on elliptic curves. <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Brumley and Tuveri</a> reveal a timing attack vulnerability in OpenSSL&rsquo;s implementation of Montgomery&rsquo;s ladder that consequently leaks the server&rsquo;s private key.</p>
 
@@ -755,6 +753,14 @@ As indicated in the third line of code, OpenSSL optimizes the number of ladder s
 <sup>Countermeasure to OpenSSL&rsquo;s flaw</sup><br>
 <sup>Source: <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</a></sup></center>
 This ensures that the logarithm is constant and hence leaks no side-channel information. Moreover, the above modification does not cause extra computation overhead.</p>
+
+<h3 id="sources">Sources</h3>
+
+<p><a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">Marc Joye and Sung-Ming Yen. &ldquo;The Montgomery powering ladder.&rdquo; International Workshop on Cryptographic Hardware and Embedded Systems. Springer Berlin Heidelberg, 2002.</a></p>
+
+<p><a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Billy Bob Brumley and Nicola Tuveri. &ldquo;Remote timing attacks are still practical.&rdquo; European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.</a></p>
+
+<p><a href="http://www.hpl.hp.com/techreports/1999/HPL-1999-90.pdf">Howgrave-Graham, Nick A., and Nigel P. Smart. &ldquo;Lattice attacks on digital signature schemes.&rdquo; Designs, Codes and Cryptography 23.3 (2001): 283-290.</a></p>
 
 <h1 id="cache-timing-attacks">Cache Timing Attacks</h1>
 
