@@ -39,8 +39,8 @@ Thus, we see from this simple example that verifying constant-time implementatio
 
 # Remote Timing Attacks are Practical
 
-TODO: add full reference for paper
-[Paper link](/docs/ssl-timing.pdf)
+
+[Remote timing attacks are practical](/docs/ssl-timing.pdf). David Brumley and Dan Boneh (2005).Computer Networks, 48(5), 701-716.]
 
 At the heart of RSA decription is a modular exponentiation \\( m = c^d mod~N\\) where \\(N = pq\\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \\( m = c^d mod~N\\) is computed in two steps:
 
@@ -142,8 +142,7 @@ correlation with total decryption time.
 
 # Remote Timing Attacks are Still Practical
 
-TODO: add cite
-[Paper link](/docs/stillpractical.pdf)
+[Billy Bob Brumley and Nicola Tuveri. "Remote timing attacks are still practical." European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf)
 
 Timing attacks target cryptosystems and protocols that do not run in constant time. [Elliptic curve](https://en.wikipedia.org/wiki/Elliptic_curve_cryptography) based [signature schemes](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via [Montgomery's ladder](https://cr.yp.to/bib/2003/joye-ladder.pdf) which performs a sequence of independent field operations on elliptic curves. [Brumley and Tuveri](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf) reveal a timing attack vulnerability in OpenSSL's implementation of Montgomery's ladder that consequently leaks the server's private key.
 
@@ -179,6 +178,14 @@ A possible countermeasure as proposed by [Brumley and Tuveri](https://gnunet.org
 <sup>Countermeasure to OpenSSL's flaw</sup><br>
 <sup>Source: https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</sup></center>
 This ensures that the logarithm is constant and hence leaks no side-channel information. Moreover, the above modification does not cause extra computation overhead.
+
+### Sources
+
+[Marc Joye and Sung-Ming Yen. "The Montgomery powering ladder." International Workshop on Cryptographic Hardware and Embedded Systems. Springer Berlin Heidelberg, 2002.](https://cr.yp.to/bib/2003/joye-ladder.pdf)
+
+[Billy Bob Brumley and Nicola Tuveri. "Remote timing attacks are still practical." European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.](https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf)
+
+[Howgrave-Graham, Nick A., and Nigel P. Smart. "Lattice attacks on digital signature schemes." Designs, Codes and Cryptography 23.3 (2001): 283-290.](http://www.hpl.hp.com/techreports/1999/HPL-1999-90.pdf)
 
 # Cache Timing Attacks
 
