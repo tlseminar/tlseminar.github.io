@@ -168,11 +168,11 @@ The above problems can be countered using correct downgrade protection. While TL
 Downgrade protection primarily relies on the MACs in the finished messages, which in turn rely on the strength of the group and the negotiated algorithms and hash.
 If a client and server support a weak group, then an attacker can downgrade the group and break the master secret to forget the MACs, as in Logjam.
 
-The figure below shows the faulty downgrade resilience of TLS 1.2, where the TLS 1.2 server fails to hash  the negotiated parameters like protocol version (`v`), chosen parameters (`a_R`) and server identity (`pk_R`) in its hash message `hash_1(.)`.
+The figure below shows the faulty downgrade resilience of TLS 1.2, where the TLS 1.2 server fails to hash  the negotiated parameters like protocol version (`v`), chosen parameters (`a_R`) and server identity (`pk_R`) in its hash message `hash_1(.)` (see subfigure (b) of the below figure).
 <center><img src="/images/tls-13/tls1_2.png" alt="Downgrade Protection in TLS 1.2" style="width:1000px;"/><br>
 <sup>TLS 1.0 - 1.2 with (EC)DHE key exchange (a), where messages labeled with * occur only when client authentication is enabled, and (b) its downgrade protection sub-protocol</sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
-Draft 10 of TLS 1.3 implements the following downgrade protection mechanism which rectifies the above mistake and consequently hashes all the negotiated parameters.
+Draft 10 of TLS 1.3 implements the following downgrade protection mechanism which rectifies the above mistake and consequently hashes all the negotiated parameters. Notice the `hash_1(H(m_1, m_2, -))` in the message sent by server (subfigure (b) in the figure below), which hashes all the negotiated parameters in `m_2`.
 
 <center><img src="/images/tls-13/tls1_3_draft10.png" alt="Downgrade Protection in TLS 1.3 Draft 10" style="width:1000px;"/><br>
 <sup>TLS 1.3 1-RTT mode with server-only authentication (a) and its downgrade protection sub-protocol (b) </sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
@@ -183,7 +183,7 @@ Second, an attacker uses the TLS fallback mechanism to stop TLS 1.3 connections 
 Third, in Draft 10 of the TLS1.3 protocol, the handshake hashes restart upon receiving a Retry message and hence, the attacker can downgrade the Diffie-Hellman group for some classes of negotiation functions.
 
 TLS 1.3 draft 11 counters the above three attacks by incorporating two countermeasures.
-First, TLS 1.3 protocol continues the handshake hashes over retries (subfigure (a) of figure below).
+First, TLS 1.3 protocol continues the handshake hashes over retries (subfigure (a) of the figure below).
 Second, TLS 1.3 servers always include their highest supported version number in the server nonce, even when they choose a lower version such as TLS 1.0.
 Draft 11 of TLS 1.3 [fixed](https://github.com/tlswg/tls13-spec/pull/284) the issue by requiring TLS 1.3 server to set top N bits of the ServerRandom to be a specific fixed value on receiving ClientHello message from a TLS 1.2 or below client. TLS 1.3 clients which receive a TLS 1.2 or below ServerHello check for this value and abort if they receive it. The figure below shows the client check using `verifyVersion` functionality.
 This allows for detection of downgrade attacks over and above the Finished handshake as long as ephemeral cipher suites are used. This prevents attacks targeted at (EC)DHE.
