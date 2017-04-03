@@ -153,34 +153,29 @@ frameborder="0" allowfullscreen></iframe>
 
 ## Anti-Downgrade Prevention and Detection
 
-TODO: fix reference - don't use et al. like this, give all the authors credit
 
-[Downgrade resilience in key-exchange protocols](https://eprint.iacr.org/2016/072.pdf) by Karthikeyan Bhargavan et al. in IEEE Symposium on Security and Privacy (SP), 2016.
+[Downgrade resilience in key-exchange protocols](https://eprint.iacr.org/2016/072.pdf) by Karthikeyan Bhargavan, Christina Brzuska, Cédric Fournet, Markulf Kohlweiss, Santiago Zanella-Béguelin and Matthew Green in IEEE Symposium on Security and Privacy (SP), 2016.
 
-TODO: add a link to previous class about this
-
-TLS 1.2 suffers from various downgrade and man-in-the-middle attacks like Logjam, FREAK and POODLE.
+TLS 1.2 suffers from various [downgrade](https://tlseminar.github.io/downgrade-attacks/) and [man-in-the-middle attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) like Logjam, FREAK and POODLE.
 Logjam exploits the option of using legacy "export-grade" 512-bit Diffie–Hellman groups in TLS 1.2. It forces susceptible servers to downgrade to cryptographically weak 512 bit Diffie-Hellman groups, which could then be compromised.
 FREAK is a man-in-the-middle attack that affects the OpenSSL stack, the default Android web browser, and some Safari browsers. It tricks servers into negotiating a TLS connection using cryptographically weak 512 bit encryption keys.
 POODLE exploits vulnerability in SSL 3.0 but is applicable to TLS 1.2 once the attacker performs version rollback to SSL 3.0 through a man-in-the-middle attack.
 
-The above problems can be countered using correct downgrade protection. While TLS 1.2 does implement downgrade protection, it fails to do so correctly.  TODO: add a sentence connecting this to TLS v1.3
+The above problems can be countered using correct downgrade protection. While TLS 1.2 does implement downgrade protection, it fails to do so correctly. TLS 1.3 implements downgrade protection by requiring the TLS 1.3 server to set first `N` bits of its ServerRandom nonce to a fixed value on recieving ClientHello message from a TLS 1.2 or below client. This signals the TLS 1.3 clients and they reject any packets that has the fixed value sequence.
 
 ### Downgrade Resilience in Key-Exchange Protocols
 
 Downgrade protection primarily relies on the MACs in the finished messages, which in turn rely on the strength of the group and the negotiated algorithms and hash.
 If a client and server support a weak group, then an attacker can downgrade the group and break the master secret to forget the MACs, as in Logjam.
 
-TODO: I tried to fix the provided image, but it is very low resolution. You should go back to the original source and take a high resolution screen shot to make it readable (of course, best would be to make your own image better suited to web).  Then, crop the screenshot well to display okay here.
-
-<center><img src="/images/tls-13/tls1_2.png" alt="Downgrade Protection in TLS 1.2" style="width:800px;"/><br>
+<center><img src="/images/tls-13/tls1_2.png" alt="Downgrade Protection in TLS 1.2" style="width:1000px;"/><br>
 <sup>TLS 1.0 - 1.2 with (EC)DHE key exchange (a), where messages labeled with * occur only when client authentication is enabled, and (b) its downgrade protection sub-protocol</sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
 Draft 10 of TLS 1.3 implements the following downgrade protection mechanism.
 
 TODO: don't just drop in the image, explain the main idea behind the protection
 
-<center><img src="/images/tls-13/tls1_3_draft10.png" alt="Downgrade Protection in TLS 1.3 Draft 10" style="width:800px;"/><br>
+<center><img src="/images/tls-13/tls1_3_draft10.png" alt="Downgrade Protection in TLS 1.3 Draft 10" style="width:1000px;"/><br>
 <sup>TLS 1.3 1-RTT mode with server-only authentication (a) and its downgrade protection sub-protocol (b) </sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
 There are three downgrade attacks possible on TLS 1.3 as described in Draft 10.
@@ -195,7 +190,7 @@ Draft 11 of TLS 1.3 implements the following downgrade protection mechanism.
 
 TODO: can't really make out anything from this figure - can you describe change from Draft 10?
 
-<center><img src="/images/tls-13/tls1_3_draft11.png" alt="Downgrade Protection in TLS 1.3 Draft 11" style="width:800px;"/><br>
+<center><img src="/images/tls-13/tls1_3_draft11.png" alt="Downgrade Protection in TLS 1.3 Draft 11" style="width:1000px;"/><br>
 <sup>TLS 1.3 Draft 11 Update on Downgrade Resilience in Key-Exchange Protocols</sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
 TLS 1.3 draft 11 counters all the attacks discussed by [Karthikeyan et al.](https://eprint.iacr.org/2016/072.pdf) by incorporating two countermeasures.
