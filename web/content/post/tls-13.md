@@ -284,9 +284,7 @@ While verifying the [delayed authentication mechanism](https://www.ietf.org/proc
     <img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/>
     <br><br>
     <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
-    </center>
-
-TODO: source for this? (great if its original, but still give credit cause otherwise looks like a missing image credit)
+</center>
 
 **Step 3.** Charlie makes a request to Bob that requires client authentication. Charlie is thus prompted for his certificate and verification. This request is re-encrypted and forwarded to Alice. To compute the verification signature of this forwarded request, Alice uses the `session_hash` value, which is the hash of all handshake messages excluding the `Finished` messages. This `session_hash` value will match that of Charlie and Bob's, and thus Charlie can re-encrypt Alice's signature for Bob. Bob accepts Alice's certificate and verification as valid authentication for Charlie.
 
