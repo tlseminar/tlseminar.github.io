@@ -243,13 +243,17 @@ Cas Cremers, Marko Horvat, Sam Scott, and Thyla van der Merwe's paper, [_Automat
 
 > _The various flaws identified in TLS 1.2 and below, be they implementation- or specification-based, have prompted the TLS Working Group to adopt an "analysis-before-deployment" design paradigm in drafting the next version of the protocol. After a development process of many months, the [TLS 1.3 specification](https://github.com/tlswg/tls13-spec) is nearly complete. In the spirit of contributing towards this new design philosophy, we model the TLS 1.3 specification using the Tamarin prover, a tool for the automated analysis of security protocols._
 
-The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision](https://tools.ietf.org/html/draft-ietf-tls-tls13-11) of the protocol is includes a fix for this attack.
+The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision](https://tools.ietf.org/html/draft-ietf-tls-tls13-11) of the protocol included a fix for this attack.
 
 ### Protocol Model
 
 The authors used the [Tamarin](https://github.com/tamarin-prover/tamarin-prover) prover for their analysis. Tamarin is an interactive theorem proving environment (similar to [Coq](https://coq.inria.fr/about-co)) specially designed for the verification of protocols such as TLS. As TLS is already an abstract specification, encoding TLS 1.3 into the Tamarin specification language was relatively straightforward. "Rules" (functions) over this specification captured honest-party and adversary actions alike. The following state diagram depicts the client TLS state (as defined in Tamarin) and transitions between the states (Tamarin rules) for an entire session.
 
-<center><img src="/images/tls-13/client-sm.png" alt="Partial client state machines for TLS 1.3 revision 10" style="width:800px;"/></center><br>
+<center>
+    <img src="/images/tls-13/client-sm.png" alt="Partial client state machines for TLS 1.3 revision 10" style="width:800px;"/>
+    <br><br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#building-a-model)</sup>
+</center>
 
 ### Proven Security Properties
 
@@ -268,19 +272,29 @@ While verifying the [delayed authentication mechanism](https://www.ietf.org/proc
 
 **Step 1.** The victim client, Alice, establishes a connection with the man-in-the-middle attacker, Charlie. Charlie establishes a connection with Bob, the server which which Alice wishes to connect. A PSK is established for both connections, `PSK_1` and `PSK_2`, respectively.
 
-<center><img src="/images/tls-13/att1.png" alt="Client Authentication Attack: Step 1" style="width:800px;"/></center><br>
-
-TODO: source for this? (great if its original, but still give credit cause otherwise looks like a missing image credit)
+<center>
+    <img src="/images/tls-13/att1.png" alt="Client Authentication Attack: Step 1" style="width:800px;"/>
+    <br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
+</center>
 
 **Step 2.**  Alice sends a random nonce, `nc`, to Charlie using `PSK_1`. Charlie reuses this nonce to initiate a PSK-resumption handshake with Bob. Bob responds with random nonce `ns` and the server `Finished` message using `PSK_2`. Charlie reuses `ns` and recomputes the `Finished` message for Alice using `PSK_1`.  Alice Returns her `Finished` message to Charlie. Charlie then recomputes this `Finished` message for Bob using `PSK_2`.
 
-<center><img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/></center><br>
+<center>
+    <img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/>
+    <br><br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
+    </center>
 
 TODO: source for this? (great if its original, but still give credit cause otherwise looks like a missing image credit)
 
 **Step 3.** Charlie makes a request to Bob that requires client authentication. Charlie is thus prompted for his certificate and verification. This request is re-encrypted and forwarded to Alice. To compute the verification signature of this forwarded request, Alice uses the `session_hash` value, which is the hash of all handshake messages excluding the `Finished` messages. This `session_hash` value will match that of Charlie and Bob's, and thus Charlie can re-encrypt Alice's signature for Bob. Bob accepts Alice's certificate and verification as valid authentication for Charlie.
 
-<center><img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/></center><br>
+<center>
+    <img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/>
+    <br><br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
+</center>
 
 The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group. 
 
