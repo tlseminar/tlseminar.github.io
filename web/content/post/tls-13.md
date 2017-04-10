@@ -137,16 +137,6 @@ Kenny's response: (excerpted from [https://www.ietf.org/mail-archive/web/tls/cur
 > Kenny
 
 
-#### TLS 1.3: The Great, the Good, and the Bad:
-
-TODO: need some text around this, setting up and summarising the video
-
-[Video
-Source](https://media.ccc.de/v/33c3-8348-deploying_tls_1_3_the_great_the_good_and_the_bad)
-<iframe width="1024" height="576"
-src="https://media.ccc.de/v/33c3-8348-deploying_tls_1_3_the_great_the_good_and_the_bad/oembed"
-frameborder="0" allowfullscreen></iframe>
-
 ## Anti-Downgrade Prevention and Detection
 
 
