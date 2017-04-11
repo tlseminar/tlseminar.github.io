@@ -42,8 +42,6 @@ In contrast, TLS 1.3 incorporates the key share messages with the
 send one less message (and only send one message total to initiate the
 connection).
 
-TODO: fix images
-
 <center><img src="/images/tls-13/handshake1.2.png" alt="TLS 1.2 Handshake" style="width:300px;"/><br>
 <sup>TLS 1.2 Handshake</sup></center>
 
@@ -52,11 +50,9 @@ TODO: fix images
 
 ### Sidebar: AuthLoop
 
-TODO: does this really belong here? It was covered in class, but doesn't seem to fit. I would suggest cutting or moving elsewhere, and setting it up to explain how it fits in.
+> [AuthLoop: End-to-End Cryptographic Authentication for Telephony over Voice Channels](/docs/authloop.pdf), Bradley Reaves, Logan Blue, and Patrick Traynor. USENIX. August 2016.
 
-TODO: add paper link
-
-AuthLoop is a TLS-style authentication protocol specifically designed to telephony networks. In this domain, the system must connect three different types of telephony networks: cellular, VoIP, and PSTN. However, the TLS Handshake transmission speeds for such a system were extremely slow - averaging 98 seconds per handshake - which is completely infeasible for most phone calls. AuthLoop keeps the authentication and shared secret elements of TLS and a freshness/liveness component analogous to the Heartbeat Protocol. On the other hand, AuthLoop removes RSA and the cipher agreement messages. Furthermore, AuthLoop does not encrypt messages and therefore has no Record Protocol. After slimming down, the average transmission time reduced drastically to 4.8 seconds.
+On the subject of modification and adaptations to the typical TLS 1.2 system of encryption and authentication, we explore AuthLoop: a TLS-style authentication protocol specifically designed for telephony networks. In this domain, the system must connect three different types of telephony networks: cellular, VoIP, and PSTN. However, the TLS Handshake transmission speeds for such a system were extremely slow - averaging 98 seconds per handshake - which is completely infeasible for most phone calls. AuthLoop keeps the authentication and shared secret elements of TLS and a freshness/liveness component analogous to the Heartbeat Protocol. On the other hand, AuthLoop removes RSA and the cipher agreement messages. Furthermore, AuthLoop does not encrypt messages and therefore has no Record Protocol. After slimming down, the average transmission time reduced drastically to 4.8 seconds.
 
 ## 0-RTT Resumption
 
@@ -141,66 +137,46 @@ Kenny's response: (excerpted from [https://www.ietf.org/mail-archive/web/tls/cur
 > Kenny
 
 
-#### TLS 1.3: The Great, the Good, and the Bad:
-
-TODO: need some text around this, setting up and summarising the video
-
-[Video
-Source](https://media.ccc.de/v/33c3-8348-deploying_tls_1_3_the_great_the_good_and_the_bad)
-<iframe width="1024" height="576"
-src="https://media.ccc.de/v/33c3-8348-deploying_tls_1_3_the_great_the_good_and_the_bad/oembed"
-frameborder="0" allowfullscreen></iframe>
-
 ## Anti-Downgrade Prevention and Detection
 
-TODO: fix reference - don't use et al. like this, give all the authors credit
 
-[Downgrade resilience in key-exchange protocols](https://eprint.iacr.org/2016/072.pdf) by Karthikeyan Bhargavan et al. in IEEE Symposium on Security and Privacy (SP), 2016.
+[Downgrade resilience in key-exchange protocols](https://eprint.iacr.org/2016/072.pdf) by Karthikeyan Bhargavan, Christina Brzuska, Cédric Fournet, Markulf Kohlweiss, Santiago Zanella-Béguelin and Matthew Green in IEEE Symposium on Security and Privacy (SP), 2016.
 
-TODO: add a link to previous class about this
-
-TLS 1.2 suffers from various downgrade and man-in-the-middle attacks like Logjam, FREAK and POODLE.
+TLS 1.2 suffers from various [downgrade](https://tlseminar.github.io/downgrade-attacks/) and [man-in-the-middle attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) like Logjam, FREAK and POODLE.
 Logjam exploits the option of using legacy "export-grade" 512-bit Diffie–Hellman groups in TLS 1.2. It forces susceptible servers to downgrade to cryptographically weak 512 bit Diffie-Hellman groups, which could then be compromised.
 FREAK is a man-in-the-middle attack that affects the OpenSSL stack, the default Android web browser, and some Safari browsers. It tricks servers into negotiating a TLS connection using cryptographically weak 512 bit encryption keys.
 POODLE exploits vulnerability in SSL 3.0 but is applicable to TLS 1.2 once the attacker performs version rollback to SSL 3.0 through a man-in-the-middle attack.
 
-The above problems can be countered using correct downgrade protection. While TLS 1.2 does implement downgrade protection, it fails to do so correctly.  TODO: add a sentence connecting this to TLS v1.3
+The above problems can be countered using correct downgrade protection. While TLS 1.2 does implement downgrade protection, it fails to do so correctly. Downgrade protection requires sending MAC of finished messages between client and server to ensure that the negotiated parameters have not be modified by a MITM attacker. TLS 1.2 does not hash all the negotiated parameters in its MAC allowing the attacker to alter the non-hashed parameters and launch downgrade attacks. TLS 1.3 fixes this issue by hashing all the parameters and also isolates TLS 1.2 or lower version messages (which have downgrade resilience issues) by requiring the TLS 1.3 server to set first `N` bits of its ServerRandom nonce to a fixed value on recieving ClientHello message from a TLS 1.2 or below client. This signals the TLS 1.3 clients and they reject any packet that has the fixed value sequence.
 
 ### Downgrade Resilience in Key-Exchange Protocols
 
 Downgrade protection primarily relies on the MACs in the finished messages, which in turn rely on the strength of the group and the negotiated algorithms and hash.
 If a client and server support a weak group, then an attacker can downgrade the group and break the master secret to forget the MACs, as in Logjam.
 
-TODO: I tried to fix the provided image, but it is very low resolution. You should go back to the original source and take a high resolution screen shot to make it readable (of course, best would be to make your own image better suited to web).  Then, crop the screenshot well to display okay here.
-
-<center><img src="/images/tls-13/tls1_2.png" alt="Downgrade Protection in TLS 1.2" style="width:800px;"/><br>
+The figure below shows the faulty downgrade resilience of TLS 1.2, where the TLS 1.2 server fails to hash  the negotiated parameters like protocol version (`v`), chosen parameters (`a_R`) and server identity (`pk_R`) in its hash message `hash_1(.)` (see subfigure (b) of the below figure).
+<center><img src="/images/tls-13/tls1_2.png" alt="Downgrade Protection in TLS 1.2" style="width:1000px;"/><br>
 <sup>TLS 1.0 - 1.2 with (EC)DHE key exchange (a), where messages labeled with * occur only when client authentication is enabled, and (b) its downgrade protection sub-protocol</sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
-Draft 10 of TLS 1.3 implements the following downgrade protection mechanism.
+Draft 10 of TLS 1.3 implements the following downgrade protection mechanism which rectifies the above mistake and consequently hashes all the negotiated parameters. Notice the `hash_1(H(m_1, m_2, -))` in the message sent by server (subfigure (b) in the figure below), which hashes all the negotiated parameters in `m_2`.
 
-TODO: don't just drop in the image, explain the main idea behind the protection
-
-<center><img src="/images/tls-13/tls1_3_draft10.png" alt="Downgrade Protection in TLS 1.3 Draft 10" style="width:800px;"/><br>
+<center><img src="/images/tls-13/tls1_3_draft10.png" alt="Downgrade Protection in TLS 1.3 Draft 10" style="width:1000px;"/><br>
 <sup>TLS 1.3 1-RTT mode with server-only authentication (a) and its downgrade protection sub-protocol (b) </sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
-There are three downgrade attacks possible on TLS 1.3 as described in Draft 10.
+However, there are three downgrade attacks possible on TLS 1.3 as described in Draft 10.
 One, an attacker downgrades the connection to TLS 1.2 or lower and mounts any of the downgrade attacks mentioned before. This will succeed as long as the attacker can forge the finished MACs.
-Second, an attacker uses the TLS fallback mechanism to stop TLS 1.3 connections and allows only TLS 1.2 connections to go through. Even if the end points implement the fallback protection mechanism, the attacker can use one of the downgrade attacks in TLS1.2 to break the connection.
+Second, an attacker uses the TLS fallback mechanism to stop TLS 1.3 connections and allows only TLS 1.2 connections to go through. Even if the end points implement the fallback protection mechanism, the attacker can use one of the downgrade attacks in TLS 1.2 to break the connection.
 Third, in Draft 10 of the TLS1.3 protocol, the handshake hashes restart upon receiving a Retry message and hence, the attacker can downgrade the Diffie-Hellman group for some classes of negotiation functions.
 
-Draft 11 of TLS 1.3 [fixed](https://github.com/tlswg/tls13-spec/pull/284) the issue by requiring TLS 1.3 server to set top N bits of the ServerRandom to be a specific fixed value on receiving ClientHello message from a TLS 1.2 or below client. TLS 1.3 clients which receive a TLS 1.2 or below ServerHello check for this value and abort if they receive it.
+TLS 1.3 draft 11 counters the above three attacks by incorporating two countermeasures.
+First, TLS 1.3 protocol continues the handshake hashes over retries (subfigure (a) of the figure below).
+Second, TLS 1.3 servers always include their highest supported version number in the server nonce, even when they choose a lower version such as TLS 1.0.
+Draft 11 of TLS 1.3 [fixed](https://github.com/tlswg/tls13-spec/pull/284) the issue by requiring TLS 1.3 server to set top N bits of the ServerRandom to be a specific fixed value on receiving ClientHello message from a TLS 1.2 or below client. TLS 1.3 clients which receive a TLS 1.2 or below ServerHello check for this value and abort if they receive it. The figure below shows the client check using `verifyVersion` functionality.
 This allows for detection of downgrade attacks over and above the Finished handshake as long as ephemeral cipher suites are used. This prevents attacks targeted at (EC)DHE.
 
-Draft 11 of TLS 1.3 implements the following downgrade protection mechanism.
-
-TODO: can't really make out anything from this figure - can you describe change from Draft 10?
-
-<center><img src="/images/tls-13/tls1_3_draft11.png" alt="Downgrade Protection in TLS 1.3 Draft 11" style="width:800px;"/><br>
+<center><img src="/images/tls-13/tls1_3_draft11.png" alt="Downgrade Protection in TLS 1.3 Draft 11" style="width:1000px;"/><br>
 <sup>TLS 1.3 Draft 11 Update on Downgrade Resilience in Key-Exchange Protocols</sup><br><sup>Source: https://eprint.iacr.org/2016/072.pdf</sup></center>
 
-TLS 1.3 draft 11 counters all the attacks discussed by [Karthikeyan et al.](https://eprint.iacr.org/2016/072.pdf) by incorporating two countermeasures.
-First, TLS 1.3 protocol continues the handshake hashes over retries.
-Second, TLS 1.3 servers always include their highest supported version number in the server nonce, even when they choose a lower version such as TLS 1.0.
 The TLS 1.3 server will send a [`ServerHello`](https://tools.ietf.org/html/draft-ietf-tls-tls13-18#section-4.1.3) message in response to a `ClientHello` message when it is able to find an acceptable set of algorithms and the client's `key_share` extension is acceptable.  If it is not able to find an acceptable set of parameters, the server will respond with a `handshake_failure` fatal alert. The `ServerHello` message contains server's random value which incorporates downgrade protection mechanism. If a `ClientHello` indicates only support for TLS 1.2 or below, then the last eight bytes of server's random value MUST be set to: `44 4F 57 4E 47 52 44 01`.
 If a `ClientHello` indicates only support for TLS 1.1 or below, then the last eight bytes of server's random value SHOULD be set to: `44 4F 57 4E 47 52 44 00`.
 TLS 1.3 clients are required to check the above values in the random field of server responses.
@@ -257,13 +233,17 @@ Cas Cremers, Marko Horvat, Sam Scott, and Thyla van der Merwe's paper, [_Automat
 
 > _The various flaws identified in TLS 1.2 and below, be they implementation- or specification-based, have prompted the TLS Working Group to adopt an "analysis-before-deployment" design paradigm in drafting the next version of the protocol. After a development process of many months, the [TLS 1.3 specification](https://github.com/tlswg/tls13-spec) is nearly complete. In the spirit of contributing towards this new design philosophy, we model the TLS 1.3 specification using the Tamarin prover, a tool for the automated analysis of security protocols._
 
-The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision](https://tools.ietf.org/html/draft-ietf-tls-tls13-11) of the protocol is slated to include a fix for this attack.  TODO: we're now at revision 18/19? should have an update on this
+The authors are able to prove that [revision 10](https://tools.ietf.org/html/draft-ietf-tls-tls13-10) of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The [11th revision](https://tools.ietf.org/html/draft-ietf-tls-tls13-11) of the protocol included a fix for this attack.
 
 ### Protocol Model
 
 The authors used the [Tamarin](https://github.com/tamarin-prover/tamarin-prover) prover for their analysis. Tamarin is an interactive theorem proving environment (similar to [Coq](https://coq.inria.fr/about-co)) specially designed for the verification of protocols such as TLS. As TLS is already an abstract specification, encoding TLS 1.3 into the Tamarin specification language was relatively straightforward. "Rules" (functions) over this specification captured honest-party and adversary actions alike. The following state diagram depicts the client TLS state (as defined in Tamarin) and transitions between the states (Tamarin rules) for an entire session.
 
-<center><img src="/images/tls-13/client-sm.png" alt="Partial client state machines for TLS 1.3 revision 10" style="width:800px;"/></center><br>
+<center>
+    <img src="/images/tls-13/client-sm.png" alt="Partial client state machines for TLS 1.3 revision 10" style="width:800px;"/>
+    <br><br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#building-a-model)</sup>
+</center>
 
 ### Proven Security Properties
 
@@ -282,19 +262,27 @@ While verifying the [delayed authentication mechanism](https://www.ietf.org/proc
 
 **Step 1.** The victim client, Alice, establishes a connection with the man-in-the-middle attacker, Charlie. Charlie establishes a connection with Bob, the server which which Alice wishes to connect. A PSK is established for both connections, `PSK_1` and `PSK_2`, respectively.
 
-<center><img src="/images/tls-13/att1.png" alt="Client Authentication Attack: Step 1" style="width:800px;"/></center><br>
-
-TODO: source for this? (great if its original, but still give credit cause otherwise looks like a missing image credit)
+<center>
+    <img src="/images/tls-13/att1.png" alt="Client Authentication Attack: Step 1" style="width:800px;"/>
+    <br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
+</center>
 
 **Step 2.**  Alice sends a random nonce, `nc`, to Charlie using `PSK_1`. Charlie reuses this nonce to initiate a PSK-resumption handshake with Bob. Bob responds with random nonce `ns` and the server `Finished` message using `PSK_2`. Charlie reuses `ns` and recomputes the `Finished` message for Alice using `PSK_1`.  Alice Returns her `Finished` message to Charlie. Charlie then recomputes this `Finished` message for Bob using `PSK_2`.
 
-<center><img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/></center><br>
-
-TODO: source for this? (great if its original, but still give credit cause otherwise looks like a missing image credit)
+<center>
+    <img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/>
+    <br><br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
+</center>
 
 **Step 3.** Charlie makes a request to Bob that requires client authentication. Charlie is thus prompted for his certificate and verification. This request is re-encrypted and forwarded to Alice. To compute the verification signature of this forwarded request, Alice uses the `session_hash` value, which is the hash of all handshake messages excluding the `Finished` messages. This `session_hash` value will match that of Charlie and Bob's, and thus Charlie can re-encrypt Alice's signature for Bob. Bob accepts Alice's certificate and verification as valid authentication for Charlie.
 
-<center><img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/></center><br>
+<center>
+    <img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/>
+    <br><br>
+    <sup>Source: [Automated Analysis of TLS 1.3](http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication)</sup>
+</center>
 
 The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group. 
 
