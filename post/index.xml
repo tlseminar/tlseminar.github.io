@@ -6,8 +6,332 @@
     <description>Recent content in Post-rsses on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 22 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 24 Mar 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>TLS 1.3</title>
+      <link>https://tlseminar.github.io/tls-13/</link>
+      <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/tls-13/</guid>
+      <description>
+
+&lt;h2 id=&#34;tls-evolves-version-1-3&#34;&gt;TLS Evolves: Version 1.3&lt;/h2&gt;
+
+&lt;p&gt;TLS v1.3 is a major revision to TLS to simplify the protocol, and improve its security and performance. In order to get a good understanding of TLS v1.3 and where it is heading in the future, we will first look at where TLS has been.&lt;/p&gt;
+
+&lt;h3 id=&#34;looking-backward-retro-tls&#34;&gt;Looking Backward: Retro TLS&lt;/h3&gt;
+
+&lt;p&gt;SSL/TLS has a storied past. SSL v1.0 was never released. Netscape, the company that originally developed SSL, circulated it internally but decided not to release it to the public because it had several flaws including a lack of data integrity protection.&lt;/p&gt;
+
+&lt;p&gt;After that non-starter, the timeline looks like this:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1994: Netscape develops SSL v2.0 which is shipped with the Netscape Navigator 1.1&lt;/li&gt;
+&lt;li&gt;1995: SSL v2.0 has serious security issues; Netscape releases SSL v3.&lt;/li&gt;
+&lt;li&gt;1999: TLS v1.0 released; standardizing and upgrading SSL v3.0&lt;/li&gt;
+&lt;li&gt;2006: TLS v1.1 released; address the BEAST attack, which will come in 5 years&lt;/li&gt;
+&lt;li&gt;2008: TLS v1.2 released with Authenticated Encryption&lt;/li&gt;
+&lt;li&gt;2011: Google deploys public key pinning and forward secrecy&lt;/li&gt;
+&lt;li&gt;2013: Work on TLS v1.3 begins&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A more thorough timeline can be found at &lt;a href=&#34;https://www.feistyduck.com/ssl-tls-and-pki-history/&#34;&gt;&lt;em&gt;SSL/TLS and PKI History&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So what does TLS v1.3 bring to the table? Let&amp;rsquo;s take a look&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;faster-handshake&#34;&gt;Faster Handshake&lt;/h2&gt;
+
+&lt;p&gt;TLS 1.3 introduces a significantly slimmer Handshake Protocol than previous versions. In order to understand the implications of these changes, we first review the Handshake Protocol used in TLS 1.2.&lt;/p&gt;
+
+&lt;p&gt;In TLS 1.2, the client begins the handshake with a &lt;code&gt;Client Hello&lt;/code&gt;,
+followed by a &lt;code&gt;Server Hello&lt;/code&gt; response from the server. The client then
+proceeds with a &lt;code&gt;Client Key Exchange&lt;/code&gt; and &lt;code&gt;Client Finished&lt;/code&gt;; the
+server responds with its own versions of these messages.&lt;/p&gt;
+
+&lt;p&gt;In contrast, TLS 1.3 incorporates the key share messages with the
+&lt;code&gt;Client/Server Hello&lt;/code&gt;, meaning that each side of the connection has to
+send one less message (and only send one message total to initiate the
+connection).&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/handshake1.2.png&#34; alt=&#34;TLS 1.2 Handshake&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;TLS 1.2 Handshake&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/handshake1.3.png&#34; alt=&#34;TLS 1.3 Handshake&#34; style=&#34;width:500px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;TLS 1.3 Handshake&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;sidebar-authloop&#34;&gt;Sidebar: AuthLoop&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://tlseminar.github.io/docs/authloop.pdf&#34;&gt;&lt;em&gt;AuthLoop: End-to-End Cryptographic Authentication for Telephony over Voice Channels&lt;/em&gt;&lt;/a&gt;, Bradley Reaves, Logan Blue, and Patrick Traynor. USENIX Security Symposium. August 2016.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;On the subject of modification and adaptations to the typical TLS 1.2 system of encryption and authentication, we explore AuthLoop: a TLS-style authentication protocol specifically designed for telephony networks. In this domain, the system must connect three different types of telephony networks: cellular, VoIP, and PSTN. However, the TLS Handshake transmission speeds for such a system were extremely slow - averaging 98 seconds per handshake - which is completely infeasible for most phone calls. AuthLoop keeps the authentication and shared secret elements of TLS and a freshness/liveness component analogous to the Heartbeat Protocol. On the other hand, AuthLoop removes RSA and the cipher agreement messages. Furthermore, AuthLoop does not encrypt messages and therefore has no Record Protocol. After slimming down, the average transmission time reduced drastically to 4.8 seconds.&lt;/p&gt;
+
+&lt;h2 id=&#34;0-rtt-resumption&#34;&gt;0-RTT Resumption&lt;/h2&gt;
+
+&lt;p&gt;A major new feature in the TLS 1.3 draft is support for 0-RTT session resumption. In TLS 1.2, establishing a connection to a new server required at least 4 trips between the server and client to make an HTTP request and receive a response. With a session-ID or session ticket, that could be reduced to 3 trips per connection. TLS 1.3 by default reduces the number for new connections to only 3 trips per connection, but also adds support for a new mode termed &lt;em&gt;0-RTT&lt;/em&gt;. In this mode, resumed HTTPS connections require only 2 trips, which is the bare minimum required for a full HTTP query and response. In this mode, TLS 1.3 adds barely any additional latency cost over a plain HTTP request!&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/tls1_3_0rtt.jpg&#34; alt=&#34;0-RTT&#34; width=&#34;65%&#34;&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;TLS 1.3 0-RTT (Source: &lt;a href=&#34;https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/&#34;&gt;https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/&lt;/a&gt;)&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;However, the addition of 0-RTT resumption to the protocol has an
+important implication for the security features provided by the
+protocol. Because TLS 1.3 session tickets, which enable 0-RTT
+resumption, are stateless on the server, such requests from the client
+are trivially vulnerable to &lt;strong&gt;replay attacks&lt;/strong&gt;. An attacker who can
+intercept an encrypted client message can re-send it to the server,
+tricking the server into processing the same request twice (which
+could be serious, for example, if the request is &amp;ldquo;transfer $x to
+Bob&amp;rdquo;).&lt;/p&gt;
+
+&lt;p&gt;To remedy this, the protocol authors recommend that initial requests from the client be &lt;em&gt;idempotent&lt;/em&gt;, or non-state-changing. Servers should not allow the first request to be idempotent in 0-RTT mode. This has been arguably the most controversial part of the new standard, as it puts the onus on some higher level protocol to solve a problem that TLS has historically been responsible for. Even worse, it is not solved directly by HTTP but rather must be specifically kept in mind by web developers.&lt;/p&gt;
+
+&lt;h2 id=&#34;deployment&#34;&gt;Deployment&lt;/h2&gt;
+
+&lt;p&gt;Deployment of TLS 1.3 remains loosely in the future as the protocol specification
+finishes its final draft. Current TLS 1.3 drafts include 0-RTT by requiring servers to set up
+a profile that defines its use. However, as with many other features in earlier
+TLS protocols, 0-RTT data is not compatible with older servers.
+A server using TLS 1.3 has the option to limit what early data to use in a 0-RTT and what to buffer.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://tools.ietf.org/html/draft-green-tls-static-dh-in-tls13-00&#34;&gt;Data Center use of Static Diffie-Hellman&lt;/a&gt;:
+While ephemeral (EC) Diffie-Hellman is in nearly all ways an improvement over
+the TLS RSA handshake, it has a limitation in certain enterprise settings.
+Specifically, the use of ephemeral (PFS) ciphersuites is not compatible with
+enterprise network monitoring tools such as Intrusion Detection Systems (IDS)
+that must passively monitor intranet TLS connections made to endpoints under the
+enterprise&amp;rsquo;s control. Such monitoring is ubiquitous and indispensable in some industries, and loss of
+this capability may slow adoption of TLS 1.3.&lt;/p&gt;
+
+&lt;p&gt;Deployment of TLS 1.3 across the web faces several industry concerns, most notably regarding Static RSA (no forward secrecy),
+as posted from an email exchange
+between Andrew Kennedy, an employee at BITS (the technology policy division of the Financial
+Services Roundtable &lt;a href=&#34;http://www.fsroundtable.org/bits&#34;&gt;http://www.fsroundtable.org/bits&lt;/a&gt;), and Kenny Paterson.&lt;/p&gt;
+
+&lt;p&gt;Andrew Kennedy writes,&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;hellip;
+While I am aware and on the whole supportive of the significant contributions to
+internet security this important working group has made in the last few years I
+recently learned of a proposed change that would affect many of my
+organization&amp;rsquo;s member institutions:  the deprecation of RSA key exchange.&lt;/p&gt;
+
+&lt;p&gt;Deprecation of the RSA key exchange in TLS 1.3 will cause significant problems
+for financial institutions, almost all of whom are running TLS internally and
+have significant, security-critical investments in out-of-band TLS decryption.&lt;/p&gt;
+
+&lt;p&gt;Like many enterprises, financial institutions depend upon the ability to
+decrypt TLS traffic to implement data loss protection, intrusion detection and
+prevention, malware detection, packet capture and analysis, and DDoS
+mitigation.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Kenny&amp;rsquo;s response: (excerpted from &lt;a href=&#34;https://www.ietf.org/mail-archive/web/tls/current/msg21278.html&#34;&gt;https://www.ietf.org/mail-archive/web/tls/current/msg21278.html&lt;/a&gt;)&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Hi Andrew,&lt;/p&gt;
+
+&lt;p&gt;My view concerning your request: no.&lt;/p&gt;
+
+&lt;p&gt;Rationale: We&amp;rsquo;re trying to build a more secure internet.&lt;/p&gt;
+
+&lt;p&gt;Meta-level comment:&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;re a bit late to the party. We&amp;rsquo;re metaphorically speaking at the stage of
+emptying the ash trays and hunting for the not quite empty beer cans.&lt;/p&gt;
+
+&lt;p&gt;More exactly, we are at draft 15 and RSA key transport disappeared from the spec
+about a dozen drafts ago. I know the banking industry is usually a bit slow off
+the mark, but this takes the biscuit.&lt;/p&gt;
+
+&lt;p&gt;Cheers,&lt;/p&gt;
+
+&lt;p&gt;Kenny&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;anti-downgrade-prevention-and-detection&#34;&gt;Anti-Downgrade Prevention and Detection&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://eprint.iacr.org/2016/072.pdf&#34;&gt;Downgrade resilience in key-exchange protocols&lt;/a&gt; by Karthikeyan Bhargavan, Christina Brzuska, Cédric Fournet, Markulf Kohlweiss, Santiago Zanella-Béguelin and Matthew Green in IEEE Symposium on Security and Privacy (SP), 2016.&lt;/p&gt;
+
+&lt;p&gt;TLS 1.2 suffers from various &lt;a href=&#34;https://tlseminar.github.io/downgrade-attacks/&#34;&gt;downgrade&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Man-in-the-middle_attack&#34;&gt;man-in-the-middle attacks&lt;/a&gt; like Logjam, FREAK and POODLE.
+Logjam exploits the option of using legacy &amp;ldquo;export-grade&amp;rdquo; 512-bit Diffie–Hellman groups in TLS 1.2. It forces susceptible servers to downgrade to cryptographically weak 512 bit Diffie-Hellman groups, which could then be compromised.
+FREAK is a man-in-the-middle attack that affects the OpenSSL stack, the default Android web browser, and some Safari browsers. It tricks servers into negotiating a TLS connection using cryptographically weak 512 bit encryption keys.
+POODLE exploits vulnerability in SSL 3.0 but is applicable to TLS 1.2 once the attacker performs version rollback to SSL 3.0 through a man-in-the-middle attack.&lt;/p&gt;
+
+&lt;p&gt;The above problems can be countered using correct downgrade protection. While TLS 1.2 does implement downgrade protection, it fails to do so correctly. Downgrade protection requires sending MAC of finished messages between client and server to ensure that the negotiated parameters have not be modified by a MITM attacker. TLS 1.2 does not hash all the negotiated parameters in its MAC allowing the attacker to alter the non-hashed parameters and launch downgrade attacks. TLS 1.3 fixes this issue by hashing all the parameters and also isolates TLS 1.2 or lower version messages (which have downgrade resilience issues) by requiring the TLS 1.3 server to set first &lt;code&gt;N&lt;/code&gt; bits of its ServerRandom nonce to a fixed value on recieving ClientHello message from a TLS 1.2 or below client. This signals the TLS 1.3 clients and they reject any packet that has the fixed value sequence.&lt;/p&gt;
+
+&lt;h3 id=&#34;downgrade-resilience-in-key-exchange-protocols&#34;&gt;Downgrade Resilience in Key-Exchange Protocols&lt;/h3&gt;
+
+&lt;p&gt;Downgrade protection primarily relies on the MACs in the finished messages, which in turn rely on the strength of the group and the negotiated algorithms and hash.
+If a client and server support a weak group, then an attacker can downgrade the group and break the master secret to forget the MACs, as in Logjam.&lt;/p&gt;
+
+&lt;p&gt;The figure below shows the faulty downgrade resilience of TLS 1.2, where the TLS 1.2 server fails to hash  the negotiated parameters like protocol version (&lt;code&gt;v&lt;/code&gt;), chosen parameters (&lt;code&gt;a_R&lt;/code&gt;) and server identity (&lt;code&gt;pk_R&lt;/code&gt;) in its hash message &lt;code&gt;hash_1(.)&lt;/code&gt; (see subfigure (b) of the below figure).
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/tls1_2.png&#34; alt=&#34;Downgrade Protection in TLS 1.2&#34; style=&#34;width:1000px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;TLS 1.0 - 1.2 with (EC)DHE key exchange (a), where messages labeled with * occur only when client authentication is enabled, and (b) its downgrade protection sub-protocol&lt;/sup&gt;&lt;br&gt;&lt;sup&gt;Source: &lt;a href=&#34;https://eprint.iacr.org/2016/072.pdf&#34;&gt;https://eprint.iacr.org/2016/072.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Draft 10 of TLS 1.3 implements the following downgrade protection mechanism which rectifies the above mistake and consequently hashes all the negotiated parameters. Notice the &lt;code&gt;hash_1(H(m_1, m_2, -))&lt;/code&gt; in the message sent by server (subfigure (b) in the figure below), which hashes all the negotiated parameters in &lt;code&gt;m_2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/tls1_3_draft10.png&#34; alt=&#34;Downgrade Protection in TLS 1.3 Draft 10&#34; style=&#34;width:1000px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;TLS 1.3 1-RTT mode with server-only authentication (a) and its downgrade protection sub-protocol (b) &lt;/sup&gt;&lt;br&gt;&lt;sup&gt;Source: &lt;a href=&#34;https://eprint.iacr.org/2016/072.pdf&#34;&gt;https://eprint.iacr.org/2016/072.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;However, there are three downgrade attacks possible on TLS 1.3 as described in Draft 10.
+One, an attacker downgrades the connection to TLS 1.2 or lower and mounts any of the downgrade attacks mentioned before. This will succeed as long as the attacker can forge the finished MACs.
+Second, an attacker uses the TLS fallback mechanism to stop TLS 1.3 connections and allows only TLS 1.2 connections to go through. Even if the end points implement the fallback protection mechanism, the attacker can use one of the downgrade attacks in TLS 1.2 to break the connection.
+Third, in Draft 10 of the TLS1.3 protocol, the handshake hashes restart upon receiving a Retry message and hence, the attacker can downgrade the Diffie-Hellman group for some classes of negotiation functions.&lt;/p&gt;
+
+&lt;p&gt;TLS 1.3 draft 11 counters the above three attacks by incorporating two countermeasures.
+First, TLS 1.3 protocol continues the handshake hashes over retries (subfigure (a) of the figure below).
+Second, TLS 1.3 servers always include their highest supported version number in the server nonce, even when they choose a lower version such as TLS 1.0.
+Draft 11 of TLS 1.3 &lt;a href=&#34;https://github.com/tlswg/tls13-spec/pull/284&#34;&gt;fixed&lt;/a&gt; the issue by requiring TLS 1.3 server to set top N bits of the ServerRandom to be a specific fixed value on receiving ClientHello message from a TLS 1.2 or below client. TLS 1.3 clients which receive a TLS 1.2 or below ServerHello check for this value and abort if they receive it. The figure below shows the client check using &lt;code&gt;verifyVersion&lt;/code&gt; functionality.
+This allows for detection of downgrade attacks over and above the Finished handshake as long as ephemeral cipher suites are used. This prevents attacks targeted at (EC)DHE.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/tls1_3_draft11.png&#34; alt=&#34;Downgrade Protection in TLS 1.3 Draft 11&#34; style=&#34;width:1000px;&#34;/&gt;&lt;br&gt;
+&lt;sup&gt;TLS 1.3 Draft 11 Update on Downgrade Resilience in Key-Exchange Protocols&lt;/sup&gt;&lt;br&gt;&lt;sup&gt;Source: &lt;a href=&#34;https://eprint.iacr.org/2016/072.pdf&#34;&gt;https://eprint.iacr.org/2016/072.pdf&lt;/a&gt;&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The TLS 1.3 server will send a &lt;a href=&#34;https://tools.ietf.org/html/draft-ietf-tls-tls13-18#section-4.1.3&#34;&gt;&lt;code&gt;ServerHello&lt;/code&gt;&lt;/a&gt; message in response to a &lt;code&gt;ClientHello&lt;/code&gt; message when it is able to find an acceptable set of algorithms and the client&amp;rsquo;s &lt;code&gt;key_share&lt;/code&gt; extension is acceptable.  If it is not able to find an acceptable set of parameters, the server will respond with a &lt;code&gt;handshake_failure&lt;/code&gt; fatal alert. The &lt;code&gt;ServerHello&lt;/code&gt; message contains server&amp;rsquo;s random value which incorporates downgrade protection mechanism. If a &lt;code&gt;ClientHello&lt;/code&gt; indicates only support for TLS 1.2 or below, then the last eight bytes of server&amp;rsquo;s random value MUST be set to: &lt;code&gt;44 4F 57 4E 47 52 44 01&lt;/code&gt;.
+If a &lt;code&gt;ClientHello&lt;/code&gt; indicates only support for TLS 1.1 or below, then the last eight bytes of server&amp;rsquo;s random value SHOULD be set to: &lt;code&gt;44 4F 57 4E 47 52 44 00&lt;/code&gt;.
+TLS 1.3 clients are required to check the above values in the random field of server responses.&lt;/p&gt;
+
+&lt;h2 id=&#34;authenticated-encryption&#34;&gt;Authenticated Encryption&lt;/h2&gt;
+
+&lt;p&gt;Up until now, we&amp;rsquo;ve mostly concerned ourselves with the &amp;ldquo;MAC-Encode-Encrypt&amp;rdquo; (MEE) packet construction method.  In a nutshell, MEE follows three steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Calculate a MAC over the payload&lt;/li&gt;
+&lt;li&gt;Append the MAC and an appropriate amount of padding to the payload&lt;/li&gt;
+&lt;li&gt;Encrypt the modified payload to generate a ciphertext&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;As we&amp;rsquo;ve discussed in previous classes, the CBC mode of operation has its downsides; adversaries can break encryption by utilizing padding oracle attacks, since padding can only exist in a handful of values and lengths.  Moreover, it&amp;rsquo;s impossible to actually verify the integrity of the ciphertext &lt;em&gt;until the MAC has been revealed by decrypting the ciphertext&lt;/em&gt;.  The duration required to decrypt the tampered ciphertext and validate the MAC leaks sensitive (and potentially useful) timing information to adversaries.&lt;/p&gt;
+
+&lt;h4 id=&#34;encrypt-then-mac&#34;&gt;Encrypt-then-MAC&lt;/h4&gt;
+
+&lt;p&gt;In general, MEE is inferior to its cousin, &amp;ldquo;Encrypt-then-MAC&amp;rdquo;  (ETM).  In ETM, as opposed to MEE, the plaintext is encrypted &lt;em&gt;before&lt;/em&gt; the MAC is calculated.  Intuitively, it makes sense that ETM is more secure&amp;mdash;any tampering of the ciphertext is immediately evident when the MAC is calculated, therefore no decryption takes place (and no timing information is leaked).  Additionally, assuming the ciphertext appears random, the MAC also appears random and reveals no information about the underlying ciphertext.&lt;/p&gt;
+
+&lt;h4 id=&#34;galois-counter-mode-gcm&#34;&gt;Galois/Counter Mode (GCM)&lt;/h4&gt;
+
+&lt;p&gt;Before we jump on the ETM bandwagon, however, let&amp;rsquo;s take a look at yet another mode of operation, &lt;em&gt;Galois/Counter Mode&lt;/em&gt; (GCM).  GCM is an authenticated encryption algorithm that provides confidentiality &lt;em&gt;and&lt;/em&gt; integrity, and does so extremely efficiently.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-13/gcm.png&#34; alt=&#34;GCM&#34; width=500px/&gt;&lt;br&gt;
+&lt;sup&gt;Galois/Counter Mode (credit:  Wikipedia)&lt;/sup&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt; GCM At-A-Glance &lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Sequentially number blocks&lt;/li&gt;
+&lt;li&gt;Encrypt block numbers with block cipher E&lt;/li&gt;
+&lt;li&gt;XOR result of encryption with plaintext to produce ciphertext&lt;/li&gt;
+&lt;li&gt;Combine ciphertext with authentication code to produce authentication tag&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The authentication tag can be used to verify the integrity of the data upon decryption, similar to an HMAC.  If this &amp;ldquo;counter mode&amp;rdquo; of authenticated encryption seems superior, that&amp;rsquo;s because &lt;em&gt;it is&lt;/em&gt;!  TLS 1.3 only provides support for GCM, CCM, and ChaCha20-Poly1305, another authenticated encryption mode of operation.  Say goodbye to MAC-then-encrypt.&lt;/p&gt;
+
+&lt;h2 id=&#34;tls-v1-3-removals&#34;&gt;TLS v1.3 Removals&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/&#34;&gt;An overview of TLS 1.3 and Q&amp;amp;A&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In TLS v1.3, everything was scrutinized for being really necessary and
+secure, and scrapped otherwise. In particular, the following things
+are removed:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/&#34;&gt;static RSA handshake&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;the &lt;a href=&#34;https://blog.cloudflare.com/padding-oracles-and-the-decline-of-cbc-mode-ciphersuites/&#34;&gt;CBC MAC-then-Encrypt&lt;/a&gt; modes, which were responsible for Vaudenay, Lucky13, POODLE, LuckyMinus20&lt;/li&gt;
+&lt;li&gt;weak primitives like RC4, SHA1, MD5&lt;/li&gt;
+&lt;li&gt;compression&lt;/li&gt;
+&lt;li&gt;renegotiation&lt;/li&gt;
+&lt;li&gt;custom FFDHE groups&lt;/li&gt;
+&lt;li&gt;RSA PKCS#1v1.5&lt;/li&gt;
+&lt;li&gt;explicit nonces&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;formal-verification&#34;&gt;Formal Verification&lt;/h2&gt;
+
+&lt;p&gt;TLS 1.3 is the first revision of the TLS protocol to incorporate formal verification during development.
+Cas Cremers, Marko Horvat, Sam Scott, and Thyla van der Merwe&amp;rsquo;s paper, &lt;a href=&#34;https://tls13tamarin.github.io/TLS13Tamarin/docs/tls13tamarin.pdf&#34;&gt;&lt;em&gt;Automated Analysis of TLS 1.3: 0-RTT, Resumption and Delayed Authentication&lt;/em&gt;&lt;/a&gt;, provides a recent (February 2016) description of the challenges and results of such an analysis. In the &lt;a href=&#34;https://tls13tamarin.github.io/TLS13Tamarin/#introduction&#34;&gt;blog post&lt;/a&gt; associated with their work, the authors contextualize their verification efforts:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;The various flaws identified in TLS 1.2 and below, be they implementation- or specification-based, have prompted the TLS Working Group to adopt an &amp;ldquo;analysis-before-deployment&amp;rdquo; design paradigm in drafting the next version of the protocol. After a development process of many months, the &lt;a href=&#34;https://github.com/tlswg/tls13-spec&#34;&gt;TLS 1.3 specification&lt;/a&gt; is nearly complete. In the spirit of contributing towards this new design philosophy, we model the TLS 1.3 specification using the Tamarin prover, a tool for the automated analysis of security protocols.&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The authors are able to prove that &lt;a href=&#34;https://tools.ietf.org/html/draft-ietf-tls-tls13-10&#34;&gt;revision 10&lt;/a&gt; of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The &lt;a href=&#34;https://tools.ietf.org/html/draft-ietf-tls-tls13-11&#34;&gt;11th revision&lt;/a&gt; of the protocol included a fix for this attack.&lt;/p&gt;
+
+&lt;h3 id=&#34;protocol-model&#34;&gt;Protocol Model&lt;/h3&gt;
+
+&lt;p&gt;The authors used the &lt;a href=&#34;https://github.com/tamarin-prover/tamarin-prover&#34;&gt;Tamarin&lt;/a&gt; prover for their analysis. Tamarin is an interactive theorem proving environment (similar to &lt;a href=&#34;https://coq.inria.fr/about-co&#34;&gt;Coq&lt;/a&gt;) specially designed for the verification of protocols such as TLS. As TLS is already an abstract specification, encoding TLS 1.3 into the Tamarin specification language was relatively straightforward. &amp;ldquo;Rules&amp;rdquo; (functions) over this specification captured honest-party and adversary actions alike. The following state diagram depicts the client TLS state (as defined in Tamarin) and transitions between the states (Tamarin rules) for an entire session.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+    &lt;img src=&#34;https://tlseminar.github.io/images/tls-13/client-sm.png&#34; alt=&#34;Partial client state machines for TLS 1.3 revision 10&#34; style=&#34;width:800px;&#34;/&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;sup&gt;Source: &lt;a href=&#34;http://tls13tamarin.github.io/TLS13Tamarin/#building-a-model&#34;&gt;Automated Analysis of TLS 1.3&lt;/a&gt;&lt;/sup&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;proven-security-properties&#34;&gt;Proven Security Properties&lt;/h3&gt;
+
+&lt;p&gt;The next step in the analysis involved encoding the desired security properties of TLS 1.3 as Tamarin lemmas. The authors encoded the following properties:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;unilateral authentication of the server (mandatory)&lt;/li&gt;
+&lt;li&gt;mutual authentication (optional)&lt;/li&gt;
+&lt;li&gt;confidentiality and perfect forward secrecy of session keys&lt;/li&gt;
+&lt;li&gt;integrity of handshake messages&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Each lemma must hold over its respective domain of states (a subset of the nodes in the client state machine above, for example). While proof assistants like Tamarin are capable of constructing simple proofs, a significant amount of manual effort was required to prove the enumerated lemmas. As such, a notable contribution of this work is the actual Tamarin proof artifact itself, not just what was and wasn&amp;rsquo;t proven. The authors claim their Tamarin abstractions and proofs were constructed with extensibility to future TLS development in mind.&lt;/p&gt;
+
+&lt;h3 id=&#34;discovered-attack&#34;&gt;Discovered Attack&lt;/h3&gt;
+
+&lt;p&gt;While verifying the &lt;a href=&#34;https://www.ietf.org/proceedings/93/slides/slides-93-tls-2.pdf&#34;&gt;delayed authentication mechanism&lt;/a&gt; portion of the protocol, an attack was discovered which violated client authentication; an adversary is able to impersonate a client while communicating with the server.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1.&lt;/strong&gt; The victim client, Alice, establishes a connection with the man-in-the-middle attacker, Charlie. Charlie establishes a connection with Bob, the server which which Alice wishes to connect. A PSK is established for both connections, &lt;code&gt;PSK_1&lt;/code&gt; and &lt;code&gt;PSK_2&lt;/code&gt;, respectively.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+    &lt;img src=&#34;https://tlseminar.github.io/images/tls-13/att1.png&#34; alt=&#34;Client Authentication Attack: Step 1&#34; style=&#34;width:800px;&#34;/&gt;
+    &lt;br&gt;
+    &lt;sup&gt;Source: &lt;a href=&#34;http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication&#34;&gt;Automated Analysis of TLS 1.3&lt;/a&gt;&lt;/sup&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 2.&lt;/strong&gt;  Alice sends a random nonce, &lt;code&gt;nc&lt;/code&gt;, to Charlie using &lt;code&gt;PSK_1&lt;/code&gt;. Charlie reuses this nonce to initiate a PSK-resumption handshake with Bob. Bob responds with random nonce &lt;code&gt;ns&lt;/code&gt; and the server &lt;code&gt;Finished&lt;/code&gt; message using &lt;code&gt;PSK_2&lt;/code&gt;. Charlie reuses &lt;code&gt;ns&lt;/code&gt; and recomputes the &lt;code&gt;Finished&lt;/code&gt; message for Alice using &lt;code&gt;PSK_1&lt;/code&gt;.  Alice Returns her &lt;code&gt;Finished&lt;/code&gt; message to Charlie. Charlie then recomputes this &lt;code&gt;Finished&lt;/code&gt; message for Bob using &lt;code&gt;PSK_2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+    &lt;img src=&#34;https://tlseminar.github.io/images/tls-13/att2.png&#34; alt=&#34;Client Authentication Attack: Step 2&#34; style=&#34;width:800px;&#34;/&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;sup&gt;Source: &lt;a href=&#34;http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication&#34;&gt;Automated Analysis of TLS 1.3&lt;/a&gt;&lt;/sup&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 3.&lt;/strong&gt; Charlie makes a request to Bob that requires client authentication. Charlie is thus prompted for his certificate and verification. This request is re-encrypted and forwarded to Alice. To compute the verification signature of this forwarded request, Alice uses the &lt;code&gt;session_hash&lt;/code&gt; value, which is the hash of all handshake messages excluding the &lt;code&gt;Finished&lt;/code&gt; messages. This &lt;code&gt;session_hash&lt;/code&gt; value will match that of Charlie and Bob&amp;rsquo;s, and thus Charlie can re-encrypt Alice&amp;rsquo;s signature for Bob. Bob accepts Alice&amp;rsquo;s certificate and verification as valid authentication for Charlie.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+    &lt;img src=&#34;https://tlseminar.github.io/images/tls-13/att3.png&#34; alt=&#34;Client Authentication Attack: Step 3&#34; style=&#34;width:800px;&#34;/&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;sup&gt;Source: &lt;a href=&#34;http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication&#34;&gt;Automated Analysis of TLS 1.3&lt;/a&gt;&lt;/sup&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group.&lt;/p&gt;
+
+&lt;p&gt;The fix, which forces the &lt;code&gt;session_hash&lt;/code&gt; value to include &lt;code&gt;Finished&lt;/code&gt; messages was even suggested in an official &lt;a href=&#34;https://github.com/tlswg/tls13-spec/pull/316&#34;&gt;pull request&lt;/a&gt;, but was rejected.&lt;/p&gt;
+
+&lt;p&gt;The authors make a strong case that formal verification has been an
+extremely valuable part of the design process of TLS 1.3. The speed
+with which the fix was incorporated into subsequent protocol revisions
+suggests that the TLS Working Group shares this sentiment.&lt;/p&gt;
+
+&lt;p&gt;Two &lt;a href=&#34;http://www.ieee-security.org/TC/SP2017/&#34;&gt;Oakland 2017&lt;/a&gt;
+papers provide more reports on formal verification efforts for TLS
+1.3, up through Draft 18:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Karthikeyan Bhargavan, Bruno Blanchet, and Nadim Kobeissi. &lt;a href=&#34;http://prosecco.gforge.inria.fr/personal/bblanche/publications/BhargavanBlanchetKobeissiSP2017.pdf&#34;&gt;&lt;em&gt;Verified Models and Reference Implementations
+for the TLS 1.3 Standard Candidate&lt;/em&gt;&lt;/a&gt;. &lt;a href=&#34;https://www.ieee-security.org/TC/SP2017/program.html&#34;&gt;IEEE Symposium on Security and Privacy&lt;/a&gt;, May 2017.&lt;/li&gt;
+&lt;li&gt;Karthikeyan Bhargavan, Antoine Delignat-Lavaud, Cédric Fournet, Markulf Kohlweiss, Jianyang Pan, Jonathan Protzenko, Aseem Rastogi, Nikhil Swamy, Santiago Zanella-Béguelin, and Jean Karim Zinzindohoué. &lt;a href=&#34;http://www.cs.umd.edu/~aseem/record.pdf&#34;&gt;&lt;em&gt;Implementing and Proving the TLS 1.3 Record Layer&lt;/em&gt;&lt;/a&gt;. &lt;a href=&#34;https://www.ieee-security.org/TC/SP2017/program.html&#34;&gt;IEEE Symposium on Security and Privacy&lt;/a&gt;, May 2017.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Usable Security in TLS</title>
@@ -2215,27 +2539,6 @@ to latest version of Rust, so if you go through this, please submit
 updates as pull requests!)&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://rustbyexample.com/&#34;&gt;&lt;strong&gt;Rust by Example&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Welcome to TLSeminar!</title>
-      <link>https://tlseminar.github.io/welcome/</link>
-      <pubDate>Wed, 14 Dec 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://tlseminar.github.io/welcome/</guid>
-      <description>&lt;p&gt;&lt;center&gt;
-&lt;a href=&#34;http://xkcd.com/1353/&#34;&gt;
-&lt;img src=&#34;//imgs.xkcd.com/comics/heartbleed.png&#34; title=&#34;I looked at some of the data dumps from vulnerable sites, and it was ... bad. I saw emails, passwords, password hints. SSL keys and session cookies. Important servers brimming with visitor IPs. Attack ships on fire off the shoulder of Orion, c-beams glittering in the dark near the Tannhäuser Gate. I should probably patch OpenSSL.&#34; alt=&#34;Heartbleed&#34; srcset=&#34;//imgs.xkcd.com/comics/heartbleed_2x.png 2x&#34;&gt;
-&lt;/img&gt;
-&lt;/a&gt;
-&lt;/center&gt;&lt;/p&gt;
-
-&lt;p&gt;This is the course site for &lt;strong&gt;cs6501: Understanding and Securing
-TLS&lt;/strong&gt;. [&lt;a href=&#34;https://tlseminar.github.io/syllabus&#34;&gt;Syllabus&lt;/a&gt;]&lt;/p&gt;
-
-&lt;p&gt;The first class is Friday, 20 January 2017 (9:30am-noon in Thornton
-Hall D115).&lt;/p&gt;
 </description>
     </item>
     

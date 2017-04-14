@@ -1,7 +1,7 @@
 +++
 date = "24 Mar 2017"
 author = "Team Mango"
-draft = true
+draft = false
 title = "TLS 1.3"
 slug = "tls-13"
 +++

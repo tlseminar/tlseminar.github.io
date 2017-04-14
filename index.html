@@ -132,6 +132,324 @@
   </header>
   
   
+  <p class="fronthead"><A href="/tls-13/">TLS 1.3</a><br><span class="authordate">Team Mango, Fri, 24 Mar 2017</span></p>
+    
+
+<h2 id="tls-evolves-version-1-3">TLS Evolves: Version 1.3</h2>
+
+<p>TLS v1.3 is a major revision to TLS to simplify the protocol, and improve its security and performance. In order to get a good understanding of TLS v1.3 and where it is heading in the future, we will first look at where TLS has been.</p>
+
+<h3 id="looking-backward-retro-tls">Looking Backward: Retro TLS</h3>
+
+<p>SSL/TLS has a storied past. SSL v1.0 was never released. Netscape, the company that originally developed SSL, circulated it internally but decided not to release it to the public because it had several flaws including a lack of data integrity protection.</p>
+
+<p>After that non-starter, the timeline looks like this:</p>
+
+<ul>
+<li>1994: Netscape develops SSL v2.0 which is shipped with the Netscape Navigator 1.1</li>
+<li>1995: SSL v2.0 has serious security issues; Netscape releases SSL v3.</li>
+<li>1999: TLS v1.0 released; standardizing and upgrading SSL v3.0</li>
+<li>2006: TLS v1.1 released; address the BEAST attack, which will come in 5 years</li>
+<li>2008: TLS v1.2 released with Authenticated Encryption</li>
+<li>2011: Google deploys public key pinning and forward secrecy</li>
+<li>2013: Work on TLS v1.3 begins</li>
+</ul>
+
+<p>A more thorough timeline can be found at <a href="https://www.feistyduck.com/ssl-tls-and-pki-history/"><em>SSL/TLS and PKI History</em></a>.</p>
+
+<p>So what does TLS v1.3 bring to the table? Let&rsquo;s take a look&hellip;</p>
+
+<h2 id="faster-handshake">Faster Handshake</h2>
+
+<p>TLS 1.3 introduces a significantly slimmer Handshake Protocol than previous versions. In order to understand the implications of these changes, we first review the Handshake Protocol used in TLS 1.2.</p>
+
+<p>In TLS 1.2, the client begins the handshake with a <code>Client Hello</code>,
+followed by a <code>Server Hello</code> response from the server. The client then
+proceeds with a <code>Client Key Exchange</code> and <code>Client Finished</code>; the
+server responds with its own versions of these messages.</p>
+
+<p>In contrast, TLS 1.3 incorporates the key share messages with the
+<code>Client/Server Hello</code>, meaning that each side of the connection has to
+send one less message (and only send one message total to initiate the
+connection).</p>
+
+<p><center><img src="/images/tls-13/handshake1.2.png" alt="TLS 1.2 Handshake" style="width:500px;"/><br>
+<sup>TLS 1.2 Handshake</sup></center></p>
+
+<p><center><img src="/images/tls-13/handshake1.3.png" alt="TLS 1.3 Handshake" style="width:500px;"/><br>
+<sup>TLS 1.3 Handshake</sup></center></p>
+
+<h3 id="sidebar-authloop">Sidebar: AuthLoop</h3>
+
+<blockquote>
+<p><a href="/docs/authloop.pdf"><em>AuthLoop: End-to-End Cryptographic Authentication for Telephony over Voice Channels</em></a>, Bradley Reaves, Logan Blue, and Patrick Traynor. USENIX Security Symposium. August 2016.</p>
+</blockquote>
+
+<p>On the subject of modification and adaptations to the typical TLS 1.2 system of encryption and authentication, we explore AuthLoop: a TLS-style authentication protocol specifically designed for telephony networks. In this domain, the system must connect three different types of telephony networks: cellular, VoIP, and PSTN. However, the TLS Handshake transmission speeds for such a system were extremely slow - averaging 98 seconds per handshake - which is completely infeasible for most phone calls. AuthLoop keeps the authentication and shared secret elements of TLS and a freshness/liveness component analogous to the Heartbeat Protocol. On the other hand, AuthLoop removes RSA and the cipher agreement messages. Furthermore, AuthLoop does not encrypt messages and therefore has no Record Protocol. After slimming down, the average transmission time reduced drastically to 4.8 seconds.</p>
+
+<h2 id="0-rtt-resumption">0-RTT Resumption</h2>
+
+<p>A major new feature in the TLS 1.3 draft is support for 0-RTT session resumption. In TLS 1.2, establishing a connection to a new server required at least 4 trips between the server and client to make an HTTP request and receive a response. With a session-ID or session ticket, that could be reduced to 3 trips per connection. TLS 1.3 by default reduces the number for new connections to only 3 trips per connection, but also adds support for a new mode termed <em>0-RTT</em>. In this mode, resumed HTTPS connections require only 2 trips, which is the bare minimum required for a full HTTP query and response. In this mode, TLS 1.3 adds barely any additional latency cost over a plain HTTP request!</p>
+
+<p><center>
+<img src="/images/tls-13/tls1_3_0rtt.jpg" alt="0-RTT" width="65%"><br>
+<span class="caption">TLS 1.3 0-RTT (Source: <a href="https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/">https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/</a>)</span>
+</center></p>
+
+<p>However, the addition of 0-RTT resumption to the protocol has an
+important implication for the security features provided by the
+protocol. Because TLS 1.3 session tickets, which enable 0-RTT
+resumption, are stateless on the server, such requests from the client
+are trivially vulnerable to <strong>replay attacks</strong>. An attacker who can
+intercept an encrypted client message can re-send it to the server,
+tricking the server into processing the same request twice (which
+could be serious, for example, if the request is &ldquo;transfer $x to
+Bob&rdquo;).</p>
+
+<p>To remedy this, the protocol authors recommend that initial requests from the client be <em>idempotent</em>, or non-state-changing. Servers should not allow the first request to be idempotent in 0-RTT mode. This has been arguably the most controversial part of the new standard, as it puts the onus on some higher level protocol to solve a problem that TLS has historically been responsible for. Even worse, it is not solved directly by HTTP but rather must be specifically kept in mind by web developers.</p>
+
+<h2 id="deployment">Deployment</h2>
+
+<p>Deployment of TLS 1.3 remains loosely in the future as the protocol specification
+finishes its final draft. Current TLS 1.3 drafts include 0-RTT by requiring servers to set up
+a profile that defines its use. However, as with many other features in earlier
+TLS protocols, 0-RTT data is not compatible with older servers.
+A server using TLS 1.3 has the option to limit what early data to use in a 0-RTT and what to buffer.</p>
+
+<p><a href="https://tools.ietf.org/html/draft-green-tls-static-dh-in-tls13-00">Data Center use of Static Diffie-Hellman</a>:
+While ephemeral (EC) Diffie-Hellman is in nearly all ways an improvement over
+the TLS RSA handshake, it has a limitation in certain enterprise settings.
+Specifically, the use of ephemeral (PFS) ciphersuites is not compatible with
+enterprise network monitoring tools such as Intrusion Detection Systems (IDS)
+that must passively monitor intranet TLS connections made to endpoints under the
+enterprise&rsquo;s control. Such monitoring is ubiquitous and indispensable in some industries, and loss of
+this capability may slow adoption of TLS 1.3.</p>
+
+<p>Deployment of TLS 1.3 across the web faces several industry concerns, most notably regarding Static RSA (no forward secrecy),
+as posted from an email exchange
+between Andrew Kennedy, an employee at BITS (the technology policy division of the Financial
+Services Roundtable <a href="http://www.fsroundtable.org/bits">http://www.fsroundtable.org/bits</a>), and Kenny Paterson.</p>
+
+<p>Andrew Kennedy writes,</p>
+
+<blockquote>
+<p>&hellip;
+While I am aware and on the whole supportive of the significant contributions to
+internet security this important working group has made in the last few years I
+recently learned of a proposed change that would affect many of my
+organization&rsquo;s member institutions:  the deprecation of RSA key exchange.</p>
+
+<p>Deprecation of the RSA key exchange in TLS 1.3 will cause significant problems
+for financial institutions, almost all of whom are running TLS internally and
+have significant, security-critical investments in out-of-band TLS decryption.</p>
+
+<p>Like many enterprises, financial institutions depend upon the ability to
+decrypt TLS traffic to implement data loss protection, intrusion detection and
+prevention, malware detection, packet capture and analysis, and DDoS
+mitigation.</p>
+</blockquote>
+
+<p>Kenny&rsquo;s response: (excerpted from <a href="https://www.ietf.org/mail-archive/web/tls/current/msg21278.html">https://www.ietf.org/mail-archive/web/tls/current/msg21278.html</a>)</p>
+
+<blockquote>
+<p>Hi Andrew,</p>
+
+<p>My view concerning your request: no.</p>
+
+<p>Rationale: We&rsquo;re trying to build a more secure internet.</p>
+
+<p>Meta-level comment:</p>
+
+<p>You&rsquo;re a bit late to the party. We&rsquo;re metaphorically speaking at the stage of
+emptying the ash trays and hunting for the not quite empty beer cans.</p>
+
+<p>More exactly, we are at draft 15 and RSA key transport disappeared from the spec
+about a dozen drafts ago. I know the banking industry is usually a bit slow off
+the mark, but this takes the biscuit.</p>
+
+<p>Cheers,</p>
+
+<p>Kenny</p>
+</blockquote>
+
+<h2 id="anti-downgrade-prevention-and-detection">Anti-Downgrade Prevention and Detection</h2>
+
+<p><a href="https://eprint.iacr.org/2016/072.pdf">Downgrade resilience in key-exchange protocols</a> by Karthikeyan Bhargavan, Christina Brzuska, Cédric Fournet, Markulf Kohlweiss, Santiago Zanella-Béguelin and Matthew Green in IEEE Symposium on Security and Privacy (SP), 2016.</p>
+
+<p>TLS 1.2 suffers from various <a href="https://tlseminar.github.io/downgrade-attacks/">downgrade</a> and <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">man-in-the-middle attacks</a> like Logjam, FREAK and POODLE.
+Logjam exploits the option of using legacy &ldquo;export-grade&rdquo; 512-bit Diffie–Hellman groups in TLS 1.2. It forces susceptible servers to downgrade to cryptographically weak 512 bit Diffie-Hellman groups, which could then be compromised.
+FREAK is a man-in-the-middle attack that affects the OpenSSL stack, the default Android web browser, and some Safari browsers. It tricks servers into negotiating a TLS connection using cryptographically weak 512 bit encryption keys.
+POODLE exploits vulnerability in SSL 3.0 but is applicable to TLS 1.2 once the attacker performs version rollback to SSL 3.0 through a man-in-the-middle attack.</p>
+
+<p>The above problems can be countered using correct downgrade protection. While TLS 1.2 does implement downgrade protection, it fails to do so correctly. Downgrade protection requires sending MAC of finished messages between client and server to ensure that the negotiated parameters have not be modified by a MITM attacker. TLS 1.2 does not hash all the negotiated parameters in its MAC allowing the attacker to alter the non-hashed parameters and launch downgrade attacks. TLS 1.3 fixes this issue by hashing all the parameters and also isolates TLS 1.2 or lower version messages (which have downgrade resilience issues) by requiring the TLS 1.3 server to set first <code>N</code> bits of its ServerRandom nonce to a fixed value on recieving ClientHello message from a TLS 1.2 or below client. This signals the TLS 1.3 clients and they reject any packet that has the fixed value sequence.</p>
+
+<h3 id="downgrade-resilience-in-key-exchange-protocols">Downgrade Resilience in Key-Exchange Protocols</h3>
+
+<p>Downgrade protection primarily relies on the MACs in the finished messages, which in turn rely on the strength of the group and the negotiated algorithms and hash.
+If a client and server support a weak group, then an attacker can downgrade the group and break the master secret to forget the MACs, as in Logjam.</p>
+
+<p>The figure below shows the faulty downgrade resilience of TLS 1.2, where the TLS 1.2 server fails to hash  the negotiated parameters like protocol version (<code>v</code>), chosen parameters (<code>a_R</code>) and server identity (<code>pk_R</code>) in its hash message <code>hash_1(.)</code> (see subfigure (b) of the below figure).
+<center><img src="/images/tls-13/tls1_2.png" alt="Downgrade Protection in TLS 1.2" style="width:1000px;"/><br>
+<sup>TLS 1.0 - 1.2 with (EC)DHE key exchange (a), where messages labeled with * occur only when client authentication is enabled, and (b) its downgrade protection sub-protocol</sup><br><sup>Source: <a href="https://eprint.iacr.org/2016/072.pdf">https://eprint.iacr.org/2016/072.pdf</a></sup></center></p>
+
+<p>Draft 10 of TLS 1.3 implements the following downgrade protection mechanism which rectifies the above mistake and consequently hashes all the negotiated parameters. Notice the <code>hash_1(H(m_1, m_2, -))</code> in the message sent by server (subfigure (b) in the figure below), which hashes all the negotiated parameters in <code>m_2</code>.</p>
+
+<p><center><img src="/images/tls-13/tls1_3_draft10.png" alt="Downgrade Protection in TLS 1.3 Draft 10" style="width:1000px;"/><br>
+<sup>TLS 1.3 1-RTT mode with server-only authentication (a) and its downgrade protection sub-protocol (b) </sup><br><sup>Source: <a href="https://eprint.iacr.org/2016/072.pdf">https://eprint.iacr.org/2016/072.pdf</a></sup></center></p>
+
+<p>However, there are three downgrade attacks possible on TLS 1.3 as described in Draft 10.
+One, an attacker downgrades the connection to TLS 1.2 or lower and mounts any of the downgrade attacks mentioned before. This will succeed as long as the attacker can forge the finished MACs.
+Second, an attacker uses the TLS fallback mechanism to stop TLS 1.3 connections and allows only TLS 1.2 connections to go through. Even if the end points implement the fallback protection mechanism, the attacker can use one of the downgrade attacks in TLS 1.2 to break the connection.
+Third, in Draft 10 of the TLS1.3 protocol, the handshake hashes restart upon receiving a Retry message and hence, the attacker can downgrade the Diffie-Hellman group for some classes of negotiation functions.</p>
+
+<p>TLS 1.3 draft 11 counters the above three attacks by incorporating two countermeasures.
+First, TLS 1.3 protocol continues the handshake hashes over retries (subfigure (a) of the figure below).
+Second, TLS 1.3 servers always include their highest supported version number in the server nonce, even when they choose a lower version such as TLS 1.0.
+Draft 11 of TLS 1.3 <a href="https://github.com/tlswg/tls13-spec/pull/284">fixed</a> the issue by requiring TLS 1.3 server to set top N bits of the ServerRandom to be a specific fixed value on receiving ClientHello message from a TLS 1.2 or below client. TLS 1.3 clients which receive a TLS 1.2 or below ServerHello check for this value and abort if they receive it. The figure below shows the client check using <code>verifyVersion</code> functionality.
+This allows for detection of downgrade attacks over and above the Finished handshake as long as ephemeral cipher suites are used. This prevents attacks targeted at (EC)DHE.</p>
+
+<p><center><img src="/images/tls-13/tls1_3_draft11.png" alt="Downgrade Protection in TLS 1.3 Draft 11" style="width:1000px;"/><br>
+<sup>TLS 1.3 Draft 11 Update on Downgrade Resilience in Key-Exchange Protocols</sup><br><sup>Source: <a href="https://eprint.iacr.org/2016/072.pdf">https://eprint.iacr.org/2016/072.pdf</a></sup></center></p>
+
+<p>The TLS 1.3 server will send a <a href="https://tools.ietf.org/html/draft-ietf-tls-tls13-18#section-4.1.3"><code>ServerHello</code></a> message in response to a <code>ClientHello</code> message when it is able to find an acceptable set of algorithms and the client&rsquo;s <code>key_share</code> extension is acceptable.  If it is not able to find an acceptable set of parameters, the server will respond with a <code>handshake_failure</code> fatal alert. The <code>ServerHello</code> message contains server&rsquo;s random value which incorporates downgrade protection mechanism. If a <code>ClientHello</code> indicates only support for TLS 1.2 or below, then the last eight bytes of server&rsquo;s random value MUST be set to: <code>44 4F 57 4E 47 52 44 01</code>.
+If a <code>ClientHello</code> indicates only support for TLS 1.1 or below, then the last eight bytes of server&rsquo;s random value SHOULD be set to: <code>44 4F 57 4E 47 52 44 00</code>.
+TLS 1.3 clients are required to check the above values in the random field of server responses.</p>
+
+<h2 id="authenticated-encryption">Authenticated Encryption</h2>
+
+<p>Up until now, we&rsquo;ve mostly concerned ourselves with the &ldquo;MAC-Encode-Encrypt&rdquo; (MEE) packet construction method.  In a nutshell, MEE follows three steps:</p>
+
+<ol>
+<li>Calculate a MAC over the payload</li>
+<li>Append the MAC and an appropriate amount of padding to the payload</li>
+<li>Encrypt the modified payload to generate a ciphertext</li>
+</ol>
+
+<p>As we&rsquo;ve discussed in previous classes, the CBC mode of operation has its downsides; adversaries can break encryption by utilizing padding oracle attacks, since padding can only exist in a handful of values and lengths.  Moreover, it&rsquo;s impossible to actually verify the integrity of the ciphertext <em>until the MAC has been revealed by decrypting the ciphertext</em>.  The duration required to decrypt the tampered ciphertext and validate the MAC leaks sensitive (and potentially useful) timing information to adversaries.</p>
+
+<h4 id="encrypt-then-mac">Encrypt-then-MAC</h4>
+
+<p>In general, MEE is inferior to its cousin, &ldquo;Encrypt-then-MAC&rdquo;  (ETM).  In ETM, as opposed to MEE, the plaintext is encrypted <em>before</em> the MAC is calculated.  Intuitively, it makes sense that ETM is more secure&mdash;any tampering of the ciphertext is immediately evident when the MAC is calculated, therefore no decryption takes place (and no timing information is leaked).  Additionally, assuming the ciphertext appears random, the MAC also appears random and reveals no information about the underlying ciphertext.</p>
+
+<h4 id="galois-counter-mode-gcm">Galois/Counter Mode (GCM)</h4>
+
+<p>Before we jump on the ETM bandwagon, however, let&rsquo;s take a look at yet another mode of operation, <em>Galois/Counter Mode</em> (GCM).  GCM is an authenticated encryption algorithm that provides confidentiality <em>and</em> integrity, and does so extremely efficiently.</p>
+
+<p><center><img src="/images/tls-13/gcm.png" alt="GCM" width=500px/><br>
+<sup>Galois/Counter Mode (credit:  Wikipedia)</sup></center></p>
+
+<p><strong> GCM At-A-Glance </strong></p>
+
+<ol>
+<li>Sequentially number blocks</li>
+<li>Encrypt block numbers with block cipher E</li>
+<li>XOR result of encryption with plaintext to produce ciphertext</li>
+<li>Combine ciphertext with authentication code to produce authentication tag</li>
+</ol>
+
+<p>The authentication tag can be used to verify the integrity of the data upon decryption, similar to an HMAC.  If this &ldquo;counter mode&rdquo; of authenticated encryption seems superior, that&rsquo;s because <em>it is</em>!  TLS 1.3 only provides support for GCM, CCM, and ChaCha20-Poly1305, another authenticated encryption mode of operation.  Say goodbye to MAC-then-encrypt.</p>
+
+<h2 id="tls-v1-3-removals">TLS v1.3 Removals</h2>
+
+<p><a href="https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/">An overview of TLS 1.3 and Q&amp;A</a></p>
+
+<p>In TLS v1.3, everything was scrutinized for being really necessary and
+secure, and scrapped otherwise. In particular, the following things
+are removed:</p>
+
+<ul>
+<li><a href="https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/">static RSA handshake</a></li>
+<li>the <a href="https://blog.cloudflare.com/padding-oracles-and-the-decline-of-cbc-mode-ciphersuites/">CBC MAC-then-Encrypt</a> modes, which were responsible for Vaudenay, Lucky13, POODLE, LuckyMinus20</li>
+<li>weak primitives like RC4, SHA1, MD5</li>
+<li>compression</li>
+<li>renegotiation</li>
+<li>custom FFDHE groups</li>
+<li>RSA PKCS#1v1.5</li>
+<li>explicit nonces</li>
+</ul>
+
+<h2 id="formal-verification">Formal Verification</h2>
+
+<p>TLS 1.3 is the first revision of the TLS protocol to incorporate formal verification during development.
+Cas Cremers, Marko Horvat, Sam Scott, and Thyla van der Merwe&rsquo;s paper, <a href="https://tls13tamarin.github.io/TLS13Tamarin/docs/tls13tamarin.pdf"><em>Automated Analysis of TLS 1.3: 0-RTT, Resumption and Delayed Authentication</em></a>, provides a recent (February 2016) description of the challenges and results of such an analysis. In the <a href="https://tls13tamarin.github.io/TLS13Tamarin/#introduction">blog post</a> associated with their work, the authors contextualize their verification efforts:</p>
+
+<blockquote>
+<p><em>The various flaws identified in TLS 1.2 and below, be they implementation- or specification-based, have prompted the TLS Working Group to adopt an &ldquo;analysis-before-deployment&rdquo; design paradigm in drafting the next version of the protocol. After a development process of many months, the <a href="https://github.com/tlswg/tls13-spec">TLS 1.3 specification</a> is nearly complete. In the spirit of contributing towards this new design philosophy, we model the TLS 1.3 specification using the Tamarin prover, a tool for the automated analysis of security protocols.</em></p>
+</blockquote>
+
+<p>The authors are able to prove that <a href="https://tools.ietf.org/html/draft-ietf-tls-tls13-10">revision 10</a> of the specification meets the goals of authenticated key exchange for any combination of unilaterally or mutually authenticated handshakes. Further, the authors discovered a new, unknown attack on the protocol during a PSK-resumption handshake. The <a href="https://tools.ietf.org/html/draft-ietf-tls-tls13-11">11th revision</a> of the protocol included a fix for this attack.</p>
+
+<h3 id="protocol-model">Protocol Model</h3>
+
+<p>The authors used the <a href="https://github.com/tamarin-prover/tamarin-prover">Tamarin</a> prover for their analysis. Tamarin is an interactive theorem proving environment (similar to <a href="https://coq.inria.fr/about-co">Coq</a>) specially designed for the verification of protocols such as TLS. As TLS is already an abstract specification, encoding TLS 1.3 into the Tamarin specification language was relatively straightforward. &ldquo;Rules&rdquo; (functions) over this specification captured honest-party and adversary actions alike. The following state diagram depicts the client TLS state (as defined in Tamarin) and transitions between the states (Tamarin rules) for an entire session.</p>
+
+<p><center>
+    <img src="/images/tls-13/client-sm.png" alt="Partial client state machines for TLS 1.3 revision 10" style="width:800px;"/>
+    <br><br>
+    <sup>Source: <a href="http://tls13tamarin.github.io/TLS13Tamarin/#building-a-model">Automated Analysis of TLS 1.3</a></sup>
+</center></p>
+
+<h3 id="proven-security-properties">Proven Security Properties</h3>
+
+<p>The next step in the analysis involved encoding the desired security properties of TLS 1.3 as Tamarin lemmas. The authors encoded the following properties:</p>
+
+<ul>
+<li>unilateral authentication of the server (mandatory)</li>
+<li>mutual authentication (optional)</li>
+<li>confidentiality and perfect forward secrecy of session keys</li>
+<li>integrity of handshake messages</li>
+</ul>
+
+<p>Each lemma must hold over its respective domain of states (a subset of the nodes in the client state machine above, for example). While proof assistants like Tamarin are capable of constructing simple proofs, a significant amount of manual effort was required to prove the enumerated lemmas. As such, a notable contribution of this work is the actual Tamarin proof artifact itself, not just what was and wasn&rsquo;t proven. The authors claim their Tamarin abstractions and proofs were constructed with extensibility to future TLS development in mind.</p>
+
+<h3 id="discovered-attack">Discovered Attack</h3>
+
+<p>While verifying the <a href="https://www.ietf.org/proceedings/93/slides/slides-93-tls-2.pdf">delayed authentication mechanism</a> portion of the protocol, an attack was discovered which violated client authentication; an adversary is able to impersonate a client while communicating with the server.</p>
+
+<p><strong>Step 1.</strong> The victim client, Alice, establishes a connection with the man-in-the-middle attacker, Charlie. Charlie establishes a connection with Bob, the server which which Alice wishes to connect. A PSK is established for both connections, <code>PSK_1</code> and <code>PSK_2</code>, respectively.</p>
+
+<p><center>
+    <img src="/images/tls-13/att1.png" alt="Client Authentication Attack: Step 1" style="width:800px;"/>
+    <br>
+    <sup>Source: <a href="http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication">Automated Analysis of TLS 1.3</a></sup>
+</center></p>
+
+<p><strong>Step 2.</strong>  Alice sends a random nonce, <code>nc</code>, to Charlie using <code>PSK_1</code>. Charlie reuses this nonce to initiate a PSK-resumption handshake with Bob. Bob responds with random nonce <code>ns</code> and the server <code>Finished</code> message using <code>PSK_2</code>. Charlie reuses <code>ns</code> and recomputes the <code>Finished</code> message for Alice using <code>PSK_1</code>.  Alice Returns her <code>Finished</code> message to Charlie. Charlie then recomputes this <code>Finished</code> message for Bob using <code>PSK_2</code>.</p>
+
+<p><center>
+    <img src="/images/tls-13/att2.png" alt="Client Authentication Attack: Step 2" style="width:800px;"/>
+    <br><br>
+    <sup>Source: <a href="http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication">Automated Analysis of TLS 1.3</a></sup>
+</center></p>
+
+<p><strong>Step 3.</strong> Charlie makes a request to Bob that requires client authentication. Charlie is thus prompted for his certificate and verification. This request is re-encrypted and forwarded to Alice. To compute the verification signature of this forwarded request, Alice uses the <code>session_hash</code> value, which is the hash of all handshake messages excluding the <code>Finished</code> messages. This <code>session_hash</code> value will match that of Charlie and Bob&rsquo;s, and thus Charlie can re-encrypt Alice&rsquo;s signature for Bob. Bob accepts Alice&rsquo;s certificate and verification as valid authentication for Charlie.</p>
+
+<p><center>
+    <img src="/images/tls-13/att3.png" alt="Client Authentication Attack: Step 3" style="width:800px;"/>
+    <br><br>
+    <sup>Source: <a href="http://tls13tamarin.github.io/TLS13Tamarin/#attacking-client-authentication">Automated Analysis of TLS 1.3</a></sup>
+</center></p>
+
+<p>The discovery of this attack is noteworthy in that it was completely unexpected by the TLS Working Group.</p>
+
+<p>The fix, which forces the <code>session_hash</code> value to include <code>Finished</code> messages was even suggested in an official <a href="https://github.com/tlswg/tls13-spec/pull/316">pull request</a>, but was rejected.</p>
+
+<p>The authors make a strong case that formal verification has been an
+extremely valuable part of the design process of TLS 1.3. The speed
+with which the fix was incorporated into subsequent protocol revisions
+suggests that the TLS Working Group shares this sentiment.</p>
+
+<p>Two <a href="http://www.ieee-security.org/TC/SP2017/">Oakland 2017</a>
+papers provide more reports on formal verification efforts for TLS
+1.3, up through Draft 18:</p>
+
+<ul>
+<li>Karthikeyan Bhargavan, Bruno Blanchet, and Nadim Kobeissi. <a href="http://prosecco.gforge.inria.fr/personal/bblanche/publications/BhargavanBlanchetKobeissiSP2017.pdf"><em>Verified Models and Reference Implementations
+for the TLS 1.3 Standard Candidate</em></a>. <a href="https://www.ieee-security.org/TC/SP2017/program.html">IEEE Symposium on Security and Privacy</a>, May 2017.</li>
+<li>Karthikeyan Bhargavan, Antoine Delignat-Lavaud, Cédric Fournet, Markulf Kohlweiss, Jianyang Pan, Jonathan Protzenko, Aseem Rastogi, Nikhil Swamy, Santiago Zanella-Béguelin, and Jean Karim Zinzindohoué. <a href="http://www.cs.umd.edu/~aseem/record.pdf"><em>Implementing and Proving the TLS 1.3 Record Layer</em></a>. <a href="https://www.ieee-security.org/TC/SP2017/program.html">IEEE Symposium on Security and Privacy</a>, May 2017.</li>
+</ul>
+ 
+  
   <p class="fronthead"><A href="/usable-security/">Usable Security in TLS</a><br><span class="authordate">Team Pineapple, Wed, 22 Mar 2017</span></p>
     
 
@@ -1530,278 +1848,6 @@ Source: <a href="https://tlseminar.github.io/docs/drown.pdf">https://tlseminar.g
 <h2 id="prevention-of-drown">Prevention of DROWN</h2>
 
 <p>The attack is successful mainly because of the reliance on obsolete cryptographic practices. Export-grade ciphers only support 40-bit keys which are vulnerable to brute-force attack and hence it is crucial to disable export-grade ciphers and use safer ciphers (like <a href="https://tools.ietf.org/html/rfc5288">AES_GCM</a>) with longer key lengths (256-bits). PKCS#1 v1.5 padding leaks significant byte patterns and hence a better padding technique should be used. SSLv2 protocol includes the above obsolete cryptos and hence it should be scrapped and replaced with TLS 1.3. Lastly, the RSA public keys should not be shared among multiple servers or connections in order to deter the attack.</p>
- 
-  
-  <p class="fronthead"><A href="/padding-oracle/">Padding Oracle Attacks</a><br><span class="authordate">Team Sesame, Tue, 31 Jan 2017</span></p>
-    
-
-<h1 id="introduction">Introduction</h1>
-
-<p><a href="/https://tlseminar.github.io/first-few-milliseconds/">Last week</a>, we
-examined how the Transport Layer Security (TLS) protocol provides a
-private channel between two devices by following the handshake and
-record layers protocols. The handshake layer establishes a symmetric
-key that both the client and the server could use in the record layer
-to encrypt and decrypt messages.</p>
-
-<p>This week, we&rsquo;ll discuss a real-world TLS attack, the Padding Oracle
-Attack, that takes advantage of our need for each message to be a
-particular set length. If the original message is not long enough,
-then we have to add padding for the <a href="https://tlseminar.github.io/docs/analysisssl3.pdf">CBC Mode
-Encryption</a> to
-work. Because the padding is present, an attacker can chip away
-information on the
-<a href="https://tlseminar.github.io/docs/beast.pdf">ciphertext</a>, one byte at
-a time, through analyzing the receiver’s error messages for the
-sender, <a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">response time</a>,
-and general behavior.</p>
-
-<p>We&rsquo;ll start out by learning about how <a href="https://tlseminar.github.io/docs/analysisssl3.pdf">CBC Mode
-Encryption</a> works.</p>
-
-<h1 id="padding-and-cbc-mode">Padding and CBC Mode</h1>
-
-<blockquote>
-<p><a href="https://tlseminar.github.io/docs/analysisssl3.pdf"><em>Analysis of the SSL 3.0 Protocol</em></a> by David Wagner and Bruce Schneider (1997)</p>
-</blockquote>
-
-<p>When AES-128 encryption is performed in cipher block chaining mode
-(CBC mode), the plaintext message is first split up into 16-byte
-(128-bit) blocks. It is often the case, however, that the length of
-the message is not perfectly divisible by 16. To account for varying
-message sizes, extra bytes, called padding, are concatenated after the
-end of the message to fill up the remaining quota for the final block.</p>
-
-<p>These bytes are not chosen at random, however, and different cipher
-modes prescribe different padding methods. In order to clearly mark
-for the recipient where the message ends and the padding begins, the
-padding follows a strict formatting pattern. With PKCS #5 padding as
-used in TLS, if there are <em>n</em> bytes of padding, then each padding byte
-contains the value <em>n</em>. For instance, if the last block contains 15
-message bytes, the 1-byte padding contains <code>0x01</code>; if the last block
-contains 14 message bytes, the 2-byte padding contains <code>0x0202</code>;
-3-byte padding contains <code>0x030303</code>; and so on.</p>
-
-<p><center>
-<img src="/images/paddingoracle/padding.png" alt="Padding"><Br>
-<span class="caption"><em>Source: </em><a href="https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html">Gotham Digital Science</a></span>
-</center></p>
-
-<p>In CBC mode, the bytes of each plaintext block n are first XOR’ed with
-the encrypted bytes of the block before it, and their result is then
-encrypted. Block 1 is the obvious exception, which is XOR’ed with a
-fixed, random, or secret initialization vector (IV). Thus, for any
-block <em>n</em> &gt; 1, where E<sub><em>k</em></sub> is the encryption function,
-<em>c</em><sub><em>n</em></sub> is the encrypted block <em>n</em>, <em>p</em><sub><em>n</em></sub> is the plaintext
-block <em>n</em>, and <em>c</em><sub><em>n</em>-1</sub> is the encrypted block <em>n</em>-1:
-<center>
-<em>c</em><sub><em>n</em></sub> = E<sub><em>k</em></sub> (<em>p</em><sub><em>n</em></sub>⊕ <em>c</em><sub><em>n</em>-1</sub>)
-</center></p>
-
-<p><center><img src="/images/paddingoracle/cbc.png" alt="cbc-mode" /><br>
-<span class="caption"><em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">Alan Kaminsky</a></span>
-</center></p>
-
-<p>However, the predictability of the padding format can turn out to be
-an extremely exploitable weakness for an active attacker. Under
-SSL/TLS protocol, when servers receive an encrypted message, their
-first step upon decryption is to check the validity of the padding;
-that is, determine if the numbers at the end of the last block
-represent the number of padding bytes. As soon as this step is
-completed, the server will return to the sender either an error code
-or an acknowledgment that the padding is valid. In this way, the
-server acts as an oracle to an active attacker, providing them with
-confirmations/rejections to inform their guesses.</p>
-
-<h1 id="padding-oracle-attack">Padding Oracle Attack</h1>
-
-<blockquote>
-<p><a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf"><em>Security Flaws Induced by CBC Padding Applications to SSL, ISPEC, WTLS&hellip;</em></a> by Serge Vaudenay</p>
-</blockquote>
-
-<p>To begin, the attacker creates a Last Word Oracle. This first assumes
-a 1-byte padding, so the format that the oracle would return as valid
-is <code>0x01</code> XOR’ed with some particular value in the corresponding last
-position in the <em>n</em>-1th block. Since the last byte, or word, can have
-256 distinct values, the attacker can simply manipulate the <em>n</em>-1th
-block, easily testing all values, until either the possibilities are
-exhausted or the padding is returned as valid. If the possibilities
-are exhausted, then the attacker instead tries <code>0x02</code>, then <code>0x03</code>,
-and on until the padding returned is valid.</p>
-
-<p><center><img src="/images/paddingoracle/last-word.png" alt="LastWordOracle" /><br>
-<span class="caption"><em>Source: </em><a href="https://www.rsaconference.com/writable/presentations/file_upload/asec-403.pdf">Brian Holyfield, Gotham Digital Science</a></span>
-</center></p>
-
-<p>Once the attacker has learned the padding, a Block Decryption Oracle
-is constructed, using the values of the encrypted <em>n</em>-1th block to,
-byte by byte, guess the preceding byte, using the oracle’s pass/fail
-responses to confirm correct guesses. This method is then extended to
-decrypt all other blocks, as it is called on pairs containing a random
-block and a ciphertext block. (Again, the logical exception is the
-first block, assuming an independent initialization vector.) This is a
-terrifyingly efficient attack; to implement it, the attacker only
-needs (<em>b</em> * <em>W</em> * <em>N</em>)/2 trials, where <em>b</em> is the number of bytes per block,
-<em>W</em> is the number of possible bytes, and <em>N</em> is the number of blocks.</p>
-
-<p>With the CBC Padding now added to the original ciphered message,
-attackers can alter this new message with blockwise operations in
-order to draw information out of the originally unreadable
-ciphertext. This information could potentially end up being
-authentication tokens, such as cookies, granting attackers personally
-identifiable information or the potential to hijack previous sessions.</p>
-
-<h1 id="beast-plaintext-attacks-against-ssl">BEAST: Plaintext Attacks Against SSL</h1>
-
-<blockquote>
-<p><a href="https://tlseminar.github.io/docs/beast.pdf"><em>Here Come The \(\oplus\) Ninjas</em></a> by Thai Duong and Juliano Rizzo (2011)</p>
-</blockquote>
-
-<p>In CBC block encryption, each plaintext block is XORed with the
-ciphertext of the previous block before being encrypted. An attempted
-guess at a plaintext block can be evaluated by encrypting the
-ciphertext prior to the block in question XORed with the ciphertext
-prior to the current block XORed with the guess; if the new ciphertext
-matches that of the block in question, then the guess is
-correct:
-<center>
-C<sub><em>j</em></sub> = E<sub><em>k</em></sub>(P<sub><em>j</em></sub> ⊕ C<sub><em>j</em>-1</sub>), so, C<sub><em>i</em></sub>==C<sub><em>j</em></sub> iff P<sub><em>i</em></sub> == P<sub><em>j</em></sub> ⊕ C<sub><em>i</em>-1</sub> ⊕ C<sub><em>j</em>-1</sub>
-</center></p>
-
-<p>Guess G can be evaluated as equal to or unequal to plaintext
-P<sub>j</sub> by setting P<sub><em>i</em></sub>=G ⊕ C<sub><em>i</em>-1</sub> ⊕
-C<sub><em>j</em>-1</sub> and checking whether or not C<sub><em>j</em></sub> ==
-C<sub><em>i</em></sub>. An attacker would need to be able to view the
-encrypted messages and query the underlying CBC encryption system to
-be able to mount an attack based on this exploit.</p>
-
-<p>Cryptographic systems are limited in their size and ability to store
-large plaintext messages, for this reason, most cryptographic systems
-encrypt messages block by block as they are sent. In the case where an
-attacker can append padding to a message before it is encrypted, an
-attacker can mount a blockwise chosen-boundary attack, in which the
-first byte of an unknown message is isolated by padding, enabling the
-attacker to guess at single bytes of a message rather than block-sized
-chunks.</p>
-
-<p>The natural extension of this is to repeat the process such that once
-a byte of message has been guessed by the attacker, the padding is
-changed such that a single unknown byte of message is encrypted with
-padding and bytes known to the attacker, allowing them to continue
-guessing at single bytes of information.</p>
-
-<p>Duong and Rizzo go on to describe the process whereby this attack
-could be mounted on HTTPS to obtain a user’s HTTP cookie. The attack
-only requires that an attacker can view encrypted messages, can cause
-the client to make arbitrary encrypted requests, and that arbitrary
-plaintext can be added to out-going requests. In the described attack,
-the user is made to request a package with a padded end such that the
-first byte of unknown information in the request is isolated in an
-encryption with only public information. The attacker then makes
-guesses at that byte of information, appending plaintext to the
-request and watching the encrypted channel for a message block that
-matches the block containing the unknown byte of information. At that
-point, the guess that resulted in that message block is identified as
-the correct guess. The process is then repeated with a smaller padding
-until the user’s request header (including their HTTPS cookies) is
-revealed to the attacker.</p>
-
-<p><center><img src="/images/paddingoracle/beast.png" alt="beast" /><br>
-<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.</span>
-</center></p>
-
-<p>There are a few issues mentioned associated with this attack, but by
-using one of a variety of plugins, an attacker could make the user
-open bi-directional communication with the server. On this
-communication channel, the privileges required by the attacker to
-mount the attack would be easier to gain.</p>
-
-<h1 id="lucky-13-plaintext-recovery-from-injected-ciphertext">Lucky 13: Plaintext Recovery from Injected Ciphertext</h1>
-
-<blockquote>
-<p><a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf"><em>Lucky Thirteen: Breaking the TLS and DTLS Record Protocols</em></a> by Nadhem J. Alfardan and Kenneth G. Paterson (2013)</p>
-</blockquote>
-
-<p>Similar in the vein of the BEAST attack using bitwise XOR operations
-to glean useful plaintext information, Lucky Thirteen offers yet
-another alternative means to get partial or even full plaintext
-recovery with just a simple man-in-the-middle injecting ciphertext
-into the original ciphertext. Based on analyzing how TLS and DTLS
-decrypt a given ciphertext, these attacks also rely on CBC-mode
-weaknesses.</p>
-
-<p>The Lucky 13 attack relies on a timing channel introduced by the
-difference in processing time between TLS records with correct and
-incorrect padding, requiring only a standard in-the-middle attacker
-for execution and providing recovered plaintext in the most severe
-case.  This would indicate a major security flaw, even in comparison
-to the aforementioned BEAST attack. BEAST required capabilities beyond
-simple MITM on the part of the attacker.  As a result, the authors of
-the paper disclosed their results to all major vendors to allow for
-patching before publishing.</p>
-
-<p>The name “Lucky 13” is a reference to a specific breakpoint in the
-size of the padding on a given message.  Both TLS and DTLS use the
-HMAC algorithm to compute MAC tags for messages.  HMAC operates using
-a compression function on messages with lengths equal to multiples of
-64 bytes, so TLS and DTLS pad out messages with remaining space.</p>
-
-<p>After subtracting 8 bytes for the length field and 1 byte of mandatory
-padding, we are left with a maximum message length of 55 bytes that
-can be encoded within one block.  This means that messages less than
-55 bytes can be processed with only four compression function
-evaluations, and that in general the number of compressions is equal
-to</p>
-
-<p>$$\left\lceil\frac{L-55}{64}\right\rceil+4$$</p>
-
-<p>for messages of <em>L</em> bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.</p>
-
-<p>The authors detail first a distinguishing attack, and then a variation allowing for full plaintext recovery.  All attacks rely on the timing channel.  Specifically, the authors describe in detail how it is possible to place a target ciphertext block at the end of an encrypted record, causing the decryption function to interpret the plaintext block corresponding to the ciphertext block as padding.  Thus the amount of time required to process that block depends on plaintext bytes, leaking information.</p>
-
-<p><center><img src="/images/paddingoracle/timing.png" alt="lucky-thirteen" /><Br>
-<span class="caption"><em>Figure:</em> Graph showing the differences in timing due to the number of compressions necessary for varying lengths of bytes.<br><em>Source: </em><a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">http://www.isg.rhul.ac.uk/tls/TLStiming.pdf</a>
-</span>
-</center></p>
-
-<h1 id="conclusion">Conclusion</h1>
-
-<p>Through these readings and their respective explanations, we see that
-cryptographic protocols are often broken and need to be patched. There
-is always some threat model out there looking to exploit the first
-sign of weakness to decrypt and listen in on what should be a secure,
-encrypted channel. Through this last week, we focused on looking at
-padding oracle attacks which take advantage of the padding on the
-respective blocks in a CBC chain as they are passed from operation to
-operation. With the last word oracle and the BEAST attack, we saw how
-important this padding was to the security of the whole
-operation. With our look at Lucky 13, we were able to see that people
-were able to exploit the fact that one extra compression had to be
-done in certain situations to glean information about the message. As
-such, we see just from the padding, we have so many attacks.</p>
-
-<p>There are so many aspects to SSL/TLS protocols that so many more
-exploits exist. So, what are ways that we can prevent these attacks?
-With the padding attacks, we saw that they tried standardizing error
-messages (but, why not just encrypt the message and send it
-back?). Should our strategy just be to move as quickly to the newest
-version of the security protocols? Should we add the MAC to the
-messages after encryption?</p>
-
-<p>TLS 1.3 (the most recent release) has been drafted (and in the process
-of release) and has resolved many of these issues that have exploited
-weaknesses present in older versions of the protocol. However, its
-adoption rate has been very low and so it is important to bring this
-up as more and more operations should be moved over to TLS 1.3, as
-this seems to be the most secure system we have available right now
-and thus should be adopted.</p>
-
-<h1 id="sources">Sources</h1>
-
-<p><a href="https://tlseminar.github.io/docs/analysisssl3.pdf">https://tlseminar.github.io/docs/analysisssl3.pdf</a><br />
-<a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf">http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf</a><br />
-<a href="https://tlseminar.github.io/docs/beast.pdf">https://tlseminar.github.io/docs/beast.pdf</a><br />
-<a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">http://www.isg.rhul.ac.uk/tls/TLStiming.pdf</a></p>
  
   
   
