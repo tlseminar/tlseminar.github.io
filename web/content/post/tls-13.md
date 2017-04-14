@@ -42,15 +42,15 @@ In contrast, TLS 1.3 incorporates the key share messages with the
 send one less message (and only send one message total to initiate the
 connection).
 
-<center><img src="/images/tls-13/handshake1.2.png" alt="TLS 1.2 Handshake" style="width:300px;"/><br>
+<center><img src="/images/tls-13/handshake1.2.png" alt="TLS 1.2 Handshake" style="width:500px;"/><br>
 <sup>TLS 1.2 Handshake</sup></center>
 
-<center><img src="/images/tls-13/handshake1.3.png" alt="TLS 1.3 Handshake" style="width:300px;"/><br>
+<center><img src="/images/tls-13/handshake1.3.png" alt="TLS 1.3 Handshake" style="width:500px;"/><br>
 <sup>TLS 1.3 Handshake</sup></center>
 
 ### Sidebar: AuthLoop
 
-> [AuthLoop: End-to-End Cryptographic Authentication for Telephony over Voice Channels](/docs/authloop.pdf), Bradley Reaves, Logan Blue, and Patrick Traynor. USENIX. August 2016.
+> [_AuthLoop: End-to-End Cryptographic Authentication for Telephony over Voice Channels_](/docs/authloop.pdf), Bradley Reaves, Logan Blue, and Patrick Traynor. USENIX Security Symposium. August 2016.
 
 On the subject of modification and adaptations to the typical TLS 1.2 system of encryption and authentication, we explore AuthLoop: a TLS-style authentication protocol specifically designed for telephony networks. In this domain, the system must connect three different types of telephony networks: cellular, VoIP, and PSTN. However, the TLS Handshake transmission speeds for such a system were extremely slow - averaging 98 seconds per handshake - which is completely infeasible for most phone calls. AuthLoop keeps the authentication and shared secret elements of TLS and a freshness/liveness component analogous to the Heartbeat Protocol. On the other hand, AuthLoop removes RSA and the cipher agreement messages. Furthermore, AuthLoop does not encrypt messages and therefore has no Record Protocol. After slimming down, the average transmission time reduced drastically to 4.8 seconds.
 
@@ -293,6 +293,10 @@ extremely valuable part of the design process of TLS 1.3. The speed
 with which the fix was incorporated into subsequent protocol revisions
 suggests that the TLS Working Group shares this sentiment.
 
-(Two upcoming [Oakland 2017](http://www.ieee-security.org/TC/SP2017/)
+Two [Oakland 2017](http://www.ieee-security.org/TC/SP2017/)
 papers provide more reports on formal verification efforts for TLS
-1.3, up through Draft 18, and will be available soon.)
+1.3, up through Draft 18:
+
+- Karthikeyan Bhargavan, Bruno Blanchet, and Nadim Kobeissi. [_Verified Models and Reference Implementations
+for the TLS 1.3 Standard Candidate_](http://prosecco.gforge.inria.fr/personal/bblanche/publications/BhargavanBlanchetKobeissiSP2017.pdf). [IEEE Symposium on Security and Privacy](https://www.ieee-security.org/TC/SP2017/program.html), May 2017.
+- Karthikeyan Bhargavan, Antoine Delignat-Lavaud, Cédric Fournet, Markulf Kohlweiss, Jianyang Pan, Jonathan Protzenko, Aseem Rastogi, Nikhil Swamy, Santiago Zanella-Béguelin, and Jean Karim Zinzindohoué. [_Implementing and Proving the TLS 1.3 Record Layer_](http://www.cs.umd.edu/~aseem/record.pdf). [IEEE Symposium on Security and Privacy](https://www.ieee-security.org/TC/SP2017/program.html), May 2017.
