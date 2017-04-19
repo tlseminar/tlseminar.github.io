@@ -6,6 +6,18 @@ title = "The Future of TLS"
 slug = "tls-future"
 +++
 
+### QUIC (Quick UDP Internet Connections)
+Internet today relies on TCP as a backbone for secure connections over the web. But TCP protocol introduces latency due to synchronization for channel setup, even before TLS handshake. The figure below shows that an average TCP connection takes 56 ms before the TLS handshake begins. This type of latency is not acceptable in mobile devices or in an area with poor internet reception.
+<center><img src="images/future_of_tls/tls_handshake_time.png" alt="TLS Handshake Time" style="width:500px;"/><br>
+<sup>TLS Handshake Time (Source: https://hpbn.co/transport-layer-security-tls/)</sup></center>
+
+This motivates the need for faster secure networking by reducing the number of round trips required to establish secure connection. QUIC aims to achieve this by using UDP as backbone instead of TCP.
+
+#### Implementing QUIC
+[QUIC](https://www.chromium.org/quic) was introduced by Google and it relies on UDP for fast secure connection. UDP provides quick connection and can handle out of sequence packets but requires resending of failed packets to prevent packet loss. It is an excellent alternative for faster secure connection if security is taken care by the application and leaving UDP to take care of the packet transmission and recovery. This requires both server and client side change in application logic to ensure security. Google has already implemented its [crypto-layer](https://docs.google.com/document/d/1g5nIXAIkN_Y-7XJW5K45IblHd_L2f5LTaDUDwvZ5L6g/edit) and provides experimental libraries like [`libquic`](https://github.com/devsisters/libquic) and [`goquic`](https://github.com/devsisters/goquic), but currently this can only be tested on Google servers.
+<center><img src="images/future_of_tls/QUIC.png" alt="QUIC protocol stack" style="width:500px;"/><br>
+<sup>QUIC Protocol Stack (Source: https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)</sup></center>
+
 ### InterPlanetary File System (IPFS)
 
 Looking forward to the future of web, it is possible that new models of the Internet will come into play. One such candidate model that is being developed today is the InterPlanetary File System (IPFS). The goal of IPFS replace the Hypertext Transfer Protocol (HTTP) and treat the web as though it is a filesystem and to make the web distributed. Let's unpack what this means and what IPFS can potentially do for the web.
