@@ -6,6 +6,20 @@ title = "The Future of TLS"
 slug = "tls-future"
 +++
 
+
+### More Traffic Analysis
+
+TLS traffic analysis can be applied in the following scenarios,  
+
+* Distinguishing between clients on the fly!
+* Forensics!
+* Intrusion detection!
+* Malware detection!
+* Homogeneous platform verification!
+* Honeypots!
+
+Techniques such as deep packet inspection and TLS flow fingerprinting can be used to distinguish vulnerable clients from non-vulnerable clients, identify whether the encrypted connection is attributed to a Malware or not, and used for forensics, intrusion detection and homogeneous platform verification.
+
 ### QUIC (Quick UDP Internet Connections)
 Internet today relies on TCP as a backbone for secure connections over the web. But TCP protocol introduces latency due to synchronization for channel setup, even before TLS handshake. The figure below shows that an average TCP connection takes 56 ms before the TLS handshake begins. This type of latency is not acceptable in mobile devices or in an area with poor internet reception.
 <center><img src="images/future_of_tls/tls_handshake_time.png" alt="TLS Handshake Time" style="width:500px;"/><br>
