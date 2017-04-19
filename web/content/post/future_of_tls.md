@@ -18,7 +18,12 @@ TLS traffic analysis can be applied in the following scenarios,
 * Homogeneous platform verification!
 * Honeypots!
 
-Techniques such as deep packet inspection and TLS flow fingerprinting can be used to distinguish vulnerable clients from non-vulnerable clients, identify whether the encrypted connection is attributed to a Malware or not, and used for forensics, intrusion detection and homogeneous platform verification.
+Techniques such as deep packet inspection and TLS flow fingerprinting can be used to distinguish clients, identify whether the encrypted connection is attributed to a Malware or not, and also be used for forensics, intrusion detection and homogeneous platform verification.
+
+#### TLS fingerprinting
+[Brotherston, L. (2015). Stealthier attacks and smarter defending with TLS fingerprinting.](https://blog.squarelemon.com/tls-fingerprinting/)  
+
+During an TLS handshake, most clients initiate a TLS handshake request in a unique way. TLS fingerprinting is usually used to recognize a particular client. In TLS fingerprinting, some elements of the Client Hello Packet are filtered and collected to build a database of signatures. The collected elements are usually the combination of TLS version, record TLS version, ciphersuites, compression options, list of extensions, elliptic curves and signature algorithms. The use of this combined elements is not only reliable in terms of remaining static for any particular client, but offers greater granularity than assessing ciphersuites alone, which has a substantially larger quantity of fingerprint collisions. 
 
 ### QUIC (Quick UDP Internet Connections)
 Internet today relies on TCP as a backbone for secure connections over the web. But TCP protocol introduces latency due to synchronization for channel setup, even before TLS handshake. The figure below shows that an average TCP connection takes 56 ms before the TLS handshake begins. This type of latency is not acceptable in mobile devices or in an area with poor internet reception.
