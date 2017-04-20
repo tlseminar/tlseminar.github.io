@@ -70,6 +70,30 @@ When someone adds a file to the IPFS network, all of the blocks within the file 
 
 Technically, yes. The IPFS network is an actual thing that one can join and use now but it remains to be seen whether IPFS can gain widespread adoption. Currently, one of the major problems the network faces is that it is *slow* both for storing and querying content. This is partially due to the small size of the network, but also because of the overhead that comes from all of the necessary information, like the hashing of the files and their blocks, needed to support the network's functionality. Perhaps the largest problem is the deep entrenchment of the HTTP protocol. Nearly everything on the web uses HTTP for transporting content, and unless there is a clear and present need for a switch to a different architecture, IPFS may remain wishful thinking for a long while.
 
+### Multi-Context TLS
+
+Normal TLS facilitates connections between only 2 communicating parties. However, in the wild, most connections pass through various middleboxes along the way that provide additional functionality, such as intrusion detection and parental controls. Current TLS connections with middleboxes require the middlebox to generate fake certificates for the intended site. The network administrator sets up each machine on the network with a custom root CA for the fake cert. The middlebox then connects to the site, meaning that the client doesn't know what happens in this part of the connection (ex: the middlebox could downgrade the connection). 
+
+In order for TLS to support middleboxes, it must incorporate two principles: least privilege and endpoint agreement.
+
+#### Least Privilege
+
+Multi-Context TLS (mcTLS) [mcTLS](https://www.cs.cmu.edu/~dnaylor/mcTLS.pdf) implements least privilege by defining 3 types of connection users: readers, writers, and endpoints. In this setup, the endpoints are the client and the target server, while readers and writers are middleboxes. Readers have the least privilege (read-only), writers have additional wite privileges, and endpoints have full access to the network traffic. In mcTLS, readers encrypt the data and generate a MAC for the ciphertext. This MAC verifies that no 3rd-parties modified the data. Writers then create a second MAC for the reader traffic (ciphertext + reader_MAC), which confirms that the readers did not modify the data (since readers do not have write access). Finally, the endpoint also creates a MAC on the entire stream to act as a signal of whether any writers modified the data (although they do have permission). Readers and writers only receive the keys that they need to perform their operations, whereas enpoints receive all keys.
+
+		○ MAC
+			§ Readers encrypt data, create MAC
+			§ Writers create MAC - verifies no 3rd parties modified data
+			§ Endpoints create MAC - signal of whether writers modified data (they are allowed to)
+		○ Readers, writers only get keys they need - endpoints get all keys
+
+#### Endpoint Agreement
+
+mcTLS key distribution implements the principle of endpoint agreement. Each middlebox (reader or writer) only receives a subset of the connection keys determined by its functionality. Permissions, which are substantiated through the keys, must be explicitly granted to a middlebox by both the client and server. Each side (client and server) provides each middlebox with half of each key granted by that side's policy. The middlebox can only use keys (permissions) granted by both the client and server. Thus, the mcTLS Handshake Protocol includes key distribution for the middleboxes in addition to the client and server.
+
+#### Performance
+
+mcTLS requires most keys to be distributed and therefore involves larger packets in the handshake. This packet size increases with the number of encryption contexts (permissions) and the number of middleboxes. However, the hanshake includes the same number of trips as the standard TLS handshake and therefore requires roughyl the same amount of time.
+
 
 ##### References
 
