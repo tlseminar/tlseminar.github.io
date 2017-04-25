@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>TLSeminar </title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="TLSeminar ">
+<meta property="og:site_name" content="TLSeminar"/>
+<meta property="og:url" content="https://tlseminar.github.io/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="website" />
+
+
+
+<link href="https://tlseminar.github.io/index.xml" rel="alternate" type="application/rss+xml" title="TLSeminar" />
+
+<link rel="canonical" href="https://tlseminar.github.io/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
+<link href="https://tlseminar.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://tlseminar.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://tlseminar.github.io/css/style.css">
+
+
+  
+  <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</head>
+<body>
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://tlseminar.github.io">
+  TLSeminar
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Understanding and Securing TLS
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://tlseminar.github.io/syllabus">Syllabus</a>
+
+<a href="https://tlseminar.github.io/schedule">Schedule</a>
+
+<a href="https://tlseminar.github.io/teams">Teams</a>
+
+<a href="https://tlseminar.github.io/readings/">Readings</a>
+
+<a href="https://tlseminar.github.io/projects/">Projects</a>
+
+<a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<section id="main-content" class="container main_content homepage">
+  <header class="container header">
+    <h1><center>TLSeminar
+</center></h1>
+
+  </header>
+  
+  
+  <p class="fronthead"><A href="/padding-oracle/">Padding Oracle Attacks</a><br><span class="authordate">Team Sesame, Tue, 31 Jan 2017</span></p>
+    
+
+<h1 id="introduction">Introduction</h1>
+
+<p><a href="/https://tlseminar.github.io/first-few-milliseconds/">Last week</a>, we
+examined how the Transport Layer Security (TLS) protocol provides a
+private channel between two devices by following the handshake and
+record layers protocols. The handshake layer establishes a symmetric
+key that both the client and the server could use in the record layer
+to encrypt and decrypt messages.</p>
+
+<p>This week, we&rsquo;ll discuss a real-world TLS attack, the Padding Oracle
+Attack, that takes advantage of our need for each message to be a
+particular set length. If the original message is not long enough,
+then we have to add padding for the <a href="https://tlseminar.github.io/docs/analysisssl3.pdf">CBC Mode
+Encryption</a> to
+work. Because the padding is present, an attacker can chip away
+information on the
+<a href="https://tlseminar.github.io/docs/beast.pdf">ciphertext</a>, one byte at
+a time, through analyzing the receiver’s error messages for the
+sender, <a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">response time</a>,
+and general behavior.</p>
+
+<p>We&rsquo;ll start out by learning about how <a href="https://tlseminar.github.io/docs/analysisssl3.pdf">CBC Mode
+Encryption</a> works.</p>
+
+<h1 id="padding-and-cbc-mode">Padding and CBC Mode</h1>
+
+<blockquote>
+<p><a href="https://tlseminar.github.io/docs/analysisssl3.pdf"><em>Analysis of the SSL 3.0 Protocol</em></a> by David Wagner and Bruce Schneider (1997)</p>
+</blockquote>
+
+<p>When AES-128 encryption is performed in cipher block chaining mode
+(CBC mode), the plaintext message is first split up into 16-byte
+(128-bit) blocks. It is often the case, however, that the length of
+the message is not perfectly divisible by 16. To account for varying
+message sizes, extra bytes, called padding, are concatenated after the
+end of the message to fill up the remaining quota for the final block.</p>
+
+<p>These bytes are not chosen at random, however, and different cipher
+modes prescribe different padding methods. In order to clearly mark
+for the recipient where the message ends and the padding begins, the
+padding follows a strict formatting pattern. With PKCS #5 padding as
+used in TLS, if there are <em>n</em> bytes of padding, then each padding byte
+contains the value <em>n</em>. For instance, if the last block contains 15
+message bytes, the 1-byte padding contains <code>0x01</code>; if the last block
+contains 14 message bytes, the 2-byte padding contains <code>0x0202</code>;
+3-byte padding contains <code>0x030303</code>; and so on.</p>
+
+<p><center>
+<img src="/images/paddingoracle/padding.png" alt="Padding"><Br>
+<span class="caption"><em>Source: </em><a href="https://blog.gdssecurity.com/labs/2010/9/14/automated-padding-oracle-attacks-with-padbuster.html">Gotham Digital Science</a></span>
+</center></p>
+
+<p>In CBC mode, the bytes of each plaintext block n are first XOR’ed with
+the encrypted bytes of the block before it, and their result is then
+encrypted. Block 1 is the obvious exception, which is XOR’ed with a
+fixed, random, or secret initialization vector (IV). Thus, for any
+block <em>n</em> &gt; 1, where E<sub><em>k</em></sub> is the encryption function,
+<em>c</em><sub><em>n</em></sub> is the encrypted block <em>n</em>, <em>p</em><sub><em>n</em></sub> is the plaintext
+block <em>n</em>, and <em>c</em><sub><em>n</em>-1</sub> is the encrypted block <em>n</em>-1:
+<center>
+<em>c</em><sub><em>n</em></sub> = E<sub><em>k</em></sub> (<em>p</em><sub><em>n</em></sub>⊕ <em>c</em><sub><em>n</em>-1</sub>)
+</center></p>
+
+<p><center><img src="/images/paddingoracle/cbc.png" alt="cbc-mode" /><br>
+<span class="caption"><em>Source: </em><a href="https://www.cs.rit.edu/~ark/fall2012/482/module05/CbcEncrypt.png">Alan Kaminsky</a></span>
+</center></p>
+
+<p>However, the predictability of the padding format can turn out to be
+an extremely exploitable weakness for an active attacker. Under
+SSL/TLS protocol, when servers receive an encrypted message, their
+first step upon decryption is to check the validity of the padding;
+that is, determine if the numbers at the end of the last block
+represent the number of padding bytes. As soon as this step is
+completed, the server will return to the sender either an error code
+or an acknowledgment that the padding is valid. In this way, the
+server acts as an oracle to an active attacker, providing them with
+confirmations/rejections to inform their guesses.</p>
+
+<h1 id="padding-oracle-attack">Padding Oracle Attack</h1>
+
+<blockquote>
+<p><a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf"><em>Security Flaws Induced by CBC Padding Applications to SSL, ISPEC, WTLS&hellip;</em></a> by Serge Vaudenay</p>
+</blockquote>
+
+<p>To begin, the attacker creates a Last Word Oracle. This first assumes
+a 1-byte padding, so the format that the oracle would return as valid
+is <code>0x01</code> XOR’ed with some particular value in the corresponding last
+position in the <em>n</em>-1th block. Since the last byte, or word, can have
+256 distinct values, the attacker can simply manipulate the <em>n</em>-1th
+block, easily testing all values, until either the possibilities are
+exhausted or the padding is returned as valid. If the possibilities
+are exhausted, then the attacker instead tries <code>0x02</code>, then <code>0x03</code>,
+and on until the padding returned is valid.</p>
+
+<p><center><img src="/images/paddingoracle/last-word.png" alt="LastWordOracle" /><br>
+<span class="caption"><em>Source: </em><a href="https://www.rsaconference.com/writable/presentations/file_upload/asec-403.pdf">Brian Holyfield, Gotham Digital Science</a></span>
+</center></p>
+
+<p>Once the attacker has learned the padding, a Block Decryption Oracle
+is constructed, using the values of the encrypted <em>n</em>-1th block to,
+byte by byte, guess the preceding byte, using the oracle’s pass/fail
+responses to confirm correct guesses. This method is then extended to
+decrypt all other blocks, as it is called on pairs containing a random
+block and a ciphertext block. (Again, the logical exception is the
+first block, assuming an independent initialization vector.) This is a
+terrifyingly efficient attack; to implement it, the attacker only
+needs (<em>b</em> * <em>W</em> * <em>N</em>)/2 trials, where <em>b</em> is the number of bytes per block,
+<em>W</em> is the number of possible bytes, and <em>N</em> is the number of blocks.</p>
+
+<p>With the CBC Padding now added to the original ciphered message,
+attackers can alter this new message with blockwise operations in
+order to draw information out of the originally unreadable
+ciphertext. This information could potentially end up being
+authentication tokens, such as cookies, granting attackers personally
+identifiable information or the potential to hijack previous sessions.</p>
+
+<h1 id="beast-plaintext-attacks-against-ssl">BEAST: Plaintext Attacks Against SSL</h1>
+
+<blockquote>
+<p><a href="https://tlseminar.github.io/docs/beast.pdf"><em>Here Come The \(\oplus\) Ninjas</em></a> by Thai Duong and Juliano Rizzo (2011)</p>
+</blockquote>
+
+<p>In CBC block encryption, each plaintext block is XORed with the
+ciphertext of the previous block before being encrypted. An attempted
+guess at a plaintext block can be evaluated by encrypting the
+ciphertext prior to the block in question XORed with the ciphertext
+prior to the current block XORed with the guess; if the new ciphertext
+matches that of the block in question, then the guess is
+correct:
+<center>
+C<sub><em>j</em></sub> = E<sub><em>k</em></sub>(P<sub><em>j</em></sub> ⊕ C<sub><em>j</em>-1</sub>), so, C<sub><em>i</em></sub>==C<sub><em>j</em></sub> iff P<sub><em>i</em></sub> == P<sub><em>j</em></sub> ⊕ C<sub><em>i</em>-1</sub> ⊕ C<sub><em>j</em>-1</sub>
+</center></p>
+
+<p>Guess G can be evaluated as equal to or unequal to plaintext
+P<sub>j</sub> by setting P<sub><em>i</em></sub>=G ⊕ C<sub><em>i</em>-1</sub> ⊕
+C<sub><em>j</em>-1</sub> and checking whether or not C<sub><em>j</em></sub> ==
+C<sub><em>i</em></sub>. An attacker would need to be able to view the
+encrypted messages and query the underlying CBC encryption system to
+be able to mount an attack based on this exploit.</p>
+
+<p>Cryptographic systems are limited in their size and ability to store
+large plaintext messages, for this reason, most cryptographic systems
+encrypt messages block by block as they are sent. In the case where an
+attacker can append padding to a message before it is encrypted, an
+attacker can mount a blockwise chosen-boundary attack, in which the
+first byte of an unknown message is isolated by padding, enabling the
+attacker to guess at single bytes of a message rather than block-sized
+chunks.</p>
+
+<p>The natural extension of this is to repeat the process such that once
+a byte of message has been guessed by the attacker, the padding is
+changed such that a single unknown byte of message is encrypted with
+padding and bytes known to the attacker, allowing them to continue
+guessing at single bytes of information.</p>
+
+<p>Duong and Rizzo go on to describe the process whereby this attack
+could be mounted on HTTPS to obtain a user’s HTTP cookie. The attack
+only requires that an attacker can view encrypted messages, can cause
+the client to make arbitrary encrypted requests, and that arbitrary
+plaintext can be added to out-going requests. In the described attack,
+the user is made to request a package with a padded end such that the
+first byte of unknown information in the request is isolated in an
+encryption with only public information. The attacker then makes
+guesses at that byte of information, appending plaintext to the
+request and watching the encrypted channel for a message block that
+matches the block containing the unknown byte of information. At that
+point, the guess that resulted in that message block is identified as
+the correct guess. The process is then repeated with a smaller padding
+until the user’s request header (including their HTTPS cookies) is
+revealed to the attacker.</p>
+
+<p><center><img src="/images/paddingoracle/beast.png" alt="beast" /><br>
+<span class="caption"><em>Figure: </em>Attacker (Mallory) is able to sniff encrypted traffic, force Alice to send cookie-bearing HTTP requests, and insert forged plaintexts in the conversation.</span>
+</center></p>
+
+<p>There are a few issues mentioned associated with this attack, but by
+using one of a variety of plugins, an attacker could make the user
+open bi-directional communication with the server. On this
+communication channel, the privileges required by the attacker to
+mount the attack would be easier to gain.</p>
+
+<h1 id="lucky-13-plaintext-recovery-from-injected-ciphertext">Lucky 13: Plaintext Recovery from Injected Ciphertext</h1>
+
+<blockquote>
+<p><a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf"><em>Lucky Thirteen: Breaking the TLS and DTLS Record Protocols</em></a> by Nadhem J. Alfardan and Kenneth G. Paterson (2013)</p>
+</blockquote>
+
+<p>Similar in the vein of the BEAST attack using bitwise XOR operations
+to glean useful plaintext information, Lucky Thirteen offers yet
+another alternative means to get partial or even full plaintext
+recovery with just a simple man-in-the-middle injecting ciphertext
+into the original ciphertext. Based on analyzing how TLS and DTLS
+decrypt a given ciphertext, these attacks also rely on CBC-mode
+weaknesses.</p>
+
+<p>The Lucky 13 attack relies on a timing channel introduced by the
+difference in processing time between TLS records with correct and
+incorrect padding, requiring only a standard in-the-middle attacker
+for execution and providing recovered plaintext in the most severe
+case.  This would indicate a major security flaw, even in comparison
+to the aforementioned BEAST attack. BEAST required capabilities beyond
+simple MITM on the part of the attacker.  As a result, the authors of
+the paper disclosed their results to all major vendors to allow for
+patching before publishing.</p>
+
+<p>The name “Lucky 13” is a reference to a specific breakpoint in the
+size of the padding on a given message.  Both TLS and DTLS use the
+HMAC algorithm to compute MAC tags for messages.  HMAC operates using
+a compression function on messages with lengths equal to multiples of
+64 bytes, so TLS and DTLS pad out messages with remaining space.</p>
+
+<p>After subtracting 8 bytes for the length field and 1 byte of mandatory
+padding, we are left with a maximum message length of 55 bytes that
+can be encoded within one block.  This means that messages less than
+55 bytes can be processed with only four compression function
+evaluations, and that in general the number of compressions is equal
+to</p>
+
+<p>$$\left\lceil\frac{L-55}{64}\right\rceil+4$$</p>
+
+<p>for messages of <em>L</em> bytes.  The compression function is relatively expensive, so the difference between 4 and 5 iterations is distinguishable in good conditions.  It is also possible to submit multiple requests as described below to amplify the differences if necessary.</p>
+
+<p>The authors detail first a distinguishing attack, and then a variation allowing for full plaintext recovery.  All attacks rely on the timing channel.  Specifically, the authors describe in detail how it is possible to place a target ciphertext block at the end of an encrypted record, causing the decryption function to interpret the plaintext block corresponding to the ciphertext block as padding.  Thus the amount of time required to process that block depends on plaintext bytes, leaking information.</p>
+
+<p><center><img src="/images/paddingoracle/timing.png" alt="lucky-thirteen" /><Br>
+<span class="caption"><em>Figure:</em> Graph showing the differences in timing due to the number of compressions necessary for varying lengths of bytes.<br><em>Source: </em><a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">http://www.isg.rhul.ac.uk/tls/TLStiming.pdf</a>
+</span>
+</center></p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Through these readings and their respective explanations, we see that
+cryptographic protocols are often broken and need to be patched. There
+is always some threat model out there looking to exploit the first
+sign of weakness to decrypt and listen in on what should be a secure,
+encrypted channel. Through this last week, we focused on looking at
+padding oracle attacks which take advantage of the padding on the
+respective blocks in a CBC chain as they are passed from operation to
+operation. With the last word oracle and the BEAST attack, we saw how
+important this padding was to the security of the whole
+operation. With our look at Lucky 13, we were able to see that people
+were able to exploit the fact that one extra compression had to be
+done in certain situations to glean information about the message. As
+such, we see just from the padding, we have so many attacks.</p>
+
+<p>There are so many aspects to SSL/TLS protocols that so many more
+exploits exist. So, what are ways that we can prevent these attacks?
+With the padding attacks, we saw that they tried standardizing error
+messages (but, why not just encrypt the message and send it
+back?). Should our strategy just be to move as quickly to the newest
+version of the security protocols? Should we add the MAC to the
+messages after encryption?</p>
+
+<p>TLS 1.3 (the most recent release) has been drafted (and in the process
+of release) and has resolved many of these issues that have exploited
+weaknesses present in older versions of the protocol. However, its
+adoption rate has been very low and so it is important to bring this
+up as more and more operations should be moved over to TLS 1.3, as
+this seems to be the most secure system we have available right now
+and thus should be adopted.</p>
+
+<h1 id="sources">Sources</h1>
+
+<p><a href="https://tlseminar.github.io/docs/analysisssl3.pdf">https://tlseminar.github.io/docs/analysisssl3.pdf</a><br />
+<a href="http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf">http://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf</a><br />
+<a href="https://tlseminar.github.io/docs/beast.pdf">https://tlseminar.github.io/docs/beast.pdf</a><br />
+<a href="http://www.isg.rhul.ac.uk/tls/TLStiming.pdf">http://www.isg.rhul.ac.uk/tls/TLStiming.pdf</a></p>
+ 
+  
+  <p class="fronthead"><A href="/first-few-milliseconds/">The First Few Milliseconds of an TLS 1.2 Connection</a><br><span class="authordate">Team Poppyseed, Thu, 26 Jan 2017</span></p>
+    
+
+<h2 id="intro">Intro</h2>
+
+<p>In 2009, Jeff Moser published <a href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html">an excellent article</a> on the first few milliseconds of an HTTP request. It described in detail how TLS 1.0 connections are established, including a great description of RSA. We&rsquo;ve attempted to build and adapt upon that article here by describing how the process works for a TLS 1.2 connection. As of January 2nd 2017, TLS 1.2 has roughly <a href="https://www.trustworthyinternet.org/ssl-pulse/">83.2% adoption</a> among top websites, so now is a great time to dive in.</p>
+
+<p>The process of conecting via TLS 1.2 begins when the user attempts to navigate to a website. For this description, we are attempting to navigate to <a href="https://example.com/">https://example.com/</a></p>
+
+<h2 id="tls-layers">TLS Layers</h2>
+
+<p>The TLS protocol is composed of several layers, which come together to form each request. Here are descriptions of the common layers</p>
+
+<p><img src="/images/firstfew/gnutls-layers.png" alt="tls layers" /></p>
+
+<p><strong>Transport Layer</strong> - The protocol over which TLS data is distributed. For HTTPS, this will be TCP. Needs only to be reliable (packet loss must be handled). Not a direct part of TLS.</p>
+
+<p><strong>Record Layer</strong> - The record layer handles sending/receiving TLS messages, including data fragmentation for packets, (optional and bad) compression, and encryption.</p>
+
+<p>The next three are common protocols that operate within the body of the Record Layer. TLS extensions can specify additional protocols.</p>
+
+<p><strong>Handshake Protocol</strong> - Responsible for choosing a cipher suite, connection parameters, and coordinating a shared secret.</p>
+
+<p><strong>Alert Procotol</strong> - Used to communicate warnings and errors. The most common alerts are for an invalid server certificate or to signal the end of a TLS connection when the client exits.</p>
+
+<p><strong>Application Protocol</strong> - Raw higher-level application data transmitted by TLS. For us, this is HTTP.</p>
+
+<p>Now, onto the first few milliseconds of a TLSv1.2 request!</p>
+
+<h2 id="part-0-the-record-layer">Part 0: The Record Layer</h2>
+
+<p>Since the following packets will be wrapped in a Record Layer struct, it&rsquo;s worth describing that here.</p>
+
+<p><img src="/images/firstfew/record-layer.png" alt="record layer struct" /></p>
+
+<p>The record packet specifies the Content Type of the request, the TLS version, data length, and then the content data (in this image, a handshake clienthello).</p>
+
+<p>Note that the version specified in the record layer is often different from that specified in the handshake. This is for compatibility with some old TLS/SSL servers. You will often see the version here specified as TLS 1.0 (0x0103, or SSL 3.0)</p>
+
+<h2 id="part-1-client-hello">Part 1: Client Hello</h2>
+
+<p>Our web browser (Microsoft Edge 38.14393.0.0 on Windows 10) will begin the TLS 1.2 handshake with a ClientHello record.</p>
+
+<p><img src="/images/firstfew/client-hello.png" alt="clienthello record" /></p>
+
+<p>We can see several important fields here worth mentioning. First, the <strong>time</strong> (GMT seconds since midnight Jan 1, 1970) and <strong>random</strong> bytes are included. This will be used later in the protocol to generate our symmetric encryption key.</p>
+
+<p>The client can send an optional <strong>session ID</strong> (not sent in this case) to quickly resume a previous TLS connection and skip portions of the TLS handshake.</p>
+
+<p>Arguably the most important part of the ClientHello message is the list of <strong>cipher suites</strong>, which dictate the key exchange algorithm, bulk encryption algorithm (with key length), MAC, and a psuedo-random function. The list should be ordered by client preference. The collection of these choices is a &ldquo;cipher suite&rdquo;, and the server is responsible for choosing a secure one it supports, or return an error if it doesn&rsquo;t support any.</p>
+
+<p>The final field specified in the specification is for <strong>compression methods</strong>. However, secure clients will advertise that they do not support compression (by passing &ldquo;null&rdquo; as the only algorithm) to avoid the <a href="https://en.wikipedia.org/wiki/CRIME_(security_exploit)">CRIME attack</a>.</p>
+
+<p>Finally, the ClientHello can have a number of different extensions. A common one is <strong>server_name</strong>, which specifies the hostname the connection is meant for, so webservers hosting multiple sites can present the correct certificate.</p>
+
+<h2 id="server-hello">Server Hello</h2>
+
+<p>Once the server has processed our ClientHello, it will respond with a TLSv1.2 ServerHello message</p>
+
+<p><img src="/images/firstfew/server-hello.png" alt="serverhello message" /></p>
+
+<p>This message returns several important fields, beginning with the TLS <strong>version</strong> to be used, usually the highest version supported by both client and server. It also includes the server <strong>time</strong> (not sure why example.com is so off!) and 28 <strong>random bytes</strong> for use later.</p>
+
+<p>The server also makes a <strong>cipher suite selection</strong> from the list chosen by the client. This should be the strongest suite supported by both. In our case, the server has chosen TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, indicating the following:
+* Key Exchange: Elliptic curve diffie-hellman, signed with RSA
+* Encryption: AES in GCM mode with 128 bit keys
+* MAC: SHA256</p>
+
+<h2 id="certificate">Certificate</h2>
+
+<p>After the ServerHello, the server will send a certificate chain to the client if applicable.</p>
+
+<p><img src="/images/firstfew/server-certificate.png" alt="server certificate message" /></p>
+
+<p>Each certificate comes with information about domains it supports, who it was issued by, and the time period (start and end) of its validity.</p>
+
+<p>The certificate chain is a list of certificates beginning with the TLS certificate for the current domain, and ending in a root certificate that is built-in to the web browser. Each certificate is signed by the certificate above it in the chain, and it is this chain that the client validates to verify the server.</p>
+
+<p>In our case, example.com has a certificate issued by &ldquo;DigiCert SHA2 High Assurance&rdquo;, which in turn is issued by the root certificate &ldquo;DigiCert High Assurance EV Root CA.&rdquo; On Windows, you can view the list of root certificates on your system with <code>certmgr.msc</code></p>
+
+<p><img src="/images/firstfew/certmgr.png" alt="certmgr" /></p>
+
+<p>We can see the DigiCert High Assurance EV Root CA in our store, along with several other DigiCert certificates. OSX allows you to see root certificates using the &ldquo;Keychain Access&rdquo; program, where they are listed under &ldquo;System Roots&rdquo;</p>
+
+<p><img src="/images/firstfew/keychain-access.png" alt="osx keychain access" /></p>
+
+<p>In general, browsers will defer to the operating system root certificates as the central store for their validation. One notable exception is Firefox, which uses its own certificate store and ignores system root certificates by default.</p>
+
+<p>Root CA certificates are implicitly trusted by every system they&rsquo;re included on. An attacker who manages to control their private key could impersonate any website without raising any red flags, so it&rsquo;s important that the certificate authorities keep them safe (<a href="https://www.mail-archive.com/dev-security-policy@lists.mozilla.org/msg05455.html">but that doesn&rsquo;t always happen</a>).</p>
+
+<h2 id="optional-certificate-status-ocsp">Optional: Certificate Status (OCSP)</h2>
+
+<p>One increasingly common extension is the Online Certificate Status Protocol (OCSP), used for certificate revocations. OCSP servers can be consulted by clients to check if the server certificate has been revoked, which helps solve a critical problem with TLS certificates. Servers response to certificate requests by issuing a signed response from the CA with a status code indicating whether or not the certificate is valid.</p>
+
+<p>Prior to wide deployment of OCSP, TLS vendors shipped certificate revocation lists (CRLs) that contained serial numbers of revoked certificates.</p>
+
+<p>To reduce load, servers often cache the OCSP response and send it as a Certificate Status TLS message (OCSP stapling). This helps reduce load on the OCSP system and protects attackers from analyzing OCSP requests to determine client browsing habits. The server will send this cached message in response to a <strong>status_request</strong> extension in the ClientHello message.</p>
+
+<p><img src="/images/firstfew/ocsp-stapling.png" alt="ocsp stapling" /></p>
+
+<p>Each OCSP ticket is signed by a trusted OCSP server. The response itself consists of a <strong>responseStatus</strong> and optional <strong>responseBytes</strong> with additional information.</p>
+
+<p><img src="/images/firstfew/ocsp-response.png" alt="ocsp response info" /></p>
+
+<p>In our case, the OCSP ticket is valid and cached for 7 days (1/20 to 1/27). The server itself is responsible for refreshing its OCSP ticket at that time.</p>
+
+<h2 id="serverkeyexchange">ServerKeyExchange</h2>
+
+<p>For DHE key-exchanges (DHE_DSS, DHE_RSA, and DH_anon), the server will use a ServerKeyExchange message to specify the parameters for the algorithm.</p>
+
+<p><img src="/images/firstfew/dhe-params.png" alt="dhe parameters" /></p>
+
+<p>The server has specified a <strong>named_curve</strong> curve type using the <strong>secp256r1</strong> elliptic curve (also known as <strong>P-256</strong> or <strong>prime256v1</strong>). This is a public <a href="http://www.secg.org/sec2-v2.pdf">NIST standard curve</a>. With knowledge of the curve to be used, both the server and client will know the crucial $p$ and $G$ values for ECDHE. For secp256r1, these are defined by NIST as:</p>
+
+<pre><code>p = FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFF
+
+G = 03 6B17D1F2 E12C4247 F8BCE6E5 63A440F2 77037D81 2DEB33A0 F4A13945 D898C296
+</code></pre>
+
+<p>The server will choose a random private key and compute $a*G$ as its <strong>public key</strong>. In addition to this it also signs the data with its private key - signing <code>SHA256(client_random + server_random + server_params)</code></p>
+
+<h2 id="server-hello-done">Server Hello Done</h2>
+
+<p><img src="/images/firstfew/server-hello-done.png" alt="serverhellodone" /></p>
+
+<p>This short message from the server tells the client it&rsquo;s done sending information. Nothing more.</p>
+
+<h2 id="clientkeyexchange">ClientKeyExchange</h2>
+
+<p>Now, the client must  send its own ephemeral public key (for DH).</p>
+
+<p><img src="/images/firstfew/client-dhe-key.png" alt="client dhe key" /></p>
+
+<p>This is calculated by generating a random private key $b$ and from there calculating $b*G$ as its public key.</p>
+
+<h2 id="completing-the-key-exchange">Completing the Key Exchange</h2>
+
+<p>Now that the client has $a*G$ and the server $b*G$, both can calculate the final secret value $a*b*G$ with their own private keys. This is known as the <strong>pre-master secret</strong>. The key detail here is that calculating $a*b*G$ from $a*G$ and $b*G$ alone is computationally difficult.</p>
+
+<p>We just have one final step to convert our pre-master secret into the final <strong>master secret</strong>. We will use the random bytes generated by the client and server earlier along with our chosen psuedo-random function. For us, that was SHA-256.</p>
+
+<pre><code>master_secret = PRF(pre_master_secret, &quot;master secret&quot;, client_random + server_random)[0..47]
+</code></pre>
+
+<p>The TLS 1.2 spec defines the PRF as <code>PRF(secret, label, seed)</code> which expands to <code>P_SHA256(secret, label + seed)</code>. The label is the literal ASCII string &ldquo;master secret&rdquo; without any null terminator. This expands to the following definition:</p>
+
+<pre><code>P_sha256(secret, seed) = HMAC_sha256(secret, A(1) + seed) +
+                         HMAC_sha256(secret, A(2) + seed) +
+                         HMAC_sha256(secret, A(3) + seed) +
+                         ...
+</code></pre>
+
+<p>where <code>A(x)</code> is defined recursively as</p>
+
+<pre><code>A(0) = seed
+A(x) = HMAC_sha256(secret, A(x-1))
+</code></pre>
+
+<p>The result of the PRF is the final key that will be used for the bulk of the crypto in our application. We only want 48 bytes here, so we would need 2 rounds of SHA-256 and would discard the extra data.</p>
+
+<h2 id="client-changecipherspec">Client ChangeCipherSpec</h2>
+
+<p>The final unencrypted message sent by the client will be a ChangeCipherSpec message, which indicates that all following messages will be encrypted.</p>
+
+<p><img src="/images/firstfew/change-cipher-spec.png" alt="changecipherspec message" /></p>
+
+<h2 id="client-finished-server-changecipherspec-and-server-finished">Client Finished, Server ChangeCipherSpec, and Server Finished</h2>
+
+<p>Immediately after sending a ChangeCipherSpec message, the client will send an encrypted Handshake Finished message to ensure the server is able to understand the agreed-upon encryption. The message will contain a <strong>hash of all previous handshake messages</strong>, along with the string &ldquo;client finished&rdquo;. This is very important because it verifies that no part of the handshake has been tampered with by an attacker. It also includes the random bytes that were sent by the client and server, protecting it from replay attacks where the attacker pretends to be one of the parties.</p>
+
+<p>Once received by the server, the server will acknowledge with its own ChangeCipherSpec message, followed immediately by its own Finished message verifying the contents of the handshake.</p>
+
+<p>Note: if you have been following along in Wireshark, there appears to be a bug with Client/Server Finish messages when using AES_GCM that mislabels them.</p>
+
+<h2 id="application-data">Application Data</h2>
+
+<p>Finally, we can begin to transmit encrypted data! It may seem like a lot of work, but that is soon to pay off. The only remaining step is to discuss how the data is encrypted with AES_GCM, an <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">AEAD</a> cipher.</p>
+
+<p>First, we generate a MAC, key, and IV for both the client and the server using our master secret and the PRF definition from earlier.</p>
+
+<pre><code>key_data = PRF(master_secret, &quot;key expansion&quot;, server_random + client_random);
+</code></pre>
+
+<p>Since we are using 128-bit AES with SHA-256, we&rsquo;ll pull out the following key data:</p>
+
+<pre><code>// client_write_MAC_key = key_data[0..31]
+// server_write_MAC_key = key_data[32..63]
+client_write_key = key_data[64..79]
+server_write_key = key_data[80..95]
+client_write_IV = key_data[96..99]
+server_write_IV = key_data[100..103]
+</code></pre>
+
+<p>For AEAD ciphers like GCM, we don&rsquo;t need the MAC keys, but we offset them anyways. The client and server also get different keys to prevent a replay attack where a client message it looped back to it.</p>
+
+<p>We also construct <code>additional_data</code> and an 8-byte <code>nonce</code>, both of which are sent with the encrypted data. In the past, it was thought that the nonce could be either random or just a simple session counter. However, <a href="https://github.com/nonce-disrespect/nonce-disrespect">recent research</a> found many sites using random nonces for AES_GCM were vulnerable to nonce reuse attacks, so it&rsquo;s best to just use an incrementing counter tied to the session.</p>
+
+<pre><code>additional_data = sequence_num + record_type + tls_version + length
+nonce = &lt;random_8_bytes&gt;
+</code></pre>
+
+<p>Finally, we can encrypt our data with AES GCM!</p>
+
+<pre><code>encrypted = AES_GCM(client_write_key, client_write_IV+nonce, &lt;DATA&gt;, additional_data)
+</code></pre>
+
+<p>and the server can read it with</p>
+
+<pre><code>&lt;DATA&gt; = AES_GCM(client_write_key, client_write_IV+nonce, encrypted, additional_data)
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p><img src="/images/firstfew/tls-hs-ecdhe.png" alt="tls 1.2 ecdhe handshake" />
+(source: <a href="https://timtaubert.de/blog/2015/11/more-privacy-less-latency-improved-handshakes-in-tls-13/">More Privacy, Less Latency: Improved Handshakes in TLS version 1.3</a>)</p>
+
+<p>That&rsquo;s all it takes to make a TLS 1.2 connection! Over the course of ~103ms, we established a bidirectional encrypted tunnel and sent a full HTTP request and response in only 2 round trips. Although we didn&rsquo;t cover nearly everything in the <a href="https://tools.ietf.org/html/rfc5246">full TLS 1.2 RFC</a>, we hope you have a pretty good overview of how process functions - and how much work goes in behind the scenes to secure web traffic!</p>
+
+<h2 id="sources">Sources</h2>
+
+<p><a href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html">http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html</a></p>
+
+<p><a href="https://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with">https://security.stackexchange.com/questions/131724/the-first-few-milliseconds-of-an-https-connection-tls-1-2-tls-echde-rsa-with</a></p>
+
+<p><a href="https://tools.ietf.org/html/rfc5246">https://tools.ietf.org/html/rfc5246</a></p>
+
+<p><a href="https://tools.ietf.org/html/rfc5288">https://tools.ietf.org/html/rfc5288</a></p>
+
+<p><a href="http://www.secg.org/sec2-v2.pdf">http://www.secg.org/sec2-v2.pdf</a></p>
+
+<p><a href="https://vincent.bernat.im/en/blog/2011-ssl-perfect-forward-secrecy.html">https://vincent.bernat.im/en/blog/2011-ssl-perfect-forward-secrecy.html</a></p>
+
+<p><a href="https://github.com/nonce-disrespect/nonce-disrespect">https://github.com/nonce-disrespect/nonce-disrespect</a></p>
+
+<p><a href="https://www.trustworthyinternet.org/ssl-pulse/">https://www.trustworthyinternet.org/ssl-pulse/</a></p>
+ 
+  
+  <p class="fronthead"><A href="/blogging/">Blogging Mechanics</a><br><span class="authordate">David Evans, Sun, 22 Jan 2017</span></p>
+    <p>Here are some suggestions for how to create the class blog posts for
+your assigned classes.  I believe each team has at least a few members
+with enough experience using git and web contruction tools that
+following these instructions won&rsquo;t be a big burden, but if you have
+other ways you want to build your blog page for a topic let me know
+and we can discuss alternative options.</p>
+
+<ul>
+<li><p>Install <a href="https://gohugo.io/">Hugo</a>.  Hugo is a static website
+generator that builds a site from Markdown pages.  (With homebrew on
+Mac OS X, this is easy: <code>brew update &amp;&amp; brew install hugo</code>.)</p></li>
+
+<li><p>Clone the github repository,
+<a href="https://github.com/tlseminar/tlseminar.github.io"><em>https://github.com/tlseminar/tlseminar.github.io</em></a>.
+This is what is used to build the
+<a href="https://tlseminar.github.io">tlseminar.github.io</a> site.  If you are
+working with multiple teammates on the blog post (which you probably
+should be), you can add write permissions for everyone to the cloned
+repository.</p></li>
+
+<li><p>You should create your page in the <code>web/content/post/</code>
+subdirectory. You can start by copying an earlier file in that
+directory (e.g., <code>class1.md</code>) and updating the header section
+(between the <code>+++</code> marks) and replacing everything after that with
+your content.  Don&rsquo;t forget to update the date so your page will
+appear in the right order.</p></li>
+
+<li><p>You can use multiple files (but probably only one in
+the <code>post/</code> directory (this will show up as pages on the front
+list).  Use the <code>web/content/images</code> directory for images and the
+<code>web/content/docs</code> directory for papers.  Using images and other
+resources to make your post interesting and visually compelling is
+highly encouraged!</p></li>
+
+<li><p>Write the blog page using Markdown.  Markdown is a simple markup
+language that can be used to easily generate both HTML and other
+output document formats.  You can probably figure out everything you
+need by looking at previous posts, but for a summary of Markdown,
+see <a href="https://daringfireball.net/projects/markdown/syntax">Markdown: Syntax</a>.</p></li>
+
+<li><p>To test the post, run <code>make develop</code> (in the <code>web/</code> subdirectory of
+your repository).  This starts the Hugo development server, usually
+on port 1313 (unless that port is already in use).  Then, you can
+view the site with a browser at <code>localhost:1313</code>.</p></li>
+
+<li><p>When you are ready, submit a pull request to incorporate your
+changes into the main repository (and public course website).  At
+this stage, I will probably make things visible on the public site,
+although it can still be edited and improved with subsequent
+comments.</p></li>
+</ul>
+ 
+  
+  <p class="fronthead"><A href="/class1/">Class 1: Introduction</a><br><span class="authordate">David Evans, Fri, 20 Jan 2017</span></p>
+    
+
+<p><center>
+<script async class="speakerdeck-embed" data-id="c819c3c91461456ca328e97a753f6d56" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+</center></p>
+
+<h1 id="plan">Plan</h1>
+
+<ol>
+<li><p>Find your team, introduce yourselves and figure out a management structure and plan.</p></li>
+
+<li><p>Bid for your role:<br />
+T (lead Class 2: oracle padding attacks)<br />
+L (blog Class 1/lead 3: breaking weak asymmetric crypto, Drown)<br />
+S (lead Class 4: certificates)</p></li>
+</ol>
+
+<h1 id="examining-certificates">Examining Certificates</h1>
+
+<ol>
+<li><p>When does the certificate for <a href="https://whitehouse.gov">https://whitehouse.gov</a> expire?</p></li>
+
+<li><p>(won&rsquo;t be able to answer this until later today) Does the new adminstration&rsquo;s <a href="https://whitehouse.gov">https://whitehouse.gov</a> site use the same private key as Obama&rsquo;s?  (What should the answer to this question be?)</p></li>
+</ol>
+
+<h1 id="first-few-milliseconds">First Few Milliseconds</h1>
+
+<p>Jeff Moser&rsquo;s <a href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html"><em>The First Few Milliseconds of an HTTPS Connection</em></a></p>
+
+<ol>
+<li><p>Install <a href="https://www.wireshark.org/download.html">Wireshark</a>.</p></li>
+
+<li><p>Start Wireshark, and look at all the TLS sessions running on your
+laptop.  How many different TLS sessions are there?</p></li>
+
+<li><p>Pick one of the TLS sessions and try to figure out what application
+is using it.  Who are the endpoints?</p></li>
+
+<li><p>Assuming (for now!) the encryption is all perfect, what could
+someone intercepting the traffic learn?</p></li>
+
+<li><p>What differences can you observe compared to what is described for the TLS 1.0 connections on that web page?</p></li>
+</ol>
+ 
+  
+  <p class="fronthead"><A href="/background/">Background Preparation</a><br><span class="authordate">David Evans, Wed, 14 Dec 2016</span></p>
+    
+
+<p>Here are some suggestions for getting the necessary background for the
+seminar.</p>
+
+<h2 id="cryptography">Cryptography</h2>
+
+<p>If you have already taken a cryptography course, you should have
+enough cryptography background already.  If not, here are some
+suggested ways to get enough crypo background over winter break to be
+ready for the seminar.  I believe that for most students, the best way
+to get the expected background for this course is to take my Applied
+Cryptography course (more info below), but there are many options, and
+lots of great resources that go into much more depth than my course if
+you have more time.</p>
+
+<h3 id="on-line-courses">On-Line Courses</h3>
+
+<p><a href="https://www.udacity.com/course/applied-cryptography--cs387"><strong>Udacity cs387: Applied
+Cryptography</strong></a>
+- this is an open on-line course that you can take anytime taught by
+myself (so I am somewhat partial to it!).  There are <a href="http://www.cs.virginia.edu/~evans/courses/cs387/">some additional
+materials for the course
+available</a>,
+including <a href="http://www.cs.virginia.edu/~evans/courses/crypto-notes.pdf">extensive course notes
+(PDF)</a>
+created by Daniel Winter.  This is a very short and informal
+introduction to cryptography, which would be enough background to be
+prepared for the seminar.  (I can&rsquo;t give an unbiased assessment of the
+course, but according to Information Week, it is a recommended course
+to <a href="http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915"><em>&ldquo;Pump Up IT
+Careers&rdquo;</em></a>,
+and <a href="www.prospectmagazine.co.uk/magazine/online-universities-udacity-grand-challenge-david-stavens-dave-evans">Prospect
+Magazine</a>
+claimed the instructor has a &ldquo;Monty Python humor&rdquo; and &ldquo;cult
+following&rdquo;, although you shouldn&rsquo;t believe everything you read in
+British magazines.)</p>
+
+<p>Dan Boneh&rsquo;s <a href="https://www.coursera.org/learn/crypto"><strong>Cryptography
+Course</strong></a> (offered through
+Coursera).  The materials from previous courses are not available
+(although you may be able to find them if you are resourceful), so you
+have to take the course when it is offered by Coursera. There is a
+session starting December 26.  This is an excellent course that is a
+bit longer and goes into more depth on many topics than my course.
+You can read <a href="http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html">Bryan Pendleton&rsquo;s more objective
+comparison</a>.</p>
+
+<p>Christoff Parr and Jan Pelzl&rsquo;s <a href="http://www.crypto-textbook.com/"><strong>Understanding
+Cryptography</strong></a> textbook includes
+Parr&rsquo;s excellent <a href="http://wiki.crypto.rub.de/Buch/movies.php">video
+lectures</a> (chalkboard
+style without editing, so takes some patience to watch).</p>
+
+<h3 id="textbooks">Textbooks</h3>
+
+<p><a href="https://www.crypto101.io/">Crypto 101</a> - a very easy to read and
+practically-focused introduction to cryptography (available as a <a href="/docs/Crypto101.pdf">free,
+creative-commons licensed PDF</a>).</p>
+
+<p><a href="http://www.cs.umd.edu/~jkatz/imc.html"><em>Introduction to Modern
+Cryptography</em></a>, Jonathan Katz
+and Yehuda Lindell.  This provides a lot more depth that is required
+for joining the seminar, but is an excellent book for ambitious
+students with more time.</p>
+
+<h2 id="computing-systems">Computing Systems</h2>
+
+<p>Students in the class will benefit from understanding computing
+systems and having experience with systems-level programming at least
+at the level of a typical introductory operating systems course.
+Students without this experience will either need to put a lot of
+effort into learning it, or select projects and presentation topics
+that focus on other aspects.</p>
+
+<p>Some resources for learning about computing systems are below.</p>
+
+<p><a href="https://www.ops-class.org/">&ldquo;Hack the Kernel&rdquo;</a> - Operating Systems
+class developed by <a href="https://www.bluegroup.systems/people/gwa/">Geoffrey
+Challen</a>.  Provides
+programming assignments you can try on your own, as well as video
+lectures and lots of on-line materials.</p>
+
+<p><a href="http://rust-class.org/">cs4414: Operating Systems</a> - Operating
+systems course I taught in Fall 2013 and Spring 2014. Includes
+<a href="http://rust-class.org/pages/classes.html">videos</a> of lectures, and
+programming assignments in Rust (some of which will need some updating
+to work in the latest version of Rust).</p>
+
+<p>CMU&rsquo;s <a href="http://csapp.cs.cmu.edu/">Computing Systems</a> course and
+textbook by Randal Bryant and David O&rsquo;Hallaron provides an excellent
+introduction to systems programming, as well as a series of <a href="http://csapp.cs.cmu.edu/3e/labs.html">fun
+self-study labs</a>.</p>
+
+<h3 id="rust-programming">Rust Programming</h3>
+
+<p>I&rsquo;m hoping several of the projects will involve contribution to open
+source projects using Rust to provide secure, efficient, and
+iter-operable implementations of TLS and other cryptographic
+functionalities.  It is not a requirement that you use Rust in this
+class, but everyone will be encouraged to get some experience with it.</p>
+
+<p><a href="https://doc.rust-lang.org/nightly/book/"><strong>Rust Programming Language
+Book</strong></a> (this is the
+&ldquo;official&rdquo; Rust book, which includes a tutorial to get started)</p>
+
+<p><a href="http://aml3.github.io/RustTutorial/"><strong>Rust Tutorial</strong></a> (this was
+developed for my <a href="https://rust-class.org/">cs4414 class</a> by Alex
+Lamana, Rob Michaels, and Wil Thomason.  (Some parts may need updating
+to latest version of Rust, so if you go through this, please submit
+updates as pull requests!)</p>
+
+<p><a href="http://rustbyexample.com/"><strong>Rust by Example</strong></a></p>
+ 
+  
+  <p class="fronthead"><A href="/welcome/">Welcome to TLSeminar!</a><br><span class="authordate">, Wed, 14 Dec 2016</span></p>
+    <p><center>
+<a href="http://xkcd.com/1353/">
+<img src="//imgs.xkcd.com/comics/heartbleed.png" title="I looked at some of the data dumps from vulnerable sites, and it was ... bad. I saw emails, passwords, password hints. SSL keys and session cookies. Important servers brimming with visitor IPs. Attack ships on fire off the shoulder of Orion, c-beams glittering in the dark near the Tannhäuser Gate. I should probably patch OpenSSL." alt="Heartbleed" srcset="//imgs.xkcd.com/comics/heartbleed_2x.png 2x">
+</img>
+</a>
+</center></p>
+
+<p>This is the course site for <strong>cs6501: Understanding and Securing
+TLS</strong>. [<a href="/syllabus">Syllabus</a>]</p>
+
+<p>The first class is Friday, 20 January 2017 (9:30am-noon in Thornton
+Hall D115).</p>
+ 
+  
+  
+<div class="container pagination">
+  
+
+
+<a aria-label="First" href="https://tlseminar.github.io/">
+  <span aria-hidden="true">««</span>
+</a>
+
+<a aria-label="Previous" href="https://tlseminar.github.io/">
+  <span aria-hidden="true">«</span>
+</a>
+
+
+<a href="https://tlseminar.github.io/">
+  1
+</a>
+
+<a class="active" href="https://tlseminar.github.io/page/2/">
+  2
+</a>
+
+
+<a class="disabled" aria-label="Next" href="#">
+  <span aria-hidden="true">»</span>
+</a>
+
+<a aria-label="Last" href="https://tlseminar.github.io/page/2/">
+  <span aria-hidden="true">»»</span>
+</a>
+
+
+</div>
+
+
+</section>
+
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+  <p align="center">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href="https://www.cs.virginia.edu/evans">David Evans</a>
+
+
+</div>
+
+
+  
+
+</div>
+
+</footer>
+
+    </main>
+    
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3775212-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

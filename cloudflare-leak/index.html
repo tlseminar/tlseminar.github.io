@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Cloudflare Leak  &middot; TLSeminar</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="Cloudflare Leak  &middot; TLSeminar ">
+<meta property="og:site_name" content="TLSeminar"/>
+<meta property="og:url" content="https://tlseminar.github.io/cloudflare-leak/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-02-28T00:00:00Z" />
+<meta property="og:article:modified_time" content="2017-02-28T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@" />
+<meta name="twitter:title" content="Cloudflare Leak" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://tlseminar.github.io/cloudflare-leak/" />
+<meta name="twitter:domain" content="https://tlseminar.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Cloudflare Leak",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-02-28",
+    "description": "",
+    "wordCount":  1110 
+  }
+</script>
+
+
+
+<link rel="canonical" href="https://tlseminar.github.io/cloudflare-leak/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
+<link href="https://tlseminar.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://tlseminar.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://tlseminar.github.io/css/style.css">
+
+
+  
+  <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</head>
+<body>
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://tlseminar.github.io">
+  TLSeminar
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Understanding and Securing TLS
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://tlseminar.github.io/syllabus">Syllabus</a>
+
+<a href="https://tlseminar.github.io/schedule">Schedule</a>
+
+<a href="https://tlseminar.github.io/teams">Teams</a>
+
+<a href="https://tlseminar.github.io/readings/">Readings</a>
+
+<a href="https://tlseminar.github.io/projects/">Projects</a>
+
+<a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1><center>Cloudflare Leak
+</center></h1>
+
+  <div class="metas">
+<time datetime="2017-02-28">28 Feb, 2017</time>
+
+
+  
+    &middot; by Team Cinnamon
+  
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  
+
+<h1 id="the-cloudflare-leak">The Cloudflare Leak</h1>
+
+<h3 id="how-the-incident-developed">How the Incident Developed</h3>
+
+<p>Cloudflare is an Internet infrastructure company that provides security and performance services to millions of websites.  On February 17th, 2017, Travis Ormandy, a security researcher from <a href="https://googleprojectzero.blogspot.com/">Google&rsquo;s Project Zero</a>, noticed that some HTTP requests running through Cloudflare were returning corrupted web pages.</p>
+
+<p><center><img src="/images/timing-attacks/cloudflare/tweet.png" alt="Travis Ormandy's Tweet" style="width:500px;"/><br>
+<sup><a href="https://twitter.com/taviso/status/832744397800214528">https://twitter.com/taviso/status/832744397800214528</a></sup></center></p>
+
+<p>The problem that Travis noticed was that under certain circumstances, when the Cloudflare &ldquo;edge servers&rdquo; returned a web page, they were going past the end of a buffer and adding to the HTML dumps of memory that contained information such as auth tokens, HTTP POST bodies, HTTP cookies, and other private information <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">[1]</a>. To make matters worse, search engines both indexed and cached this data such that it was for a while searchable.</p>
+
+<p><center><img src="/images/timing-attacks/cloudflare/leak.png" alt="Example Leaked Data" style="width:500px;"/><br>
+<sup><a href="http://pastebin.com/AKEFci31">http://pastebin.com/AKEFci31</a></sup></center></p>
+
+<p>Since the discovery of the bug, Cloudflare worked with Google and other search engines to remove affected the cached pages.</p>
+
+<h3 id="the-impact">The Impact</h3>
+
+<p>Data could have been leaking <a href="https://www.wired.com/2017/02/crazy-cloudflare-bug-jeopardized-millions-sites/">as early as September 22nd</a>, but Cloudflare reported that the period of highest impact was from February 13th through February 18th with around 1 in every 3,300,000 HTTP requests have a potential memory leakage <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">[1]</a>. It is difficult to assess how much data was leaked, especially since the corrupted results and their cached versions were quickly removed from search engines, but Wired <a href="https://www.wired.com/2017/02/crazy-cloudflare-bug-jeopardized-millions-sites/">reported that data from large companies such as Fitbit, Uber, and OKCupid was found in the corrupted pages of a set of affected web pages</a>.</p>
+
+<p>Cloudflare asserts that the leak did not reveal any private keys, and even though other sensitive information was leaked, it did not appear in the HTML content of particularly high-traffic sites, so the damage was mitigated.</p>
+
+<p>Overall, about 3000 customer&rsquo;s sites triggered the bug, but, as previously noted, the data leaked could have come from any other Cloudflare customer. Cloudflare is aware of about 150 customers who were affected in that way.</p>
+
+<h3 id="the-bug-itself">The Bug Itself</h3>
+
+<p>As mentioned earlier, the problem resulted from a buffer being overrun and thus additional data from memory being written to the HTML of web pages. But how did this happen, and why did it happen now?</p>
+
+<p>Some of Cloudflare&rsquo;s services rely on modifying, or &ldquo;rewriting,&rdquo; HTML pages as they are routed through the edge servers. In order to do this rewriting, Cloudflare reads and parses the HTML to find elements that require changing. Cloudflare used to use a HTML parser written using a project called <a href="https://www.colm.net/open-source/ragel/">Ragel</a> that converts a description of a regular language into a finite state machine. However, about a year ago they decided that the Ragel-based parser was a source of technical debt and wrote a new parser called cf-html to replace it <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">[1]</a>.</p>
+
+<p>Cloudflare first rolled this new parser our for their <a href="https://blog.cloudflare.com/how-we-brought-https-everywhere-to-the-cloud-part-1/">Automatic HTTP Rewrites</a> service and have since been slowly migrating other services away from the Ragel-based parser. In order to use these parsers, Cloudflare adds them as a module to <a href="https://www.nginx.com/resources/wiki/">NGINX</a>, a load-balancer <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">[1]</a>.</p>
+
+<p>As it turned out, the parser that was written with Ragel actually had a bug in it for several years, but there was no memory leak because of a certain configuration fo the internal NGINX buffers. When cf-html was adopted, the buffers slightly changed, enabling the leakage.</p>
+
+<p>The actual bug was caused by what you might expect: a pointer error in the C code generated by Ragel (but the bug was not the fault of Ragel).</p>
+
+<p><center><img src="/images/timing-attacks/cloudflare/bug.png" alt="C Code Bug" style="width:500px;"/><br>
+<sup><a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/</a></sup></center></p>
+
+<p>As can be guessed from this snippit, the cause of the bug was that the check for the end of the bugger was done using the equality operator, <code>==</code>, instead of <code>&gt;=</code>, which would have caught the bug. That snippit is the generated code. Let&rsquo;s look at the code that generated that.</p>
+
+<p>In order to check for a the end of the buffer when parsing a <code>&lt;script&gt;</code> tag, this piece of code was used:</p>
+
+<p><center><img src="/images/timing-attacks/cloudflare/bug2.png" alt="Ragel Bug Code" style="width:500px;"/><br>
+<sup><a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/</a></sup></center></p>
+
+<p>What it means is that in order to parse the end of the tag, zero or more <code>unquoted_attr_char</code> are parsed followed by whitespace, <code>/</code>, or <code>&gt;</code> signifying the end of the tag. If there is nothing wrong with the script tag, the parser will move to the code in the <code>@{ }</code>. If there is a problem, the parser will move to the <code>$lerr{ }</code> section.</p>
+
+<p>The bug was caused if a web page <strong>ended</strong> with a malformed HTML tag such as <code>&lt;script type=</code>. The parser would transition to <code>dd(&quot;script consume_attr failed&quot;)</code> which is just print debug output, but then <strong>instead of failing, it transitions to <code>fgoto script_consume_attr;</code></strong>, which means it tries to parse another attribute.</p>
+
+<p>Notice that the <code>@{ }</code> block has a <code>fhold</code> while the <code>$lerr{ }</code> block does not. It was the lack of the <code>fhold</code> in the second block that caused the leak. In the generated code, <code>fhold</code> is equivalent to <code>p--</code> and thus if the malformed tag error happens at the end of the buffer, then <code>p</code> will actually be after the end of the document and the check for the end of the buffer will fail, causing <code>p</code> to overrun the buffer.</p>
+
+<h3 id="the-response-from-cloudflare">The Response From Cloudflare</h3>
+
+<p>Cloudflare seems to have responded relatively well to this bug. After the bug was brought to their attention they performed an initial mitigation, which meant disabling all of the sevices that used <code>cf_html</code>, in 47 minutes. Luckily, Cloudlfare uses a &lsquo;global kill&rsquo; <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">[1]</a> feature to enable the global disabling of any service. Since the Email Obfuscation was the main cause of the leak, it was disabled first, and then Automatic HTTPS rewrites were killed about 3 hours later. About 7 hours after the bug was detected, a fix was deployed globablly. As mentioned previously, Cloudflare also contacted search engines to get the affected pages and their cached versions removed from the web.</p>
+
+<p>What was not as good about Cloudflare&rsquo;s response were the lessons they said they learned in their incident report. Essentially, their lessons learned amounted to saying the bug was a corner case in an &ldquo;ancient piece of software&rdquo; and that they will be looking to &ldquo;fuzz older software&rdquo; to look for other potential problems <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">[1]</a>.  We hope Cloudflare will take more time to look at this incident more seriously and consider systemic issues that could allow such a problem to occur and persist.</p>
+
+<h3 id="further-thoughts">Further Thoughts</h3>
+
+<p>Bugs like this expose the difficulty of ensuring software
+correctness. It is quite unlikely that a corner case like this would
+have been caught by human eyes, and even a fuzzer would have had to
+have triggered some exceptional conditions in order to exposed the
+bug. On the other hand, many tools and processes exist for detecting
+these types of problems, and there is little excuse for not using them
+on security-critical software.</p>
+
+<h3 id="reference">Reference</h3>
+
+<p>[1] <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/</a></p>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="https://tlseminar.github.io/sha1-collisions/" title="SHA-1 Collisions">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="https://tlseminar.github.io/timing-attacks/" title="Timing Attacks">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+  <p align="center">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href="https://www.cs.virginia.edu/evans">David Evans</a>
+
+
+</div>
+
+
+  
+
+</div>
+
+</footer>
+
+    </main>
+    
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3775212-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

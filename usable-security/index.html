@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Usable Security in TLS  &middot; TLSeminar</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="Usable Security in TLS  &middot; TLSeminar ">
+<meta property="og:site_name" content="TLSeminar"/>
+<meta property="og:url" content="https://tlseminar.github.io/usable-security/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-03-22T00:00:00Z" />
+<meta property="og:article:modified_time" content="2017-03-22T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@" />
+<meta name="twitter:title" content="Usable Security in TLS" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://tlseminar.github.io/usable-security/" />
+<meta name="twitter:domain" content="https://tlseminar.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Usable Security in TLS",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-03-22",
+    "description": "",
+    "wordCount":  2334 
+  }
+</script>
+
+
+
+<link rel="canonical" href="https://tlseminar.github.io/usable-security/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
+<link href="https://tlseminar.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://tlseminar.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://tlseminar.github.io/css/style.css">
+
+
+  
+  <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</head>
+<body>
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://tlseminar.github.io">
+  TLSeminar
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Understanding and Securing TLS
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://tlseminar.github.io/syllabus">Syllabus</a>
+
+<a href="https://tlseminar.github.io/schedule">Schedule</a>
+
+<a href="https://tlseminar.github.io/teams">Teams</a>
+
+<a href="https://tlseminar.github.io/readings/">Readings</a>
+
+<a href="https://tlseminar.github.io/projects/">Projects</a>
+
+<a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1><center>Usable Security in TLS
+</center></h1>
+
+  <div class="metas">
+<time datetime="2017-03-22">22 Mar, 2017</time>
+
+
+  
+    &middot; by Team Pineapple
+  
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  
+
+<h1 id="introduction">Introduction</h1>
+
+<p>In 1999, Alma Whitten and Doug Tygar performed a usability analysis of PGP 5.0 called <a href="https://people.eecs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/USENIX.pdf"><em>Why Johnny Can’t Encrypt</em></a>. PGP Corp claimed its product “makes complex mathematical cryptography accessible for novice computer users”.</p>
+
+<p>However, Whitten and Tygar’s evaluation, based on experiments with
+users, argued that PGP’s user interface design made computer security
+usable only for people who are “already knowledgeable in that area”.
+This does not seem to be a fair expectation for users. Today, around
+40% of the <a href="http://www.internetlivestats.com/internet-users/">entire world population use the
+internet</a>. When the
+paper was published, that <a href="http://www.internetworldstats.com/emarketing.htm">percentage was
+4.1%</a>. Thus, as the
+number of internet users has skyrocketed, the security community has
+become increasingly aware of how important it is to make security understandable and accessible to typical users.</p>
+
+<p>Usability is, of course, important for any service that is a vital part of the lives of billions. However, for security in particular, there are higher stakes&mdash; confusing user interfaces can lead to sensitive data being exposed, from financial transactions to identification information. HTTPS users are vulnerable to significant, real-life risks when technical language abounds and browsers inundate them with too many warnings (many of which are false positives).</p>
+
+<p>Humans are arguably the weakest link, so usability and communication must be taken into account in any model that expects the user to act safely. When a user interface fails to effectively communicate security consequences, it is unreasonable to blame an improperly informed user for exposing themselves to those dangers.</p>
+
+<h3 id="users-are-not-the-enemy">Users Are Not The Enemy</h3>
+
+<blockquote>
+<p><a href="/docs/usersnotenemy.pdf"><em>Users Are Not The Enemy</em></a>, Anne Adams and Martina Angela Sasse. Communications of the ACM. December 1999.</p>
+</blockquote>
+
+<p>Even perfectly written software can become vulnerable to attacks when the user does not understand its behavior. In <em>Users Are Not the Enemy</em>, Adams and Sasse discuss how users can both knowingly and unknowingly compromise computer security mechanisms such as password authentication. In authentication, few users knew how to or even understood the need to constitute a secure password. As a result, most of the passwords revolved around familiar and related phrases, words, or character patterns. Because the average person finds it difficult to remember passwords, most users rarely change the passwords and some prefer to record them in plaintext.</p>
+
+<p>Users are the reason, however, not the <em>true</em> enemy. Without sufficient knowledge of hacking techniques, typical users understandably default to their own models of security threats and priorities. Meanwhile, security experts and developers do not always understand the users’ perceptions, tasks, or needs. Before quickly dismissing users as unknowing collaborators in cyberspace crime, we should educate them in why we are protecting their account. Consequently, they would be more motivated to practice security-conscious behaviors when they perceive a threat.</p>
+
+<h3 id="the-source-awakens">The Source Awakens</h3>
+
+<blockquote>
+<p><a href="https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith"><em>The Source Awakens</em></a>. Presentation at USENIX Enigma 2016 by Matthew Smith.</p>
+</blockquote>
+
+<p>We often see breaking news articles detailing the most recent hacking or the most recent password leak. These aren’t attacks focusing on specific users typically uneducated in cybersecurity principles but rather on firms’ products, that have been developed by computer scientists and engineers who are supposed to be experts in their fields. Now, if these developers are making mistakes, is it their lack of developing ability or is it their lack of understanding of the security issues? Considering the two, it’s best to assume the latter, as it is more likely. Therefore, developers are themselves making mistakes when they are not aware of the security issues latent in their system.</p>
+
+<p>A story, which probably hits home for many software developers, is trying to Google an approach or solution to their problem or feature that they want to implement. The developer clicks on the first StackOverflow link and gets a solution, implements it, and keeps it as long as it apparently works. The developer now continues and goes about completing the task with no question to the validity of the code just implemented. What the developer doesn’t realize is that the code found and used may have serious security, such as this this code for self-signed certificate validation:</p>
+
+<p><center>
+<img src="/images/usable-security/certvalidation.png" alt="validation" width="90%"><Br>
+<span class="caption"><em>Source: </em><a href="https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith">The Source Awakens</a></span>
+</center></p>
+
+<p>The code seems to work. But, upon closer inspection, it clearly
+doesn’t do anything to check certificates. When this program sees any
+and all certificates, it simply approves every single one, regardless
+of what is contained within. So, of course the code &ldquo;works&rdquo; when the
+developer incorporates into their program (at least it gives no
+apparent errors), but it presents a major security vulnerability.
+Similarly, developers may use some dummy certificate validator or
+self-signed certificates for testing, but then forget to remove them
+in the release.</p>
+
+<p>Thus, usability is a security issue for developers using APIs and
+libraries, not just for end users using graphical interfaces.</p>
+
+<h4 id="malware-analysis-tools">Malware Analysis Tools</h4>
+
+<p>There are several decompilers that take binary code and output the
+decompiled code, such as HexRays (shown below). But, the generated
+code isn’t very readable to the average programmer, such as this example from the Simda malware domain generation code:</p>
+
+<p><center>
+<img src="/images/usable-security/hexrays.jpg" alt="hexrays" width="90%"><Br>
+<span class="caption"><em>Source: </em><a href="https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith">The Source Awakens</a></span>
+</center></p>
+
+<p>Smith discusses how his team created a new system called DREAM++ that
+can outputs more readable decompiled code, so we may get something like:</p>
+
+<p><center>
+<img src="/images/usable-security/dream++.jpg" alt="dream++" width="60%"><Br>
+<span class="caption"><em>Source: </em><a href="https://www.usenix.org/conference/enigma2016/conference-program/presentation/smith">The Source Awakens</a></span>
+</center></p>
+
+<p>By producing more readable decompiled code, both security experts as
+well as typical programmers were able to much more easily and quickly
+understand the decompiled programs.</p>
+
+<h3 id="browser-warnings">Browser Warnings</h3>
+
+<blockquote>
+<p><a href="https://adrifelt.github.io/sslinterstitial-chi.pdf"><em>Improving SSL Warnings: Comprehension and Adherence</em></a> by <a href="http://www.adrienneporterfelt.com/">Adrienne Porter Felt</a>, Alex Ainslie, Robert Reeder, et Al. ACM Conference on Human Factors in Computing (CHI), 2015.</p>
+</blockquote>
+
+<p>Security experts and programmers will always attempt to do what is best for their end-users, but the problem is that (very) often the end-user will circumvent any attempt at stopping whatever they intend to do. Looking at HTTPS specifically, the inherent security boils down to the end user’s choice of whether or not to proceed to a possibly unsafe webpage.</p>
+
+<p>Therefore, it is the web browser&rsquo;s responsibility to provide adequate notice to a user when their connection is not secure. Research conducted in 2015 by Google and the University of Pennsylvania found that reducing technical jargon in Chrome browser SSL warning and focusing on brevity and simplicity, resulted in an increase in comprehension of SSL warnings. Still, only 49% of the respondent&rsquo;s could answer the following question correctly:</p>
+
+<blockquote>
+<p>What might happen if you ignored this error while checking your email?</p>
+
+<ul>
+<li><p>Your computer might get malware</p></li>
+
+<li><p>A hacker might read your email</p></li>
+</ul>
+
+<p>(Technically both are true, but realistically the user is supposed to understand that invalid HTTPS results in hackers being able to read your communications in plaintext)</p>
+</blockquote>
+
+<p>The researchers also found that the improved design of browser warnings could influence up to 30% more users to go &ldquo;Back to Safety&rdquo; rather than &ldquo;Proceed to Unsafe&rdquo;. The new design is shown below:</p>
+
+<p><center>
+<img src="/images/usable-security/chrome37.png" alt="chrome37" width="50%"><Br>
+<span class="caption"><em>Source: </em><a href="https://adrifelt.github.io/sslinterstitial-chi.pdf">Improving SSL Warnings: Comprehension and Adherence</a></span>
+</center></p>
+
+<p>If this seems familiar, it is because it was introduced in Chrome 37.
+This new design requires an extra click from a user to proceed to the
+potentially unsafe site. Notice that the unsafe option is a dark gray
+text link contrasted with a safe blue button.</p>
+
+<p>Below, a blast from the past: SSL warnings from pre-2015 Chrome versions.</p>
+
+<p><center>
+<img src="/images/usable-security/sslwarning.png" width="70%" alt="sslwarning"><Br>
+<span class="caption"><em>Source: </em><a href="http://blog.getpostman.com/2014/01/28/using-self-signed-certificates-with-postman/">Self Signed Certificates with Postman</a></span>
+</center></p>
+
+<p>Noticeably, this has ‘too much’ technical jargon and is neither short nor simple. Similarly the user can easily proceed to the site straight from the warning. Google’s research was meant to improve the user experience when seeing these warning to minimize the security risks taken by the end-user.</p>
+
+<h3 id="tls-errors-on-the-web">TLS Errors on the Web</h3>
+
+<blockquote>
+<p><a href="http://devd.me/papers/trustmemaybe.pdf"><em>Here’s My Cert, So Trust Me, Maybe? Understanding TLS Errors on the Web</em></a> by Devdatta Akhawe, Bernhard Amann, Matthias Vallentin, &amp; Robin Sommer. International World Wide Web Conference (WWW) 2013.</p>
+</blockquote>
+
+<p>The end-user isn’t the only source of security issues when it comes to
+browser usability in TLS. The behavior of web browsers may not be
+studied as much as vulnerabilities in TLS, but it is almost just as
+dangerous in measure. Usually when browsers report TLS errors, they
+don’t offer distinguishing features between real attacks and benign
+errors; hence leaving the decision to the end-user of whether
+continuing is itself a security issue. On most occasions, errors will
+turn out to be “false positives”, which can include errors due to
+server misconfiguration, self-signed certificates (as mentioned
+previously), and name validation errors. As a result, end-users
+quickly train themselves to click through these warnings, regardless
+of the content, making it unlikely that they will pay enough attention
+when a real attack comes along.</p>
+
+<p>This paper reports on a large-scale measurement study of common TLS
+warnings. A total of 11.5 billion SSL connections on all ports were
+captured over a nine-month period in their experiment. The warnings
+and errors produced were then categorized based on where they occurred
+during the verification: chain building errors, chain validation
+errors, and name validation errors. These correspond to the three
+separate steps of certificate validation of the Network Security
+Services (NSS) library, used by Firefox (and Chrome on Linux). The
+following is an algorithm that can translate the NSS responses into
+their categorization:</p>
+
+<p><center>
+<img src="/images/usable-security/nssalgorithm.jpg" alt="nssalgorithm" width="60%"><Br>
+<span class="caption"><em>Source: </em><a href="http://devd.me/papers/trustmemaybe.pdf">Here’s My Cert, So Trust Me, Maybe?</a></span>
+</center></p>
+
+<p>The results of this experiment indicate a clear opportunity, and need,
+for reducing false warnings.  A 1.54% false warning rate is
+unacceptable if we understand that benign scenarios are orders of
+magnitude more common than actual attacks.</p>
+
+<p>Based on this analysis, a number of concrete recommendations are
+proposed to help browser vendors lower the risk of such unwanted
+habituation. For example, advocating the use of free TLS certificates
+via authorities like StartCom, using a more relaxed name validation
+algorithm that accepts multiple levels for an asterisk, or enabling
+AIA support or preload all known intermediate authorities in the
+browser cache. By implementing these changes, the complete usability
+of browsers for end-users will be significantly improved, therefore
+leading to a drastic decrease in attacks and security issues caused by
+users.</p>
+
+<h3 id="rethinking-connection-security-indicators">Rethinking Connection Security Indicators</h3>
+
+<blockquote>
+<p><a href="https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf"><em>Rethinking Connection Security Indicators</em></a> by Adrienne Porter Felt, Robert Reeder, Alex Ainslie, Helen Harris, Max Walker, Christopher Thompson, Mustafa Emre Acer, Elisabeth Morant, and Sunny Consolvo.
+Twelfth Symposium on Usable Privacy and Security (SOUPS), July 2016.</p>
+</blockquote>
+
+<p>By seriously considering the ramifications of the symbology we use to
+send messages to the users, we can work to develop more useful and
+informative messages. This section focused on the findings of a study
+conducted to figure out how users react to various symbols appearing
+in their browsers (most often in the URL field). The study found that
+a surprising number of users could identify one or more of the
+significant features in a good connection, but the majority of users
+could not identify issues with a bad connection or one not using
+HTTPS.</p>
+
+<p>Only about 40% of the people in the study were able to identify an
+HTTP connection as insecure or what protocol was being used; many of
+the participants believed the symbol had to do with the favicon of the
+page or that the symbol included general information about the page
+such as permissions. A summary of the results of this research can be
+seen in the table below.</p>
+
+<p><center>
+<img src="/images/usable-security/icons.png" alt="icons"><Br>
+<span class="caption"><em>Source: </em><a href="https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf">Rethinking Connection Security Indicators</a></span>
+</center></p>
+
+<p>The researchers attempted to identify the three symbols that would be the most effective for conveying information to the user. They then conducted more research regarding how users would interpret these symbols.</p>
+
+<p><center>
+<img src="/images/usable-security/urls.png" width="40%" alt="urls"><Br>
+<span class="caption"><em>Source: </em><a href="https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf">Rethinking Connection Security Indicators</a></span>
+</center></p>
+
+<p><center>
+<img src="/images/usable-security/results.png" alt="results"><Br>
+<span class="caption"><em>Source: </em><a href="https://www.usenix.org/system/files/conference/soups2016/soups2016-paper-porter-felt.pdf">Rethinking Connection Security Indicators</a></span>
+</center></p>
+
+<p>The researchers were able to confidently determine that any sign of an
+error is interpreted to be essentially the same, regardless of color
+or shape. Secondly, they determined that even if users were shown to
+be on https or ‘secure’ sites, they still had a ‘healthy level of
+paranoia’ in only being ‘somewhat’ confident in the security of the
+site that they were currently accessing.</p>
+
+<p>Based on these results, browsers need to start asking what dangers on
+the internet are. Is it worse to have a fault in one’s implementation
+of their certificates or to not have HTTPS connection at all? Browsers
+can also consider blacklists of sites that are known for putting
+user’s information or connections at risk. Browsers could also do more
+to put security in a more central or significant location, such as
+having a pop-up before every page with information on the connection
+type and associated risks. We need to become more aware of what
+messages we’re sending to the users via the particular symbols that we
+choose for varying types of connections.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>We’ve covered several studies showing progress, and the need for more
+research, in the area of usable security.  Despite the work done to
+bridge the gap between experts and users, there is a still a gulf
+between each group’s understanding of the other. In some cases,
+browser designers assume that users know what a certificate is, while
+users assume that the green lock in their URL bar indicates a website
+is free of malware.</p>
+
+<p>The philosophical debate between informing users more effectively and
+simply manipulating them to make &ldquo;correct&rdquo; decisions is also
+unresolved. The major browsers have adopted a hybrid approach with TLS
+error warnings that both provide basic information on the error and
+require significant user effort to circumvent.</p>
+
+<p>Such error warnings are commonplace, which raises another issue. Users
+tend to become accustomed to error messages (habituation), assuming
+them to be false positives for genuine threats, because they actually
+are false positives in the vast majority of cases.  Benign server
+administration errors account for essentially all TLS warnings that
+users see. Browser manufacturers are engaged in efforts to reduce the
+amount of noise users experience while sifting through warnings of
+potential hazards.</p>
+
+<p>Work at the intersection of security and human-computer interaction
+continues to progress, but more needs to be done to ensure the
+security of future internet users. We can’t eliminate people, the
+weakest links in the chain, so we must remember design systems around
+their fallibility. While security is always at the forefront of most
+security researchers brains, we must also begin to consider the users
+who will be interacting with these features as a part of the system
+itself.</p>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="https://tlseminar.github.io/tls-interception/" title="TLS Interception and SSL Inspection">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="https://tlseminar.github.io/tls-13/" title="TLS 1.3">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+  <p align="center">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href="https://www.cs.virginia.edu/evans">David Evans</a>
+
+
+</div>
+
+
+  
+
+</div>
+
+</footer>
+
+    </main>
+    
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3775212-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

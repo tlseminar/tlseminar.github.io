@@ -32,9 +32,6 @@ pageNotFoundDetail = "The in-the-middle attacker who is attacking your connectio
     sidebar = "left"
     googleAnalytics = "UA-3775212-1"
 
-    
-    sidebartitle = "cs2012"
-    sidebartagline = "Discrete Math"
     nodate = true
     noauthor = true
     noread = true

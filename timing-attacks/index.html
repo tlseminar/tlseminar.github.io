@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Timing Attacks  &middot; TLSeminar</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="description" content="" />
+
+<meta name="keywords" content="">
+
+
+<meta property="og:title" content="Timing Attacks  &middot; TLSeminar ">
+<meta property="og:site_name" content="TLSeminar"/>
+<meta property="og:url" content="https://tlseminar.github.io/timing-attacks/" />
+<meta property="og:locale" content="en-us">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:description" content=""/>
+<meta property="og:article:published_time" content="2017-03-01T00:00:00Z" />
+<meta property="og:article:modified_time" content="2017-03-01T00:00:00Z" />
+
+  
+
+  
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@" />
+<meta name="twitter:title" content="Timing Attacks" />
+<meta name="twitter:description" content="" />
+<meta name="twitter:url" content="https://tlseminar.github.io/timing-attacks/" />
+<meta name="twitter:domain" content="https://tlseminar.github.io">
+  
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Timing Attacks",
+    "author": {
+      "@type": "Person",
+      "name": "http://profiles.google.com/+?rel=author"
+    },
+    "datePublished": "2017-03-01",
+    "description": "",
+    "wordCount":  2446 
+  }
+</script>
+
+
+
+<link rel="canonical" href="https://tlseminar.github.io/timing-attacks/" />
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://tlseminar.github.io/touch-icon-144-precomposed.png">
+<link href="https://tlseminar.github.io/favicon.png" rel="icon">
+
+<meta name="generator" content="Hugo 0.17" />
+
+  <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300%7CRaleway%7COpen+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://tlseminar.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://tlseminar.github.io/css/style.css">
+
+
+  
+  <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</head>
+<body>
+  <main id="main-wrapper" class="container main_wrapper has-sidebar">
+    <header id="main-header" class="container main_header">
+  <div class="container brand">
+  <div class="container title h1-like">
+  <a class="baselink" href="https://tlseminar.github.io">
+  TLSeminar
+
+</a>
+
+</div>
+
+  
+<div class="container topline">
+  
+  Understanding and Securing TLS
+
+
+</div>
+
+
+</div>
+
+  <nav class="container nav primary no-print">
+  
+
+
+  
+<a href="https://tlseminar.github.io/syllabus">Syllabus</a>
+
+<a href="https://tlseminar.github.io/schedule">Schedule</a>
+
+<a href="https://tlseminar.github.io/teams">Teams</a>
+
+<a href="https://tlseminar.github.io/readings/">Readings</a>
+
+<a href="https://tlseminar.github.io/projects/">Projects</a>
+
+<a href="https://tlseminar.github.io/post" title="Show list of posts">Posts</a>
+
+
+</nav>
+
+<div class="container nav secondary no-print">
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  
+
+</header>
+
+
+<article id="main-content" class="container main_content single">
+  <header class="container hat">
+  <h1><center>Timing Attacks
+</center></h1>
+
+  <div class="metas">
+<time datetime="2017-03-01">1 Mar, 2017</time>
+
+
+  
+    &middot; by Team Cinnamon
+  
+  <br>
+  
+
+
+</div>
+
+</header>
+
+  <div class="container content">
+  
+
+<h1 id="digression-notable-news">Digression: Notable News</h1>
+
+<p>Two newsworthy events occurred this week that are of high importance
+and relevant to TLS in general: <a href="/sha1-collisions">SHA-1 Collisions</a>
+and the <a href="/cloudflare-leak">Cloudflare Leak</a>.  (Those are discussed in
+the separate linked posts.)</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>Timing attacks exploitd information leaked from timing side-channels to learn private data. In this threat model, an attacker is able to observe the time required for certain parts of a program at runtime and gain information about the execution path followed.</p>
+
+<p>Consider the following snippet of Python code as an example:</p>
+
+<pre><code class="language-python">def comp(a, b):
+    if len(a) != len(b):
+        return False
+    for c1, c2 in zip (a, b):
+        if c1 != c2:
+            return False
+    return True
+</code></pre>
+
+<p>The <code>comp()</code> function performs string comparison, returning <code>True</code> if the strings are character-wise equal and <code>False</code> otherwise. Let us assume for the sake of simplicity that the lengths of the strings are public (we are not concerned with timing leaks from the initial length comparison).</p>
+
+<p>Suppose we compare the strings <code>&quot;hello&quot;</code> and <code>&quot;catch&quot;</code>. These words fail the string comparison immediately, since the first letters are different. Thus, the function returns <code>False</code> after a single iteration of the loop. In contrast, comparing <code>&quot;hello&quot;</code> with <code>&quot;hella&quot;</code> will require 5 iterations before returning False. An attacker can use the resulting timing delay to determine that <code>&quot;hello&quot;</code> and <code>&quot;hella&quot;</code> share beginning characters, whereas <code>&quot;hello&quot;</code> and <code>&quot;catch&quot;</code> do not. If <code>&quot;hello&quot;</code> was a password, an attacker who could measure the timing precisely enough to count loop iterations would be able to incrementally guess each letter of the string.</p>
+
+<p>One solution to this problem would be to use a Boolean flag initialized to <code>True</code>. If the words have mismatched characters, the flag will be set to <code>False</code>, and the flag will be returned after comparing all characters. In theory, this masks the timing leak; in practice, a compiler may optimize such code to return early, reinstating the timing leak. Furthermore, there may still be timing leaks in the execution of the code, such as variation in the instruction cache depending on which statements are entered.</p>
+
+<p>Thus, we see from this simple example that verifying constant-time implementation of code has many challenges, which we further discuss below.</p>
+
+<h1 id="remote-timing-attacks-are-practical">Remote Timing Attacks are Practical</h1>
+
+<p><a href="/docs/ssl-timing.pdf">Remote timing attacks are practical</a>. David Brumley and Dan Boneh (2005).Computer Networks, 48(5), 701-716.]</p>
+
+<p>At the heart of RSA decription is a modular exponentiation \( m = c^d mod~N\) where \(N = pq\) is the RSA modulus, d is the private decryption exponent, and c is the ciphertext being decrypted. OpenSSL uses the Chinese Remainder Theorem (CRT) to perform this exponentiation. With Chinese remaindering, the function \( m = c^d mod~N\) is computed in two steps:</p>
+
+<ol>
+<li><p>Evaluate \( m_1 = c^{d_1} mod~p\) and \( m_2 = c^{d_2} mod~q\) (\(d_1\) and \(d_2\) are precomputed from \(d\)).</p></li>
+
+<li><p>Combine \(m_1\) and \(m_2\) using CRT to yield m.</p></li>
+</ol>
+
+<p>Both steps could have timing side channels if not implemented carefully.</p>
+
+<h3 id="chinese-remainder-theorem">Chinese Remainder Theorem</h3>
+
+<p>Suppose that \(n_1,n_2,&hellip;,n_r\) are pairwise relatively prime positive integers, and let \(c_1,c_2,&hellip;,c_r\) be integers.</p>
+
+<p>Then the system of congruences,</p>
+
+<p><div class="indented">
+\(X \equiv c_1 (mod~n_1)\)<br />
+\(X \equiv c_2 (mod~n_2)\)<br />
+&hellip;<br />
+\(X \equiv c_r (mod~n_r)\)
+   </div></p>
+
+<p>has a unique solution modulo \(N = n_1n_2&hellip;n_r\)</p>
+
+<h3 id="gauss-s-algorithm">Gauss’s Algorithm</h3>
+
+<p>\(X \equiv c_1N_1{N_1}^{-1} + c_2N_2{N_2}^{-1} + &hellip; + c_rN_r{N_r}^{-1}(mod~N)\), where
+   <div class="indented">
+\(N_i = N/n_i \)<br />
+\(N_i{N_1}^{-1} \equiv 1 (mod~n_i)\)
+   </div></p>
+
+<h3 id="hasted-s-broadcast-attack">Hasted’s Broadcast Attack</h3>
+
+<p>Hasted&rsquo;s Broadcast Attack relies on cases when the public exponent \(e\) is small or when partial knowledge of the
+secret key is available.
+If \(e\) (public) is the same across different sites, the attacker can use Chinese Remainder Theorem and decrypt messages!</p>
+
+<p>Hasted’s Broadcast Attack works as follows:</p>
+
+<ul>
+<li>Alice encrypts the same message \(M\) with three different public keys \(n_1\) \(n_2\) and \(n_3\)
+, all with public exponent \(e=3\), The resulting \(C_1C_2\) and \(C_3\) are known.
+<div class="indented">
+\(M^3 \equiv C_1 (mod~n_1)\)<br />
+\(M^3 \equiv C_2 (mod~n_2)\)<br />
+\(M^3 \equiv C_3 (mod~n_3)\)
+</div></li>
+<li>An attack can then recover \(M\):
+<div class="indented">
+\(x = C_1N_1N_1^{-1} + C_2N_2N_2^{-1} + C_3N_3N_3^{-1}~mod~n_1n_2n_3 \)<br />
+\(M = \sqrt[3]{x}\)
+</div></li>
+</ul>
+
+<h3 id="montgomery-reduction">Montgomery Reduction</h3>
+
+<p>Montgomery Reduction is an algorithm  that allows modular arithmetic to be performed
+efficiently when the modulus is large.</p>
+
+<p>The reduction takes advantage of the fact that \(x~mod~2^n\)
+is easier to compute than \(x~mod~q\); the reduction simply strips off all but the \(n\) least significant bytes.</p>
+
+<p>Steps needed for the reduction:</p>
+
+<ul>
+<li><p>The Montgomery Form of \(a\) is \(aR~mod~q\), where \(R\) is some public \(2n , n\) chosen based on underlying hardware.</p></li>
+
+<li><p>Multiplication of \(ab\) in Montgomery Form: \(aRbR = cR2\).</p></li>
+
+<li><p>Pre-compute \(RR^{-1}~mod~q\).</p></li>
+
+<li><p>Reduce: \(cR^{2}R^{-1}~mod~q = cR~mod~q\).</p></li>
+
+<li><p>\(c\) can be kept in form and reused for additional multiplications during sliding windows.</p></li>
+
+<li><p>To escape Montgomery space and return to \(q\) space: multiply again by \(R^{-1}\) to arrive at solution \(c\).</p></li>
+
+<li><p>\(c = ab~mod~q\) (performing \(mod\) by \(q\) causes successive subtractions of \(ab\) by \(q\) till result \(c\) in range \([0,q)\).  The number of &ldquo;extra reductions&rdquo; depends on the private data; the attack exploits these as a timing side channel.</p></li>
+</ul>
+
+<p><center><img src="/images/timing-attacks/gap.jpg" alt="PDF Collision" style="width:500px;"/><br>
+<span class="caption">(<a href="http://slideplayer.com/slide/4519452/">Image credit</a>)</span></center></p>
+
+<h3 id="protections-against-timing-attacks">Protections against timing attacks</h3>
+
+<p>There are numerous defenses against timing attacks, but known defenses are either expensive or only provide partial mitigation.</p>
+
+<ul>
+<li><p>Use a decryption routine with the number of operations is independent of input.  For example, simply carry out the maximum number of Montgomery extra reductions, even if they are not necessary. This might be hard to mend to existing systems without replacing their entire decryption algorithm (and it is important to be wary of &ldquo;overly-optimizing&rdquo; compilers that remove non-functional code that is there to mask a timing leak).</p></li>
+
+<li><p>By quantizing all RSA computations. This decreases performance because &ldquo;all decryptions must take the maximum time of any decryption&rdquo;.</p></li>
+
+<li><p>By blinding, which works as follows:</p>
+
+<ul>
+<li>Calculate \(x = reg~mod~N\) before actual decryption for random \(r\) chosen each time</li>
+<li>Decrypt as normal.</li>
+<li>Unblind: divide by \(r~mod~N\) to obtain the decryption of the ciphertext
+\(g\).</li>
+</ul>
+
+<p>Since \(r\) is random, \(x\) is also random &ndash; and input \(g\) should have minimal
+correlation with total decryption time.</p></li>
+</ul>
+
+<h1 id="remote-timing-attacks-are-still-practical">Remote Timing Attacks are Still Practical</h1>
+
+<p><a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Billy Bob Brumley and Nicola Tuveri. &ldquo;Remote timing attacks are still practical.&rdquo; European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.</a></p>
+
+<p>Timing attacks target cryptosystems and protocols that do not run in constant time. <a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic curve</a> based <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">signature schemes</a> aim at providing side-channel resistance against timing attacks. For instance, scalar multiplication is achieved via <a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">Montgomery&rsquo;s ladder</a> which performs a sequence of independent field operations on elliptic curves. <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Brumley and Tuveri</a> reveal a timing attack vulnerability in OpenSSL&rsquo;s implementation of Montgomery&rsquo;s ladder that consequently leaks the server&rsquo;s private key.</p>
+
+<h3 id="what-is-montgomery-s-ladder">What is Montgomery&rsquo;s Ladder?</h3>
+
+<p>Consider the right-to-left square-and-multiply algorithm to compute an exponentiation operation:
+<center><img src="/images/timing-attacks/right-to-left.png" alt="Montgomery ladder" style="width:300px;"/><br>
+<sup>Right-to-Left Square-and-Multiply Algorithm</sup><br><sup>Source: <a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">https://cr.yp.to/bib/2003/joye-ladder.pdf</a></sup></center></p>
+
+<p>The above algorithm performs more operations when the bit is set, thereby leading to a possible timing attack. Montgomery&rsquo;s power ladder method, on the other hand, performs the same number of operations in both the cases. This prevents timing based side-channel attacks as well as makes the algorithm more efficient by making it parallelizable. The algorithm is as below:
+<center><img src="/images/timing-attacks/montgomery.png" alt="Montgomery ladder" style="width:300px;"/><br>
+<sup>Montgomery&rsquo;s Ladder</sup><br><sup>Source: <a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">https://cr.yp.to/bib/2003/joye-ladder.pdf</a></sup></center></p>
+
+<h3 id="openssl-s-implementation-of-montgomery-s-ladder">OpenSSL&rsquo;s implementation of Montgomery&rsquo;s Ladder</h3>
+
+<p>OpenSSL uses Elliptic Curve Cryptography for generating Digital Signatures to sign a TLS server&rsquo;s RSA key.
+Elliptic Curve Cryptography for Digital Signature uses the following curve for binary fields:
+<center><img src="/images/timing-attacks/curve.png" alt="ECC" style="width:400px;"/></center>
+NIST recommends two standard curves: 1. Set \(a_2 = 1\) and choose \(a_6\) pseudo-randomly, or 2. Choose \(a_2\) from \({0,1}\) and set \(a_6 = 1\).
+Either of the two curves can be used for digital signatures.</p>
+
+<p>Parties select private key as \(0 &lt; d &lt; n\) and public key as \([d]G\) and then proceed to generate digital signatures using elliptic curves as:
+<center><img src="/images/timing-attacks/digital_signatures.png" alt="digital" style="width:300px;"/></center></p>
+
+<p>OpenSSL uses Montogmery&rsquo;s ladder to compute the above digital signatures since it requires multiple exponentiation operations. However, OpenSSL&rsquo;s implementation has a flaw that leads to timing attack. Below is OpenSSL&rsquo;s implementation:</p>
+
+<p><center><img src="/images/timing-attacks/OpenSSL_montgomery.png" alt="OpenSSL" style="width:700px;"/><br>
+<sup>OpenSSL&rsquo;s implementation of Montgomery&rsquo;s Ladder</sup><br>
+<sup>Source: <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</a></sup></center>
+As indicated in the third line of code, OpenSSL optimizes the number of ladder steps and therefore leaks information about the MSB of k. Since the time taken to compute the scalar multiplications is proportional to the logarithm of k, which is revealed by the MSB of k, this leads to a timing attack. The attacker collects multiple digital signatures such that the signatures are generated by random nonce k with leading zero bits; this information is revealed by the above timing attack. The attacker then launches a <a href="http://www.hpl.hp.com/techreports/1999/HPL-1999-90.pdf">lattice attack</a> using the collected digital signatures to reveal the RSA key of the TLS server.</p>
+
+<h3 id="countermeasure">Countermeasure</h3>
+
+<p>A possible countermeasure as proposed by <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Brumley and Tuveri</a> is to pad the scalar \(k\):
+<center><img src="/images/timing-attacks/countermeasure.png" alt="counter" style="width:400px;"/><br>
+<sup>Countermeasure to OpenSSL&rsquo;s flaw</sup><br>
+<sup>Source: <a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf</a></sup></center>
+This ensures that the logarithm is constant and hence leaks no side-channel information. Moreover, the above modification does not cause extra computation overhead.</p>
+
+<h3 id="sources">Sources</h3>
+
+<p><a href="https://cr.yp.to/bib/2003/joye-ladder.pdf">Marc Joye and Sung-Ming Yen. &ldquo;The Montgomery powering ladder.&rdquo; International Workshop on Cryptographic Hardware and Embedded Systems. Springer Berlin Heidelberg, 2002.</a></p>
+
+<p><a href="https://gnunet.org/sites/default/files/Brumley%20%26%20Tuveri%20-%20Timing%20Attacks.pdf">Billy Bob Brumley and Nicola Tuveri. &ldquo;Remote timing attacks are still practical.&rdquo; European Symposium on Research in Computer Security. Springer Berlin Heidelberg, 2011.</a></p>
+
+<p><a href="http://www.hpl.hp.com/techreports/1999/HPL-1999-90.pdf">Howgrave-Graham, Nick A., and Nigel P. Smart. &ldquo;Lattice attacks on digital signature schemes.&rdquo; Designs, Codes and Cryptography 23.3 (2001): 283-290.</a></p>
+
+<h1 id="cache-timing-attacks">Cache Timing Attacks</h1>
+
+<p>At this point, it seems as though we&rsquo;ve seen everything—there couldn&rsquo;t possibly be another side-channel attack, right?</p>
+
+<p>Wrong.</p>
+
+<p>Timing attacks are capable of leveraging the <strong>CPU cache</strong> as a side-channel in order to perform attacks.  Since the issue results from hardware design, it&rsquo;s difficult for application designers to address; the behaviors that influence cache patterns are proprietary features hidden away into today&rsquo;s processors.</p>
+
+<h3 id="intel-cpu-cache">Intel CPU Cache</h3>
+
+<p>In cache terminology, <strong>hits</strong> occur when queried data is present in the cache and <strong>misses</strong> occur when data must be fetched from main memory.  Consider the L1 and L2 caches of the Intel Sandy Bridge processor.  Both are <strong>8-way set associative caches</strong> consisting of sets with 64-byte lines (64 sets in L1, 512 sets in L2, for a total of 32KB and 256KB in storage, respectively).</p>
+
+<p>For those unfamiliar with computer architecture, addresses of information in the cache are split into three components:  tag, set, and offset.  An address looks something like this:</p>
+
+<pre><code>1111 0000 1111 0000 1111        000011       110000
+Tag                              Set         Offset
+</code></pre>
+
+<p>Now that we&rsquo;ve reviewed the memory hierarchy, let&rsquo;s take a look at some attacks that use variations in cache timing and operation to their advantage.</p>
+
+<h3 id="prime-probe">PRIME+PROBE</h3>
+
+<p>The PRIME+PROBE attack is carried out by <strong>filling the victim&rsquo;s cache with controlled data</strong>.  As the victim carries out normal tasks in their machine, some of the attack data is evicted from the cache.  All the while, the attacker monitors the cache contents, keeping careful track of which cache lines were evicted.  In doing so, this provides the attacker with intimate knowledge of the operation and nature of the victim&rsquo;s activities as well as the contents replaced by the victim.</p>
+
+<h3 id="evict-time">EVICT+TIME</h3>
+
+<p>The EVICT+TIME attack is carried out by evicting a line of an AES lookup table from the cache such that all AES lookup tables are in the cache save for one.  The attacker then runs the encryption process.  As you might imagine, <strong>if the encryption process accesses the partially evicted lookup table, encryption will take longer to complete</strong>.  By timing exactly how long encryption takes, the attackers are able to determine which indices of which tables were accessed.  Because table lookups depend on the AES encryption key, the attacker thus gains knowledge about the key.</p>
+
+<h3 id="cache-games">Cache Games</h3>
+
+<p>The Cache Games attack targets AES-128 in OpenSSL v0.9.8 and is capable of recovering the full secret key.  In the attack, a non-privileged spy process conducts a 2.8 second observation of approximately 100 AES encryptions (1.56KB of data) and then performs 3 minutes of computation on a separate machine.  The spy process is able to abuse the default Linux scheduler, unfortunately named the <em>Completely Fair Scheduler</em>, to monitor cache offset accesses with extremely accurate precision, thus gaining information about the key.</p>
+
+<p>In order to abuse the CFS, the spy process creates hundreds of threads that immediately block.  After a few cycles, the first thread awakens, checks for memory accesses by the target code, and then signals for the next thread to awaken.  This continues for all threads.  To filter-out noise, Cache Games uses an ANN that takes bitmaps of activations and outputs points with high probability of access.</p>
+
+<p><center><img src="/images/timing-attacks/cachegames.png" alt="Cache Games ANN" style="width:300px;"/><br /><sup>An ANN takes bitmaps of activations and outputs <br />points with high probability of access</sup></center></p>
+
+<p>The nature of the AES encryption process—consisting of 10 rounds of 16 memory accesses—allows the spy process to construct a list of partial-key candidates that is continually refined as more encryptions are repeated.  The CFS maintains processes in a red-black tree and associates with each process a total runtime.  The scheduler calculates a &ldquo;max execution time&rdquo; for each process by dividing the total time it has been waiting by the number of processes in the tree.  Whichever process minimizes this value is selected to run next.</p>
+
+<h4 id="mitigation">Mitigation</h4>
+
+<ul>
+<li>Remove or restrict access to high-resolution timers such as <code>rdtsc</code> (unlikely; necessary to benchmark various hardware properties)</li>
+<li>Allow certain memory to be marked as <em>uncacheable</em> (hardware challenge!)</li>
+<li>Use AES-NI instructions in Intel chips to compute AES (but what about other encryption algorithms?)</li>
+<li>Scatter-gather:  secret data should not be allowed to influence memory access at coarser-than-cache-line granularity.</li>
+</ul>
+
+<h3 id="cachebleed">CacheBleed</h3>
+
+<p>TODO: add paper link</p>
+
+<p>In keeping with the trend of affixing &ldquo;-bleed&rdquo; to various information security leakage vulnerabilities, CacheBleed is a recent (c. 2016) attack on RSA decryptions as implemented in OpenSSL v1.0.2 on Intel Sandy Bridge processors.  In the attack, the timing of operations in <strong>cache banks</strong> is taken advantage of in order to glean information about the RSA decryption multiplier.</p>
+
+<p>Cache banks were a new feature in Sandy Bridge processors, designed to accommodate accessing multiple instructions in the same cache line in the same cycle.  As it turns out, cache banks can only serve one operation at a time, so if a <em>cache bank conflict</em> is encountered, one request will be delayed!</p>
+
+<p>In order to carry-out the attack, the attacker and victim start out running on the same hyperthreaded core, thus sharing the L1 cache.  The attacker then issues a huge number of requests to a single cache bank.  By carefully measuring how many cycles passed in completion of the request, the attacker can discern whether the victim accessed that cache bank at some point.  After many queries, the attack is successful at extracting both 2048-bit and 4096-bit secret keys.</p>
+
+<h4 id="mitigation-1">Mitigation</h4>
+
+<p>The upside to CacheBleed is that it&rsquo;s highly complicated, requiring shared access to a hyperthreaded core on which RSA decryption is taking place—certainly not a predictable scenario.  In any case, there are other pieces of &ldquo;low-hanging fruit&rdquo; in computer systems that attackers are more likely to target.  Nonetheless, Haswell processors implement cache banks differently such that conflicts are handled more carefully.  The only other mitigation technique is to disable hyperthreading entirely.</p>
+
+</div>
+
+
+  <footer class="container">
+  <div class="container navigation no-print">
+  <h2>Navigation</h2>
+  
+  
+
+    
+    <a class="prev" href="https://tlseminar.github.io/cloudflare-leak/" title="Cloudflare Leak">
+      Previous
+    </a>
+    
+
+    
+    <a class="next" href="https://tlseminar.github.io/update/" title="Survey and Revised Schedule">
+      Next
+    </a>
+    
+
+  
+
+
+</div>
+
+</footer>
+
+</article>
+      <footer id="main-footer" class="container main_footer">
+  
+
+  <div class="container nav foot no-print">
+  
+
+  <a class="toplink" href="#">back to top</a>
+
+</div>
+
+  <div class="container credits">
+  
+<div class="container footline">
+  
+  <p align="center">cs6501: TLSeminar | University of Virginia, Spring 2017 | <a href="https://www.cs.virginia.edu/evans">David Evans</a>
+
+
+</div>
+
+
+  
+
+</div>
+
+</footer>
+
+    </main>
+    
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3775212-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+    
+  </body>
+</html>
+

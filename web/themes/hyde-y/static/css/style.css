@@ -1095,10 +1095,21 @@ progress {
    background-color: #EEE;
    margin-top: 5pt; 
    margin-bottom: 5pt;
+   padding-top: 5pt;
    font-size: 18pt;
    text-align: center;
-   line-height: 2.5;
+   line-height: 1.2;
 }
+
+.authordate {
+   font-size: 12pt;
+   text-align: center;
+   font-weight: bold;
+   padding-top: 0px;
+   margin-bottom: 10pt;
+   line-height: 2.0;
+}
+
 
 .latex {
   display: none;
@@ -1162,6 +1173,10 @@ span#name {
 p.indent {
     text-indent: 5px;
     }
+
+div.indented {
+   margin-left: 60px;
+}
 
 div.credits {
    font-size: 9pt;
