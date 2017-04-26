@@ -6,8 +6,136 @@
     <description>Recent content on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 24 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 23 Apr 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>TLS Outside The Web</title>
+      <link>https://tlseminar.github.io/tls-outside-the-web/</link>
+      <pubDate>Sun, 23 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/tls-outside-the-web/</guid>
+      <description>
+
+&lt;p&gt;As the web evolves, taking on physical form with embedded devices, or
+becoming more abstracted with cloud computing, the question of how to
+secure these new kinds of connections becomes paramount. Can TLS work
+for non-web scenarios?&lt;/p&gt;
+
+&lt;p&gt;Sizzle and DTLS improve TLS performance in an attempt to make the
+protocol feasible on embedded devices with limited power and bandwidth
+- but sacrifice some security in the process. Developers of
+non-browser software like Cloud services, mobile apps, and payment
+transfer services misunderstand or intentionally disable vital
+security measures - and SSL APIs fail to communicate how to secure
+connections and implement authentication. Meanwhile, Amazon Web
+Services offers a heavily centralized alternative to securing the
+Cloud and IoT devices - but potentially at a high privacy cost.&lt;/p&gt;
+
+&lt;h2 id=&#34;sizzle-tls-for-embedded-devices&#34;&gt;Sizzle: TLS For Embedded Devices&lt;/h2&gt;
+
+&lt;p&gt;Vipul Gupta, Matthew Millard, Stephen Fung, Yu Zhu, Nils Gura, Hans Eberle, Sheueling Chang Shantz. &lt;a href=&#34;https://tlseminar.github.io/docs/sizzle.pdf&#34;&gt;&lt;em&gt;Sizzle: A Standards-based end-to-end Security Architecture for the Embedded Internet&lt;/em&gt;&lt;/a&gt;. Pervasive and Mobile Computing, 2005.&lt;/p&gt;
+
+&lt;p&gt;Sizzle is an end-to-end security architecture for embedded devices that is fully implemented on the 8-bit Berkeley/Crossbow Mica2 “mote” platform. Capable of completing an abbreviated SSL (TLS 1.0)  handshake in less than 4 seconds, this mote devices were envisioned to function as sensors/actuators connected to the wireless network. When this paper was published (2005), Sizzle on “mote” was the world’s smallest and least resource-intensive secure web server.&lt;/p&gt;
+
+&lt;p&gt;With the goal of allowing highly constrained embedded devices to offer secure connections, the authors of this paper uses 160-bit elliptic curve cryptography (ECC) to reduce computation for the system. When using ECC over RSA, there is a 4x speedup (or 5x speed up with session reuse) in computation speed of public/key cryptography. The figures 1 (full handshake) and 2 (abbreviated handshake) below show the comparison of the amount of time it took to transfer 450 bytes of data over HTTPS.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/sizzle1.png&#34;/&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/sizzle2.png&#34;/&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;authentication-for-the-internet-of-things&#34;&gt;Authentication for the Internet of Things&lt;/h2&gt;
+
+&lt;p&gt;Thomas Kothmayr, Corinna Schmitt, Wen Hu, Michael Brünig, Georg Carle. &lt;a href=&#34;https://tlseminar.github.io/docs/dtls.pdf&#34;&gt;&lt;em&gt;DTLS based security and two-way authentication
+for the Internet of Things&lt;/em&gt;&lt;/a&gt;. Ad Hoc Networks. May 2013.&lt;/p&gt;
+
+&lt;p&gt;Datagram TLS, also known as DTLS, is for all intents and purposes a “lightweight” version of TLS that can operate on devices that aren’t as powerful as traditional computers. Hence, it was a great addition for the internet of things devices as that revolution took off. According to its specification, it provides the same security guarantees as TLS except it is a stream-oriented service. It, however, does come with a downside. Namely, there is an overhead: tolerance for packet reordering and datagram loss. The former is pretty self explanatory, the latter is essentially stating that if the data is larger than the size of the datagram, it is possible that there be a data loss. Unlike, TLS, there are much fewer libraries that support this protocol, as can be seen in the graphic below:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/dtls1.png&#34;/ width=&#34;50%&#34;&gt;&lt;/center&gt;
+&lt;center&gt;&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security&#34;&gt;https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security&lt;/a&gt;&lt;/span&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;So, we know of the following encryption techniques. When you have an access point and say a printer, that have a pre-shared key, we use WPA as a communication medium. Similarly, when we need secure connection between a sensor and a security end-point we use VPN, but what about a secure connection using TLS among the internet of things. That is the primary problem that DTLS seeks to solve. Since TCP and TLS incurs an overhead small, battery-starved, low-bandwidth devices, we choose to look at DTLS which uses a less strenuous UDP protocol and a lighter version of TLS, but still maintains the security guarantees.&lt;/p&gt;
+
+&lt;p&gt;Earlier, we discussed Sizzle, but it was important to notice that sizzle only provides one-way authentication between the client and the node. That is say you have a thermostat, this would allow someone to change your thermostat, but wouldn’t allow them to read the information. This is not exactly the security that we want.&lt;/p&gt;
+
+&lt;p&gt;Let’s take a closer look at DTLS. The image below depicts a DTLS record. This looks similar to the record that we have seen with TLS and so there doesn’t seem to be too many causes for concern or intrigue about this structure. To its right, we have the handshake protocol. The main thing to notice here is that we have an extra, optional ClientHello and ClientHelloVerify before the rest of the protocol, which matches with what we’ve seen all semseter with TLS.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/dtls2.png&#34;/ width=&#34;60%&#34;&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/dtls3.png&#34;/ width=&#34;60%&#34;&gt;&lt;/center&gt;
+&lt;center&gt;
+&lt;span class=&#34;caption&#34;&gt;Source:
+&lt;a href=&#34;https://tlseminar.github.io/docs/dtls.pdf&#34;&gt;&lt;em&gt;DTLS based security and two-way authentication
+for the Internet of Things&lt;/em&gt;&lt;/a&gt;&lt;/span&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;This security protocol is an application-layer security protocol. The reasons for using this are that lower-layer security protocols do not provide end-to-end encryption and the secure connections must be established to form a mesh network. This is better than routing algorithms that are agnostic of the payload protection, which means that you may have data sent over a non-secured connection or node.&lt;/p&gt;
+
+&lt;p&gt;Finally, we can see how the proposed system actually works. This system uses a system of publishers and subscribers. Each of these can be considered the entities in the secured network. There is an access control server which stores teh access rights for all teh publishers (or motes). To intiialize any connection, the subscriber is verified by access control and is granted a ticket. The subscriber then presents this ticket to the publisher and the publisher verifies its legitimacy setting up the connection. In the larger scheme of things, the connection may look like:&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/dtls4.png&#34;/&gt;&lt;Br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source:
+&lt;a href=&#34;https://tlseminar.github.io/docs/dtls.pdf&#34;&gt;&lt;em&gt;DTLS based security and two-way authentication
+for the Internet of Things&lt;/em&gt;&lt;/a&gt;&lt;/span&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;So overall, when looking at the internet of things, we need to be wary of achieving performance, energy consumption, memory and other limiting factors that the hardware has in order to achieve some level of security. Through DTLS, the researchers presented they were able to create a system that was fairly secure and was able to experience speedups of up to 163 milliseconds based on the protocol and encryption being used. Overall, we are able to see that creating a secure network for the internet of things is slowly manifesting into a reality.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-most-dangerous-code-in-the-world&#34;&gt;The Most Dangerous Code In The World&lt;/h2&gt;
+
+&lt;p&gt;Martin Georgiev, Subodh Iyengar, Suman Jana, Rishita Anubhai, Dan Boneh, Vitaly Shmatikov.
+&lt;a href=&#34;https://tlseminar.github.io/docs/mostdangerous.pdf&#34;&gt;&lt;em&gt;The Most Dangerous Code in the World: Validating SSL Certificates in Non-Browser Software&lt;/em&gt;&lt;/a&gt;. ACM CCS 2012.&lt;/p&gt;
+
+&lt;p&gt;SSL verification for non-browser applications is nearly always compromised. These applications don’t implement SSL directly, but rather use libraries or wrappers which can have various flaws and vulnerabilities. These added vulnerabilities exist for a variety of reasons, but many of them are introduced because of a lack of security understanding in app developers and poor APIs. Rather than high-level security properties of network tunnels, many APIs divulge low-level details of SSL protocol to app developers. In many cases, options values associated with API functions are misinterpreted by app developers, leading to security risks. In other cases, attempts to fix certificate validation bugs can lead to further insecurity, potentially leading the app developer to accidentally break or disable the certificate validation entirely.&lt;/p&gt;
+
+&lt;p&gt;While most apps should do chain-of-trust and hostname verification, few do either. Chain-of-trust is often bypassed altogether, and hostname verification is often done via Common Name instead of SubjectAltName as is recommended by RFC 2818. Many applications also do not have a robust system for checking certificate revocation or allowing the user to do so. OpenSSL provides chain-of-trust verification, but requires that applications do their own hostname verification, while JSSE may or may not do either. This dependency on app developers to understand and implement potentially complex verification is unreasonable and leads to security vulnerabilities.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/dangerous1.png&#34;/&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;To avoid shop-for-free attacks, many vendor websites use SSL tunnels to communicate sensitive payment information, and these tunnels are often not set up securely. Attacks were attempted in a controlled environment on these tunnels using self-signed certificates and incorrect Common Name certificates. In Amazon’s flexible payment service, false was sent to cURL in a parameter instead of 2. In a bug fix, this parameter was changed to true, which also bypasses Common Name checks and causes vulnerability to MitM attacks.&lt;/p&gt;
+
+&lt;p&gt;One issue for app developers is needing to test their applications before making them live, and for those tests they either need to get valid localHost certificates (which aren’t given out) or they have to disable their certificate validation. Developers often do not enable the validation afterward and “disabling proper certificate validation appears to be the developers’ preferred solution to any problem with SSL libraries.”&lt;/p&gt;
+
+&lt;p&gt;App developers should attempt testing using abnormal and invalid certificates. They should also protect themselves by not relying on libraries and not disabling certificate validation during testing. SSL library developers should also attempt to be more explicit about their functionality and should avoid giving responsibility for validation to app developers.&lt;/p&gt;
+
+&lt;h2 id=&#34;aws-iot-security-overview&#34;&gt;AWS IoT Security Overview&lt;/h2&gt;
+
+&lt;p&gt;Amazon Web Services (AWS) is the largest cloud service provider in the world, offering a wide range of products from computing and network resources to game development services. One of their newer offerings, AWS IoT, enables developers to link internet-connected devices to the cloud.&lt;/p&gt;
+
+&lt;p&gt;The use case for this service is the Internet of Things. Physical sensors in our homes, offices, and cities collect data from their surroundings. Software can then analyze this data and leverage actuators to effect changes in the environment. For example, smart thermostats use temperature sensors to decide whether to heat or cool our houses. These thermostats can learn our daily routines, allowing them to control the temperature more efficiently than classical programmable thermostats. Furthermore, since the thermostats are connected to the internet, homeowners are able to remotely control their home temperature from their mobile phone.&lt;/p&gt;
+
+&lt;p&gt;AWS IoT provides application developers a protocol, Message Queue Telemetry Transport (MQTT), for communication between Internet-connected things and the cloud. Sensors use MQTT to publish data to a message broker, which passes on the sensor readings to subscribing smart appliances and other devices. These messages are also processed by a rules engine, allowing developers to interface with other AWS services, such as their storage and data processing solutions.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/aws1.png&#34;/&gt;&lt;br&gt;
+&lt;span class=&#34;caption&#34;&gt;Source: &lt;a href=&#34;http://docs.aws.amazon.com/iot/latest/developerguide/images/thunderball-overview.png&#34;&gt;Amazon&lt;/a&gt;&lt;/span&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;All these messages to and from AWS IoT need to be secured. To ensure privacy, TLS is used to encrypt all MQTT traffic between devices and the message broker. Devices are authenticated using one of three identity types. First, clients can use the standard X.509 certificates used in HTTPS, which are authenticated using challenge-response TLS Client Authentication. AWS IoT also allows clients to use two AWS-specific identity types: IAM roles, and Amazon Cognito Federated Identities.&lt;/p&gt;
+
+&lt;p&gt;Even after a device has authenticated itself to the message broker, it is only allowed to execute an operation if it has been given the appropriate permission. An entity’s permissions are specified by AWS IoT policies, which are attached to the entity’s identity (certificate, IAM role, or Cognito identity). If an entity needs access to AWS services outside of IoT, IAM policies are used instead of IoT policies. These policies provide developers fine-grained control of authorization.&lt;/p&gt;
+
+&lt;h2 id=&#34;aws-end-to-end-hardware-security&#34;&gt;AWS End-To-End Hardware Security&lt;/h2&gt;
+
+&lt;p&gt;Brandom Lewis. &lt;a href=&#34;http://embedded-computing.com/articles/aws-microchip-deliver-trust-anchor-for-end-to-end-iot-security/&#34;&gt;&lt;em&gt;AWS, Microchip deliver trust anchor for end-to-end IoT security&lt;/em&gt;&lt;/a&gt;. Embedded Computing Design, 7 October, 2016.&lt;/p&gt;
+
+&lt;p&gt;Digital certificates are ingrained in almost every aspect of our digital lives. Signed by Certificate authorities (CAs), they help authenticate the identity of parties involved in the electronic exchange of information, preventing potential threats such as MITM attacks. With the Internet of Things (IoT) introducing billions of clients that communicate with the cloud in a two-way fashion, the requirement for mutual authentication of both clients and servers has steadily increased nowadays.&lt;/p&gt;
+
+&lt;p&gt;To solve the problems related to certificate provisioning for client-side devices, Amazon Web Services (AWS) released “Use Your Own Certificate” feature this April. It allows original equipment manufacturers (OEMs) to register digital certificates signed by a third-party CA with the AWS IoT platform using an API, which, could happen even before the devices come online. This provides a new possibility for OEMs to generate cryptographic keys for device during its production period. The latest capability in the AWS IoT portfolio, Just-In-Time Registration (JITR), is also partly based on such process. As the term implies, devices can automatically connect to and be recognized by the AWS IoT cloud the first time they request service from the platform. By ensuring them being pre-equipped with unique, trusted private keys and correct server configurations and policies, such immediate, autonomous onboarding of devices with cloud services can maintain secure despite the large numbers of connections.&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/aws2.png&#34;/&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Fortunately, good news have arrived from hardware side of IoT spectrum as well. One example is ECC508A, a 2 mm x 3 mm tamper-resistant CryptoAuthentication device based on elliptic curve Diffie-Hellman (ECDH) algorithms. The architectural features of the chip include internally encrypted memory, isolated power rails, a memory and logic shield, internal clock generation, and a lack of probe points to protect against different kinds of real-world threats. It also improves overall system performance when TLS transaction runs on hardware-based crypto accelerator. With the ECC508A acting as the root of trust, Microchip can act as a third-party CA, signing device certificates in an offline verification process. Then OEMs are able to access robust security and automatic cloud authentication by adding a single component to their bill of materials (BoM).&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://tlseminar.github.io/images/tls-outside-the-web/aws3.png&#34;/&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;Security is still essential to the continued rollout of IoT in every market. Device makers now can separate security from business functions and continue to work upon that. The ECC508A evaluation kit has been available on the market, which must excite those who deeply concern and care about the future of cyber security.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;As we have seen, TLS is being widely used outside of the web in embedded devices, the Internet of Things, Amazon Web Services, and many others. The problem, however, is how these devices choose to implement their own versions of TLS and the problems that ensue. We have seen interesting applications of TLS that seem to also fundamentally break the intended security inherent in the protocol. Many of the problems are actually just based on laziness in the production of these devices, such as pinning a single certificate to every type of a device.&lt;/p&gt;
+
+&lt;p&gt;Besides TLS, alternative protocols have been designed for minimal data use and enhanced security throughout all communication between these devices. Because of the limited resources provided by embedded devices and IoT devices, many of the protocols must consider how much CPU, battery, and memory will be used at a time.&lt;/p&gt;
+
+&lt;p&gt;As time goes on, more and more of these embedded devices will be in our homes and cities, and there is the very real possibility of our own physical safety being in harm’s way due to a compromised device. Internet enabled doors, heating systems, windows, safes, and more could hold the potential of being locked, overused, and unlocked to cause danger to their owner. While TLS never was designed with the idea outside of web use, we must begin to consider alternative protocols or improve current ones to ensure the security of our technology outside of our browsers.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>TLS 1.3</title>
@@ -2417,128 +2545,6 @@ someone intercepting the traffic learn?&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;What differences can you observe compared to what is described for the TLS 1.0 connections on that web page?&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Background Preparation</title>
-      <link>https://tlseminar.github.io/background/</link>
-      <pubDate>Wed, 14 Dec 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://tlseminar.github.io/background/</guid>
-      <description>
-
-&lt;p&gt;Here are some suggestions for getting the necessary background for the
-seminar.&lt;/p&gt;
-
-&lt;h2 id=&#34;cryptography&#34;&gt;Cryptography&lt;/h2&gt;
-
-&lt;p&gt;If you have already taken a cryptography course, you should have
-enough cryptography background already.  If not, here are some
-suggested ways to get enough crypo background over winter break to be
-ready for the seminar.  I believe that for most students, the best way
-to get the expected background for this course is to take my Applied
-Cryptography course (more info below), but there are many options, and
-lots of great resources that go into much more depth than my course if
-you have more time.&lt;/p&gt;
-
-&lt;h3 id=&#34;on-line-courses&#34;&gt;On-Line Courses&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.udacity.com/course/applied-cryptography--cs387&#34;&gt;&lt;strong&gt;Udacity cs387: Applied
-Cryptography&lt;/strong&gt;&lt;/a&gt;
-- this is an open on-line course that you can take anytime taught by
-myself (so I am somewhat partial to it!).  There are &lt;a href=&#34;http://www.cs.virginia.edu/~evans/courses/cs387/&#34;&gt;some additional
-materials for the course
-available&lt;/a&gt;,
-including &lt;a href=&#34;http://www.cs.virginia.edu/~evans/courses/crypto-notes.pdf&#34;&gt;extensive course notes
-(PDF)&lt;/a&gt;
-created by Daniel Winter.  This is a very short and informal
-introduction to cryptography, which would be enough background to be
-prepared for the seminar.  (I can&amp;rsquo;t give an unbiased assessment of the
-course, but according to Information Week, it is a recommended course
-to &lt;a href=&#34;http://www.informationweek.com/strategic-cio/team-building-and-staffing/5-online-classes-to-pump-up-it-careers/d/d-id/898915&#34;&gt;&lt;em&gt;&amp;ldquo;Pump Up IT
-Careers&amp;rdquo;&lt;/em&gt;&lt;/a&gt;,
-and &lt;a href=&#34;www.prospectmagazine.co.uk/magazine/online-universities-udacity-grand-challenge-david-stavens-dave-evans&#34;&gt;Prospect
-Magazine&lt;/a&gt;
-claimed the instructor has a &amp;ldquo;Monty Python humor&amp;rdquo; and &amp;ldquo;cult
-following&amp;rdquo;, although you shouldn&amp;rsquo;t believe everything you read in
-British magazines.)&lt;/p&gt;
-
-&lt;p&gt;Dan Boneh&amp;rsquo;s &lt;a href=&#34;https://www.coursera.org/learn/crypto&#34;&gt;&lt;strong&gt;Cryptography
-Course&lt;/strong&gt;&lt;/a&gt; (offered through
-Coursera).  The materials from previous courses are not available
-(although you may be able to find them if you are resourceful), so you
-have to take the course when it is offered by Coursera. There is a
-session starting December 26.  This is an excellent course that is a
-bit longer and goes into more depth on many topics than my course.
-You can read &lt;a href=&#34;http://bryanpendleton.blogspot.com/2012/05/comparing-coursera-and-udacity.html&#34;&gt;Bryan Pendleton&amp;rsquo;s more objective
-comparison&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Christoff Parr and Jan Pelzl&amp;rsquo;s &lt;a href=&#34;http://www.crypto-textbook.com/&#34;&gt;&lt;strong&gt;Understanding
-Cryptography&lt;/strong&gt;&lt;/a&gt; textbook includes
-Parr&amp;rsquo;s excellent &lt;a href=&#34;http://wiki.crypto.rub.de/Buch/movies.php&#34;&gt;video
-lectures&lt;/a&gt; (chalkboard
-style without editing, so takes some patience to watch).&lt;/p&gt;
-
-&lt;h3 id=&#34;textbooks&#34;&gt;Textbooks&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.crypto101.io/&#34;&gt;Crypto 101&lt;/a&gt; - a very easy to read and
-practically-focused introduction to cryptography (available as a &lt;a href=&#34;https://tlseminar.github.io/docs/Crypto101.pdf&#34;&gt;free,
-creative-commons licensed PDF&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.cs.umd.edu/~jkatz/imc.html&#34;&gt;&lt;em&gt;Introduction to Modern
-Cryptography&lt;/em&gt;&lt;/a&gt;, Jonathan Katz
-and Yehuda Lindell.  This provides a lot more depth that is required
-for joining the seminar, but is an excellent book for ambitious
-students with more time.&lt;/p&gt;
-
-&lt;h2 id=&#34;computing-systems&#34;&gt;Computing Systems&lt;/h2&gt;
-
-&lt;p&gt;Students in the class will benefit from understanding computing
-systems and having experience with systems-level programming at least
-at the level of a typical introductory operating systems course.
-Students without this experience will either need to put a lot of
-effort into learning it, or select projects and presentation topics
-that focus on other aspects.&lt;/p&gt;
-
-&lt;p&gt;Some resources for learning about computing systems are below.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.ops-class.org/&#34;&gt;&amp;ldquo;Hack the Kernel&amp;rdquo;&lt;/a&gt; - Operating Systems
-class developed by &lt;a href=&#34;https://www.bluegroup.systems/people/gwa/&#34;&gt;Geoffrey
-Challen&lt;/a&gt;.  Provides
-programming assignments you can try on your own, as well as video
-lectures and lots of on-line materials.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://rust-class.org/&#34;&gt;cs4414: Operating Systems&lt;/a&gt; - Operating
-systems course I taught in Fall 2013 and Spring 2014. Includes
-&lt;a href=&#34;http://rust-class.org/pages/classes.html&#34;&gt;videos&lt;/a&gt; of lectures, and
-programming assignments in Rust (some of which will need some updating
-to work in the latest version of Rust).&lt;/p&gt;
-
-&lt;p&gt;CMU&amp;rsquo;s &lt;a href=&#34;http://csapp.cs.cmu.edu/&#34;&gt;Computing Systems&lt;/a&gt; course and
-textbook by Randal Bryant and David O&amp;rsquo;Hallaron provides an excellent
-introduction to systems programming, as well as a series of &lt;a href=&#34;http://csapp.cs.cmu.edu/3e/labs.html&#34;&gt;fun
-self-study labs&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;rust-programming&#34;&gt;Rust Programming&lt;/h3&gt;
-
-&lt;p&gt;I&amp;rsquo;m hoping several of the projects will involve contribution to open
-source projects using Rust to provide secure, efficient, and
-iter-operable implementations of TLS and other cryptographic
-functionalities.  It is not a requirement that you use Rust in this
-class, but everyone will be encouraged to get some experience with it.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://doc.rust-lang.org/nightly/book/&#34;&gt;&lt;strong&gt;Rust Programming Language
-Book&lt;/strong&gt;&lt;/a&gt; (this is the
-&amp;ldquo;official&amp;rdquo; Rust book, which includes a tutorial to get started)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://aml3.github.io/RustTutorial/&#34;&gt;&lt;strong&gt;Rust Tutorial&lt;/strong&gt;&lt;/a&gt; (this was
-developed for my &lt;a href=&#34;https://rust-class.org/&#34;&gt;cs4414 class&lt;/a&gt; by Alex
-Lamana, Rob Michaels, and Wil Thomason.  (Some parts may need updating
-to latest version of Rust, so if you go through this, please submit
-updates as pull requests!)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://rustbyexample.com/&#34;&gt;&lt;strong&gt;Rust by Example&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
