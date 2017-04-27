@@ -22,11 +22,11 @@ See [Teams](/teams) for the class teams and responsibilities.
 
 <tr><td><a href="/usable-security">Class 8</a> (17 Mar)</td><td>Usable Security</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
 <tr><td><a href="/tls-13">Class 9</a> (24 Mar)</td><td>TLS 1.3</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 10 (31 Mar)</td><td>Project Reviews</td><td colspan=2 bgcolor="#888888"></td></tr>
+<tr><td>Class 10 (31 Mar)</td><td colspan=3>Project Reviews</td></tr>
 <tr><td><A href="/tls-outside-the-web/">Class 11</a> (7 Apr)</td><td>TLS Everywhere</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
-<tr><td>Class 12 (14 Apr)</td><td>TBD</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
-<tr><td>Class 13 (21 Apr)</td><td>TBD</td><td bgcolor="#888888" colspan=2></td></tr>
-<tr><td>Class 14 (28 Apr)</td><td>Mini-Conference</td><td bgcolor="#888888" colspan=2></td></tr>
+<tr><td>Class 12 (14 Apr)</td><td>Future of TLS</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
+<tr><td>Class 13 (21 Apr)</td><td colspan=3>Post-Quantum Crypto, Progress</td></tr>
+<tr><td><a href="/project-presentations-schedule">Class 14</a> (28 Apr)</td><td colspan=3>Mini-Conference</td></tr>
 </table>
 
 **[Class 1](/class 1) - Introduction**  

@@ -2,6 +2,7 @@
 date = "14 Dec 2016"
 draft = false
 title = "Welcome to TLSeminar!"
+author = "Team Papaya"
 slug = "welcome"
 +++
 

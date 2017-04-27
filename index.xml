@@ -6,8 +6,39 @@
     <description>Recent content on TLSeminar</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 23 Apr 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 26 Apr 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tlseminar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Project Presentations Schedule</title>
+      <link>https://tlseminar.github.io/project-presentations-schedule/</link>
+      <pubDate>Wed, 26 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://tlseminar.github.io/project-presentations-schedule/</guid>
+      <description>&lt;p&gt;Here is the schedule for the project presentations for Friday, 28
+April.  Each multi-person team will have up to 20 minutes to present
+(which should include at least 5 minutes for questions, so plan on a
+15-minute or shorter presentation), and each single-person team will
+have up to 15 minutes to present (which should include at least 3
+minutes for questions, so plan on a 12-minute or shorter
+presentation).&lt;/p&gt;
+
+&lt;table&gt;
+&lt;tr bgcolor=&#34;#90EE90&#34;&gt;
+&lt;td width=20%&gt;&lt;b&gt;9:20-9:30am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://www.chick-fil-a.com/#breakfast&#34;&gt;Breakfast&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr bgcolor=&#34;#FFFACD&#34;&gt;&lt;td&gt;&lt;b&gt;9:30-9:50am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://lineoftrust.github.io/&#34;&gt;Line Of Trust&lt;/a&gt; &amp;mdash; Anant Kharkar, Sam Havron, Bill Young, Joshua Holtzman&lt;/td&gt;&lt;/tr&gt;
+&lt;tr bgcolor=&#34;#FFEBCD&#34;&gt;&lt;td&gt;&lt;b&gt;9:50-10:05am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://darioncassel.github.io/sok-tls-testing/&#34;&gt;SoK: Software Testing Methods Applied to SSL/TLS: Lessons in Discovering Implementation Bugs&lt;/a&gt; (Darion Cassel)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr  bgcolor=&#34;#FFEBCD&#34;&gt;&lt;td&gt;&lt;b&gt;10:05-10:20am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://github.com/yuchi1989/ssltimer&#34;&gt;SSLTimer: Testing an SSL Implementation with respect to Timing Attack Vulnerability&lt;/a&gt; (Yuchi Tian)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr  bgcolor=&#34;#FFFACD&#34;&gt;&lt;td&gt;&lt;b&gt;10:20-10:40am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://github.com/cmalekpour/minimal-tls&#34;&gt;Minimal TLS&lt;/a&gt; (&lt;a href=&#34;https://github.com/FreddieJin&#34;&gt;Tianyi Jin&lt;/a&gt;, &lt;a href=&#34;https://github.com/cmalekpour&#34;&gt;Cyrus Malekpour&lt;/a&gt;, &lt;a href=&#34;https://github.com/bhuvanesh8&#34;&gt;Bhuvanesh Murali&lt;/a&gt;, &lt;a href=&#34;https://github.com/drs5ma&#34;&gt;Daniel Saha&lt;/a&gt;)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr bgcolor=&#34;#90EE90&#34;&gt;&lt;td&gt;&lt;b&gt;10:40-10:50am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Break&lt;/td&gt;&lt;/tr&gt;
+&lt;tr  bgcolor=&#34;#FFFACD&#34;&gt;&lt;td&gt;&lt;b&gt;10:50-11:10am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://reidbix.github.io/QuantumMenace/&#34;&gt;Quantum Menace&lt;/a&gt; (Reid Bixler, Collin Berman)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr  bgcolor=&#34;#FFEBCD&#34;&gt;&lt;td&gt;&lt;b&gt;11:10-11:25am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;http://adamimeson.tech/sslskimmer/&#34;&gt;SSL Skimmer&lt;/a&gt; (Adam Imeson)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr  bgcolor=&#34;#FFEBCD&#34;&gt;&lt;td&gt;&lt;b&gt;11:25-11:40am&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://lowmanb94.github.io/tie/&#34;&gt;TIE: TLS Invariants Exploration&lt;/a&gt; (Ben Lowman)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr  bgcolor=&#34;#FFFACD&#34;&gt;&lt;td&gt;&lt;b&gt;11:40am-noon&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;a href=&#34;https://hainali.github.io/DecentralizedCA/&#34;&gt;DecentralizedCA&lt;/a&gt; (&lt;a href=&#34;https://github.com/bargavjayaraman&#34;&gt;Bargav Jayaraman&lt;/a&gt;, &lt;a href=&#34;https://github.com/HainaLi/&#34;&gt;Hannah Li&lt;/a&gt;)
+&lt;/tr&gt;
+&lt;/table&gt;
+</description>
+    </item>
     
     <item>
       <title>TLS Outside The Web</title>
@@ -2493,58 +2524,6 @@ this stage, I will probably make things visible on the public site,
 although it can still be edited and improved with subsequent
 comments.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Class 1: Introduction</title>
-      <link>https://tlseminar.github.io/class1/</link>
-      <pubDate>Fri, 20 Jan 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://tlseminar.github.io/class1/</guid>
-      <description>
-
-&lt;p&gt;&lt;center&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;c819c3c91461456ca328e97a753f6d56&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/center&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;plan&#34;&gt;Plan&lt;/h1&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Find your team, introduce yourselves and figure out a management structure and plan.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Bid for your role:&lt;br /&gt;
-T (lead Class 2: oracle padding attacks)&lt;br /&gt;
-L (blog Class 1/lead 3: breaking weak asymmetric crypto, Drown)&lt;br /&gt;
-S (lead Class 4: certificates)&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&#34;examining-certificates&#34;&gt;Examining Certificates&lt;/h1&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;When does the certificate for &lt;a href=&#34;https://whitehouse.gov&#34;&gt;https://whitehouse.gov&lt;/a&gt; expire?&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;(won&amp;rsquo;t be able to answer this until later today) Does the new adminstration&amp;rsquo;s &lt;a href=&#34;https://whitehouse.gov&#34;&gt;https://whitehouse.gov&lt;/a&gt; site use the same private key as Obama&amp;rsquo;s?  (What should the answer to this question be?)&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&#34;first-few-milliseconds&#34;&gt;First Few Milliseconds&lt;/h1&gt;
-
-&lt;p&gt;Jeff Moser&amp;rsquo;s &lt;a href=&#34;http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html&#34;&gt;&lt;em&gt;The First Few Milliseconds of an HTTPS Connection&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Install &lt;a href=&#34;https://www.wireshark.org/download.html&#34;&gt;Wireshark&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Start Wireshark, and look at all the TLS sessions running on your
-laptop.  How many different TLS sessions are there?&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Pick one of the TLS sessions and try to figure out what application
-is using it.  Who are the endpoints?&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Assuming (for now!) the encryption is all perfect, what could
-someone intercepting the traffic learn?&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;What differences can you observe compared to what is described for the TLS 1.0 connections on that web page?&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
 </description>
     </item>
     
