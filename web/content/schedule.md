@@ -26,7 +26,7 @@ See [Teams](/teams) for the class teams and responsibilities.
 <tr><td><A href="/tls-outside-the-web/">Class 11</a> (7 Apr)</td><td>TLS Everywhere</td><td bgcolor="#CCDD55">Lead</td><td bgcolor="#44AAEE">Blog, Food</td></tr>
 <tr><td>Class 12 (14 Apr)</td><td>Future of TLS</td><td bgcolor="#44AAEE">Blog, Food</td><td bgcolor="#CCDD55">Lead</td></tr>
 <tr><td>Class 13 (21 Apr)</td><td colspan=3>Post-Quantum Crypto, Progress</td></tr>
-<tr><td><a href="/project-presentations-schedule">Class 14</a> (28 Apr)</td><td colspan=3>Mini-Conference</td></tr>
+<tr><td><a href="/presentations">Class 14</a> (28 Apr)</td><td colspan=3>Mini-Conference</td></tr>
 </table>
 
 **[Class 1](/class 1) - Introduction**  

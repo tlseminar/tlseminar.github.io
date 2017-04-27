@@ -3,6 +3,7 @@ date = "26 Apr 2017"
 draft = false
 author = "Team Grapefruit"
 title = "Project Presentations Schedule"
+slug = "presentations"
 +++
 
 Here is the schedule for the project presentations for Friday, 28
