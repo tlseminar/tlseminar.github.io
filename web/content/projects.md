@@ -77,7 +77,7 @@ directly.
 ### Line Of Trust
 
 [**Project Site**](https://lineoftrust.github.io/)  
-**Team members:** Anant Kharkar, Sam Havron, Bill Young, Joshua Holtzman
+**Team members:** Anant Kharkar, Sam Havron, Bethlehem Naylor, Bill Young, Joshua Holtzman
 
 Introducing the Line of Trust (LOTr): Erasing the line of death for fun and pleasure
 
